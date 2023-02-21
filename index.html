@@ -13,6 +13,7 @@
 
 
     <link rel="stylesheet" href="css/slidesFootnote.css" />
+    <link rel="stylesheet" href="css/LatexLike.css" />
 
     <script defer src="dist/fontawesome/all.min.js"></script>
 
@@ -85,32 +86,34 @@
   </head>
   <body>
     <div class="reveal">
-      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/25101.jpg" -->
+      <div class="slides"><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
 <div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
 
-## Sensitivity Analysis of Linear Structural Causal Models 
-
+## Sensitivity Analysis of Linear Structural Causal Models
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 20%; height: 30%; width: 100%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
 </br>
 
-### Marco Scatassi: 883823 
+#### Marco Scatassi  
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 43%; top: 50%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
-Università degli Studi di Milano-Bicocca (DISCO)
-</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+#### Mat: 883823
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 45%; top: 55%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+##### 22/02/2023
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 21%; top: 70%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+##### Università degli Studi</br>di Milano-Bicocca </br> (DISCO)
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 61%; top: 70%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
 <div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
 
-### Randomized trials and observational studies
-
-<!-- .element: style="position: absolute; left: 0%; top: 0%; height: 30%; width: 80%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+### Why sensitivity analysis is needed
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 80%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
 </br>
 
-- Only ***randomized controlled trials*** make it possible to untangle causal effect from association. However, often they are:
-	
-	- infeasible
-	
-	- unethical
-
+- Only ***randomized controlled trials*** make it possible to untangle causal effect from association. However, often they are ***infeasible*** or ***unethical***
 
 <!-- .element: class="fragment fade-right" -->
 
@@ -126,47 +129,10 @@ Università degli Studi di Milano-Bicocca (DISCO)
 
 <!-- .element: class="fragment fade-right" -->
 
-
-
-Sensitivity Analysis of Linear Structural Causal Models   
-
-<!-- .element: class="footer center-left" -->
-
-January 2023
-
-<!-- .element: class="footer center" -->
-
-Marco Scatassi
-
-<!-- .element: class="footer center-right" -->
-</div>
-
-<aside class="notes"><p>These <em><strong>assumptions</strong></em> are usually encoded as: </p>
-<ul>
-<li>the absence of certain causal relationships</li>
-<li>the absence of association between certain unobserved factors.</li>
-</ul>
-<!-- .slide: data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/25101.jpg" --></aside></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/25101.jpg" -->
-<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
-
-### Why sensitivity analysis is needed?
-
-<!-- .element: style="position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
-
-- There are ***two main problems*** that make ***sensitivity analysis*** fundamental:
-	
-	1. often, ***multiple causal graphs*** are compatible with given observational data
-	
-	2. some assumptions are made to ***simplify*** the identification process, but their ***validity is not known***
-
-<!-- .element: class="fragment fade-right" -->
-
 </br>
 
-- And… ***sensitivity analysis*** represent an important instrument that can be used in order to:
+- ***Sensitivity analysis*** represent an important instrument that can be used in order to:
 	- assess the ***sensitiveness*** of a causal model w.r.t. ***assumptions violations***
-	
-	- systematically quantify how different hypothetical “degrees” of violation (to be defined) affect the conclusions 
 
 	- judge whether expert knowledge can rule out problematic values.
 
@@ -174,41 +140,44 @@ Marco Scatassi
 
 
 
+
 Sensitivity Analysis of Linear Structural Causal Models   
 
 <!-- .element: class="footer center-left" -->
 
-January 2023
+February 2023
 
 <!-- .element: class="footer center" -->
 
 Marco Scatassi
 
 <!-- .element: class="footer center-right" -->
-</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
 <div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
 
-### What's new
+### Problems to be addressed
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
-<!-- .element: style="position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
-
-- In \[1\] a ***formal, algorithm framework*** to address the problem of identify the validity of a casual model w.r.t. hypothesis violation is proposed :
-	
-	- the theoretical background of ***Structural Causal Model (SCM)*** is used to formalize the procedure
-	
-	- the focus is limited to the ***linear*** case
+- The current literature is still ***limited to specific models*** and solved on a case-by-case basis.
 
 <!-- .element: class="fragment fade-right" -->
 
 </br>
 
-- In particular, it will be shown that :
+- The ***identification problem*** in ***linear systems*** has ***not yet been efficiently solved***
 	
-	1. sensitivity analysis can be reduced to a problem of ***identification with non-zero constraints***
+	- complete solution using computer algebra are computationally intractable
 	
-	3. a procedure called ***PUSHFORWARD*** can be used to simplify the analysis
+	- these are impractical for graphs larger than 4 or 5 nodes.
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- In \[1\] a ***formal, algorithm framework*** to address the problem of ***identify the validity of a casual model w.r.t. hypothesis violation*** is proposed :
 	
-	5. previous point can be used in order to develop an ***efficient graph-based constrained identification algorithm*** 
+	- the procedure is formalized by means of ***Structural Causal Model (SCM)*** 
+	
+	- the focus is limited to the ***linear*** case
 
 <!-- .element: class="fragment fade-right" -->
 
@@ -218,7 +187,87 @@ Sensitivity Analysis of Linear Structural Causal Models
 
 <!-- .element: class="footer center-left" -->
 
-January 2023
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### Notation
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+- We represent an SCM as a set of equations `$\large \Lambda V+U$`, where:
+	
+	- `$\large V$`, represent the *endogenous* variables
+	- `$\large U$` the *exogenous* variables
+	-  `$\large \Lambda$` a matrix containing the *structural coefficients* 
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- Moreover, model variables are assumed to be ***standardized*** with the ***covariance matrix*** given by:
+	- `$\large\mathcal{E}$`, for the *exogenous* variables `$\large U$`
+	
+	- `$\large\Sigma = (I-\Lambda)^{-1}\mathcal{E}(I-\Lambda)^{-T}$`, for the *endogenous* variables `$\large V$`
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- We also recall that ***causal quantities*** of interest in a ***linear SCM*** are usually entries of `$\Lambda$` (or functions of those entries), and ***identifiability*** reduces to checking whether they can be uniquely computed from the observed covariance matrix `$\Sigma$`.
+
+<!-- .element: class="fragment fade-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+
+
+
+### Steps
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+The sensitivity analysis as a problem of ***identification with non-zero constraints***
+<!-- .element: style="position: absolute; left: 30%; top: 27%; height: 1%; width: 100%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+$\begin{equation}
+\big\Downarrow\end{equation}$<!-- .element: style="position: absolute; left: 49%; top: 35%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+</br></br>
+
+Definition of a procedure called ***PUSHFORWARD*** used to simplify the analysis
+<!-- .element: style="position: absolute; left: 35%; top: 47%; height: 1%; width: 100%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+$\begin{equation}
+\big\Downarrow\end{equation}$<!-- .element: style="position: absolute; left: 49%; top: 57%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+</br></br>
+
+Development of an efficient ***graph-based constrained identification algorithm*** 
+<!-- .element: style="position: absolute; left: 28%; top: 67%; height: 1%; width: 100%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
 
 <!-- .element: class="footer center" -->
 
@@ -228,17 +277,269 @@ Marco Scatassi
 </div>
 
 <aside class="notes"><p>Remember the cigarettes example</p>
-<p>Sensitivity Analysis of Linear Structural Causal Models   </p>
+<!-- .slide: data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" --></aside></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### SA as Non-zero constraints 
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 65%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+- Sensitivity analysis as ***non-zero constraints*** means that we want to be able to compute the ***bias of an estimand*** when assuming the presence of a ***KNOWN*** ***non-zero unobserved confounding effect*** 
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- **Definition 1 (Bias of ES with respect to Q).** *Let Q be a computable quantity given a fully specified linear structural causal model, and let ES be any estimand (a functional of the covariance matrix `$\large\Lambda$`. The bias of ES with respect to Q is the difference between the two quantities, B = ES - Q*
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- So, given a fixed unobserved confounding effect `$\large\theta$`, we want to be able to compute: </br></br>`$\hspace{23em}\large B(\theta)=ES-ES(\theta)$`
+
+<!-- .element: class="fragment fade-right" -->
+
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
 <!-- .element: class="footer center-left" -->
 
-<p>January 2023</p>
+February 2023
+
 <!-- .element: class="footer center" -->
 
-<p>Marco Scatassi</p>
+Marco Scatassi
+
 <!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### The PUSHFORWARD procedure
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 65%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+- We need a way to understand if an estimand `$\large ES(\theta)$` is identifiable, that is if `$\large ES$` is ***`$\large\theta$`-identifiable***
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- **Definition 2 (`$\large\theta$`-identifiability).** *Let M be a linear SCM and `$\large\theta$` a set of parameters of M with known (non-zero) values. A causal quantity Q is said to be `$\large\theta$`-identifiable if Q is uniquely computable from `$\large\Sigma$` and `$\large\theta$`.* 
+
+<!-- .element: class="fragment fade-right" -->
+
+</br>
+
+- The ***PUSHFORWARD*** procedure: 
+	
+	- provides a ***modification procedure*** that make it possible to discover `$\large\theta$`-identifiable causal quantity
+	
+	- make it possible to ***reduce the `$\large\theta$`-identification problem to a vanilla identification problem in the modified graph***
+
+<!-- .element: class="fragment fade-right" -->
 
 
-<!-- .slide: data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/25101.jpg" --></aside></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/25101.jpg" -->
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### The PUSHFORWARD Theorem
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+- **Theorem 1 (PUSHFORWARD).** *Given a linear SCM with graph G, covariance matrix `$\large\Sigma$`, a set of known directed edges D, and known bidirected edge `$\large\epsilon_{xy}$`, let the pair `$\bigl\langle$`G', D'`$\bigl\rangle$` be constructed from G and `$\large\Sigma$` as follows:* 
+
+	1. *`$\large x \leftrightarrow y$` is removed and `$\large \sigma'_{xy} = \sigma_{xy} - \epsilon_{xy}$`*
+
+	1. *`$\forall c\in Ch(x), c\neq y$`, the bidirected edges `$\large c \leftrightarrow y$` are added if they do not exist, and `$\large\epsilon'_{cy} = \epsilon_{cy}+\lambda_{cy}\cdot\epsilon_{xy}$`*
+
+	1. *`$\forall z\in De(y), z\neq x$`, if there is an edge on any directed path from `$\large y$` to `$\large z$` that is not in D, then `$\large z$` is removed from G'. For the remaining `$\large z$`, `$\large \sigma'_{xz} = \sigma_{xz} - \epsilon_{xy}\cdot\delta_{yz}$`, where `$\delta_{yz}$` is the sum of all directed paths from `$\large y$` to `$\large z$`*
+
+	1. *All other parameters and covariances remain the same*
+
+	</br>
+	
+	*Then, if `$\large\lambda_{ab}$` is identifiable in G', it is `$\large\epsilon_{xy}$`-identifiable in G*
+
+<!-- .element: class="fragment fade-right" -->
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### Examples
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 135408.png" alt="" style="width: 650px; object-fit: fill">
+
+<!-- .element: style="position: absolute; left: 0%; top: 22%; height: undefined%; width: 26.041666666666668%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+1. *`$\large z \leftrightarrow y$` is removed and `$\large \sigma'_{zy} = \sigma_{zy} - \epsilon_{zy}$`*
+
+1. *`$\forall c\in Ch(z), c\neq y$`, the bidirected edges `$\large c \leftrightarrow y$` are added if they do not exist, and `$\large\epsilon'_{cy} = \epsilon_{cy}+\lambda_{cy}\cdot\epsilon_{xy}$`*
+
+<!-- .element: style="position: absolute; left: 60%; top: 22%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 135753.png" alt="" style="width: 1200px; object-fit: fill">
+
+<!-- .element: style="position: absolute; left: 0%; top: 55%; height: undefined%; width: 49.47916666666667%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+3. *`$\forall y\in De(x), y\neq x$`, if there is an edge on any directed path from `$\large x$` to `$\large y$` that is not in D, then `$\large y$` is removed from G'. For the remaining `$\large y$`, `$\large \sigma'_{zy} = \sigma_{zy} - \epsilon_{zx}\cdot\delta_{xy}$`, where `$\delta_{xy}$` is the sum of all directed paths from `$\large x$` to `$\large y$`*
+
+<!-- .element: style="position: absolute; left: 60%; top: 56%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### A graph-based constrained identification algorithm 
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 85%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+- Before to introduce the ***graph-based constrained identification algorithm***, we have to recall that the ***PUSHFORWARD*** theorem allow us to determine `$\large\theta$`-identifiability:
+	
+	- when `$\large\theta$` is an element of the `$\large\mathcal{E}$` covariance matrix
+	- it ***answers*** the question "is `$\large ES(\theta)$` identifiable?"
+
+<!-- .element: class="fragment fade-right" -->
+</br>
+
+- We still need some method that make it possible to ***identify casual estimands*** (i.e. the elements of the `$\large\Lambda$` matrix) in a linear SCM setting:
+	
+	- this is done using the ***QID algorithm***
+
+<!-- .element: class="fragment fade-right" -->
+</br>
+
+- Observations:
+	- QID is ***not complete*** but ***polynomial in time***
+	- it actually ***identifies*** `$\large ES(\theta)$` when `$\large\theta$` is an element of `$\large\Lambda$`
+
+<!-- .element: class="fragment fade-right" -->
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### The CID algorithm
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 172118.png" alt="" style="object-fit: scale-down">
+
+<!-- .element: style="position: absolute; left: 5%; top: 25%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+Iteratively:
+<!-- .element: style="position: absolute; left: 55%; top: 35%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+1. apply the ***PUSHFORWARD*** to reduce the identification of `$\large ES(\theta),\,\theta\in\mathcal{E}$` to the identification of `$\large ES(\theta),\,\theta\in\Lambda$`
+
+<!-- .element: style="position: absolute; left: 55%; top: 45%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+2. apply the ***QID*** to actually identify `$\large ES(\theta),\,\theta\in\Lambda$`
+
+<!-- .element: style="position: absolute; left: 55%; top: 60%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
+<div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
+
+### Final example and remarks
+<!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 55%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
+
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 172714.png" alt="" style="object-fit: scale-down">
+
+<!-- .element: style="position: absolute; left: 5%; top: 25%; height: undefined%; width: 44.27083333333333%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 172714 1.png" alt="" style="object-fit: scale-down">
+
+<!-- .element: style="position: absolute; left: 5%; top: 70%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 174307.png" alt="" style="object-fit: scale-down">
+
+<!-- .element: style="position: absolute; left: 51%; top: 25%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+<img src="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/Screenshot 2023-02-20 174307 1.png" alt="" style="object-fit: scale-down">
+
+<!-- .element: style="position: absolute; left: 65%; top: 25%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
+
+
+
+
+Sensitivity Analysis of Linear Structural Causal Models   
+
+<!-- .element: class="footer center-left" -->
+
+February 2023
+
+<!-- .element: class="footer center" -->
+
+Marco Scatassi
+
+<!-- .element: class="footer center-right" -->
+</div></script></section><section  data-markdown><script type="text/template"><!-- .slide: class="drop" data-background-image="Data Science/Casual Network/Sensitivity Analysis of Linear Structural Casual Model/Attachments/25101.jpg" -->
 <div class="" style="position: absolute; left: 0px; top: 0px; height: 1200px; width: 1920px; min-height: 1200px; display: flex; flex-direction: column; align-items: start; justify-content: center" absolute="true">
 
 ### Bibliography
@@ -253,7 +554,7 @@ Sensitivity Analysis of Linear Structural Causal Models
 
 <!-- .element: class="footer center-left" -->
 
-January 2023
+February 2023
 
 <!-- .element: class="footer center" -->
 
