@@ -309,7 +309,7 @@ Marco Scatassi
 
 </br>
 
-- So, given a fixed unobserved confounding effect `$\large\theta$`, we want to be able to compute: </br></br>`$\hspace{20em}\large B(\theta)=ES-ES(\theta)$`
+- So, given a fixed unobserved confounding effect `$\large\theta$` and a causal quantity `$\large Q$`, we want to be able to compute a ***`$\large\theta$`-specific estimand (or sensitivity curve)***. That is any functional (`$\large ES(\theta)$`) of `$\large \Sigma$` and `$\large\theta$`, which identifies `$\large Q$`
 
 <!-- .element: class="fragment fade-right" -->
 
@@ -333,7 +333,7 @@ Marco Scatassi
 ### The PUSHFORWARD procedure
 <!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 65%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
-- We need a way to understand if an estimand `$\large ES(\theta)$` is identifiable, that is if `$\large ES$` is ***`$\large\theta$`-identifiable***
+- We need a way to understand if a causal quantity `$\large Q(\theta)$` is identifiable, that is if `$\large Q$` is ***`$\large\theta$`-identifiable***
 
 <!-- .element: class="fragment fade-right" -->
 
@@ -447,10 +447,10 @@ Marco Scatassi
 ### A graph-based constrained identification algorithm 
 <!-- .element: style="word-spacing: 0.1em; position: absolute; left: 0%; top: 0%; height: 30%; width: 85%; display: flex; flex-direction: column; align-items: start; justify-content: center" -->
 
-- Before to introduce the ***graph-based constrained identification algorithm***, we have to recall that the ***PUSHFORWARD*** theorem allow us to determine `$\large\theta$`-identifiability:
+- Before to introduce the ***graph-based constrained identification algorithm***, we have to recall that the ***PUSHFORWARD*** theorem allow us to determine `$\large\theta$`-identifiability of a causal quantity `$\large Q$`:
 	
-	- when `$\large\theta$` is an element of the `$\large\mathcal{E}$` covariance matrix
-	- it ***answers*** the question "is `$\large ES(\theta)$` identifiable?"
+	- in particular, when `$\large\theta$` is an element of the `$\large\mathcal{E}$` covariance matrix
+	- it ***answers*** the question "is `$\large Q$` `$\large\theta$`-identifiable?"
 
 <!-- .element: class="fragment fade-right" -->
 </br>
@@ -464,7 +464,7 @@ Marco Scatassi
 
 - Observations:
 	- QID is ***not complete*** but ***polynomial in time***
-	- it actually ***identifies*** `$\large ES(\theta)$` when `$\large\theta$` is an element of `$\large\Lambda$`
+	- it actually `$\large\theta$`-***identifies*** `$\large Q$` when `$\large\theta$` is an element of `$\large\Lambda$`
 
 <!-- .element: class="fragment fade-right" -->
 
@@ -494,11 +494,11 @@ Marco Scatassi
 Iteratively:
 <!-- .element: style="position: absolute; left: 55%; top: 35%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
 
-1. apply the ***PUSHFORWARD*** to reduce the identification of `$\large ES(\theta),\,\theta\in\mathcal{E}$` to the identification of `$\large ES(\theta),\,\theta\in\Lambda$`
+1. apply the ***PUSHFORWARD*** to reduce the `$\large\theta$`-identification of `$\large Q,\,\theta\in\mathcal{E}$` to the `$\large\theta$`-identification of `$\large Q,\,\theta\in\Lambda$`
 
 <!-- .element: style="position: absolute; left: 55%; top: 45%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
 
-2. apply the ***QID*** to actually identify `$\large ES(\theta),\,\theta\in\Lambda$`
+2. apply the ***QID*** to actually `$\large\theta$`-identify `$\large Q,\,\theta\in\Lambda$`
 
 <!-- .element: style="position: absolute; left: 55%; top: 60%; height: undefined%; width: undefined%; display: flex; flex-direction: column; align-items: start; justify-content: center" class="fragment fade-right" -->
 
