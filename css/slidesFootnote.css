@@ -2,23 +2,23 @@
 
 .footer.center-left {
 	  position: fixed;
-	  bottom: 0;
-	  left: 0;
+	  bottom: 0em;
+	  left: 0em;
 	  padding-left: 1%;
 	  font-size: 0.6em;
 }
 
 .footer.center {
 	  position: fixed;
-	  bottom: 0;
+	  bottom: 0em;
 	  left: 50%;
 	  font-size: 0.6em;
 }
 
 .footer.center-right {
 	  position: fixed;
-	  bottom: 0;
-	  right: 0;
+	  bottom: 0em;
+	  right: 0em;
 	  border-top: 3px solid silver;
 	  padding-top: 0.5%;
 	  padding-inline: 90% 1%;
