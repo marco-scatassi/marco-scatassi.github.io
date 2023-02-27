@@ -173,13 +173,34 @@ body, html {
 
 
 <!-- Modal for full size images on click-->
-<div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
-  <span class="w3-button w3-large w3-black w3-display-topright" title="Close Modal Image"><i class="fa fa-remove"></i></span>
-  <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-    <img id="img01" class="w3-image">
-    <p id="caption" class="w3-opacity w3-large"></p>
+<div id="project" onclick="this.style.display='none'">
+  <div class="w3-top">
+    <div class="w3-bar w3-card w3-animate-top w3-black" id="myNavbar">
+      <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+        <i class="fa fa-bars"></i>
+      </a>
+      <a href="#home" class="w3-bar-item w3-text-white w3-button">HOME</a>
+      <a href="#about" class="w3-bar-item w3-text-white w3-button w3-hide-small"><i class="fa fa-user"></i> ABOUT</a>
+      <a href="#portfolio" class="w3-bar-item w3-text-white w3-button w3-hide-small"><i class="fa fa-th"></i> PORTFOLIO</a>
+      <a href="#contact" class="w3-bar-item w3-text-white w3-button w3-hide-small"><i class="fa fa-envelope"></i> CONTACT</a>
+      <a href="#" class="w3-bar-item w3-text-white w3-button w3-hide-small w3-right w3-hover-red">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  
+    <!-- Navbar on small screens -->
+    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium">
+      <a href="#about" class="w3-bar-item w3-text-white w3-button" onclick="toggleFunction()">ABOUT</a>
+      <a href="#portfolio" class="w3-bar-item w3-text-white w3-button" onclick="toggleFunction()">PORTFOLIO</a>
+      <a href="#contact" class="w3-bar-item w3-text-white w3-button" onclick="toggleFunction()">CONTACT</a>
+      <a href="#" class="w3-bar-item w3-text-white w3-button">SEARCH</a>
+    </div>
   </div>
+
+  <div w3-include-html="projects/causal-network.html"></div>
+  
 </div>
+
 
 <!-- Third Parallax Image with Portfolio Text -->
 <div class="bgimg-3 w3-display-container" id="contact_background">
@@ -224,7 +245,6 @@ body, html {
   </div>
 </div>
 
-<div w3-include-html="projects/causal-network.html"></div>
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-64">
@@ -245,6 +265,8 @@ body, html {
     <a target="_blank" href="https://icons8.com/icon/xSkewUSqtErH/pandas">Pandas</a> icons by <a target="_blank" href="https://icons8.com">Icons8</a></p>
 </footer>
  
+
+
 <script>
 function includeHTML() {
   var z, i, elmnt, file, xhttp;
@@ -285,9 +307,9 @@ function onClick(element) {
   document.getElementById("portfolio").style.display = "none";
   document.getElementById("contact_background").style.display = "none";
   document.getElementById("contact").style.display = "none";
+  document.getElementById("project").style.display = "block";
   includeHTML()
-  // document.getElementById("img01").src = element.src;
-  // document.getElementById("modal01").style.display = "block";
+
   // var captionText = document.getElementById("caption");
   // captionText.innerHTML = element.alt;
 }
