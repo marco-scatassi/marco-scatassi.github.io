@@ -325,10 +325,10 @@ function onClick(element) {
   for(i=0; i<projectsDiv.length; i++) {
     var subDiv = projectsDiv[i].id
     if (subDiv == id) {
-      projectsDiv.getElementById(subDiv.slice(4,)).style.display = "block"
+      projectsDiv.getElementById(subDiv).style.display = "block"
     }
     else if (subDiv) {
-      projectsDiv.getElementById(subDiv.slice(4,)).style.display = "none"
+      projectsDiv.getElementById(subDiv).style.display = "none"
     }
   }
 
