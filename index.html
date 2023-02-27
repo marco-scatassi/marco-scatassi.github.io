@@ -275,6 +275,10 @@ function includeHTML() {
 }
 // Modal Image Gallery
 function onClick(element) {
+
+  var navbar = document.getElementById("myNavbar");
+  navbar.className = "w3-bar" + " w3-card" + " w3-animate-top" + " w3-black";
+
   document.getElementById("home").style.display = "none";
   document.getElementById("about").style.display = "none";
   document.getElementById("portfolio_background").style.display = "none";
