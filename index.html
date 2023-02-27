@@ -316,7 +316,7 @@ function onClick(element) {
   document.getElementById("contact").style.display = "none";
   document.getElementById("project").style.display = "block";
 
-  var id = element.getAttribute("id").slice(-4,)
+  var id = element.getAttribute("id").slice(0,-4)
 
   includeHTML(id)
 
