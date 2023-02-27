@@ -314,11 +314,23 @@ function onClick(element) {
   document.getElementById("portfolio").style.display = "none";
   document.getElementById("contact_background").style.display = "none";
   document.getElementById("contact").style.display = "none";
+
   document.getElementById("project").style.display = "block";
 
+  includeHTML(id)
+  
+  var projectsDiv = document.getElementById("project").childNodes
   var id = element.getAttribute("id").slice(0,-4)
 
-  includeHTML(id)
+  for(i=0; i<projectsDiv.length; i++) {
+    var subDiv = projectsDiv[i]
+    if (subDiv.getAttribute('id') == id) {
+      subDiv.style.display = "block"
+    }
+    else {
+      subDiv.style.display = "none"
+    }
+  }
 
   // var captionText = document.getElementById("caption");
   // captionText.innerHTML = element.alt;
