@@ -324,11 +324,11 @@ function onClick(element) {
 
   for(i=0; i<projectsDiv.length; i++) {
     var subDiv = projectsDiv[i]
-    if (subDiv.getAttribute('id') == id) {
-      subDiv.style.display = "block"
+    if (subDiv == "div#"+id) {
+      projectsDiv.getElementById(subDiv.slice(4,)).style.display = "block"
     }
     else {
-      subDiv.style.display = "none"
+      projectsDiv.getElementById(subDiv.slice(4,)).style.display = "none"
     }
   }
 
