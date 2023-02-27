@@ -119,7 +119,7 @@ body, html {
 
 
 <!-- Second Parallax Image with Portfolio Text -->
-<div class="bgimg-2 w3-display-container">
+<div class="bgimg-2 w3-display-container" id="portfolio_background">
   <div class="w3-display-middle">
     <span class="w3-padding-large w3-xlarge w3-black w3-wide">PORTFOLIO</span>
   </div>
@@ -182,7 +182,7 @@ body, html {
 </div>
 
 <!-- Third Parallax Image with Portfolio Text -->
-<div class="bgimg-3 w3-display-container">
+<div class="bgimg-3 w3-display-container" id="contact_background">
   <div class="w3-display-middle">
      <span class="w3-padding-large w3-xlarge w3-black w3-wide">CONTACT</span>
   </div>
@@ -278,7 +278,9 @@ function onClick(element) {
   document.getElementById("myNavbar").style.display = "none";
   document.getElementById("home").style.display = "none";
   document.getElementById("about").style.display = "none";
+  document.getElementById("portfolio_background").style.display = "none";
   document.getElementById("portfolio").style.display = "none";
+  document.getElementById("contact_background").style.display = "none";
   document.getElementById("contact").style.display = "none";
   includeHTML()
   // document.getElementById("img01").src = element.src;
