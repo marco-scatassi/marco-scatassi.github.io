@@ -1,1 +1,26 @@
-<h2>deep</h2>
+<div class="w3-content w3-container w3-padding-64" id="about">
+    <h2 class="w3-center">WM-811K-WaferMap failure detection a deep-learning-approach</h2>
+    <p>
+        Beeing able to identify specific class defects in product, such as wafermap, can help in understand what's wrong 
+        in the production chain. So that it became possible to take necessary actions faster and in a targeted manner. 
+        In this <a href="https://github.com/marco-scatassi/WM-811K-WaferMap-A-deep-learning-approach" target="_blank">repo</a>, 
+        you can find the step followed, togheter with my colleagues 
+        <a href="https://www.linkedin.com/in/greta-gravina-742925189/">Greta Gravina</a> and 
+        <a href="https://www.linkedin.com/in/niccol%C3%B2-puccinelli-b1ba2a232/"> Niccolò Puccinelli</a>, 
+        in order to developed a simple CNN (Convolutional Neural Network), from the scratch, to face the problem previously descripted. 
+        In particular, the problem consists in identify the type of defect of wafermaps among 9:
+    <p>
+
+    <p class="w3-center"> Center - Donut - Edge-Loc - Edge-Ring - Loc - Near-full - Random - Scratch - none </p>
+    
+    <p>
+        Due to the extreme imbalance of the dataset, both among failure classes and between the non failure class (none) and the failure classes, 
+        we have focused on the generation of synthetic data that together with classical augmentation techniques have lead in improve model performance. 
+        In particular, the final model shows more uniform performance across classes than the initial one as well as a greater mean percentual of correct classified images.
+    </p>
+
+    <p>Below, it's possible to play a little with one of the tested models in order to see how it works. I hope you will enjoy it! 😄</p><br>
+
+    <iframe src="https://marco-scatassi-wm-811k-wafermap-a-deep-lear-model-deploy-vy0bqn.streamlit.app/" width="100%" height="500px" style="border: hidden;"></iframe>
+
+</div>
