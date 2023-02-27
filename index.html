@@ -274,16 +274,15 @@ body, html {
 
 
 <script>
-function includeHTML(id) {
+function includeHTML() {
   var z, i, elmnt, file, xhttp;
   /* Loop through a collection of all HTML elements: */
   z = document.getElementsByTagName("*");
   for (i = 0; i < z.length; i++) {
     elmnt = z[i];
     /*search for elements with a certain atrribute:*/
-    id_ = elmnt.getAttribute("id")
     file = elmnt.getAttribute("w3-include-html");
-    if (file && id_ == id) {
+    if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
       xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -317,7 +316,7 @@ function onClick(element) {
 
   document.getElementById("project").style.display = "block";
 
-  includeHTML(id)
+  includeHTML()
 
   var projectsDiv = document.getElementById("projects").childNodes
   var id = element.getAttribute("id").slice(0,-4)
