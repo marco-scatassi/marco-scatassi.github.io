@@ -18,5 +18,58 @@
     <h2 id="algorithm-1-greedy-search">Algorithm 1: Greedy Search</h2>
     <p>This algorithm belongs to the class of the so-called <strong><em>score-based</em></strong> algorithm. This means that it follows a certain <strong><em>methodology to explore</em></strong> the space of possible DAG using a provided <strong><em>score function</em></strong> to evaluate candidate DAGs. </p>
     <p>In the following, the portion of Algorithm 1 implemented is described.</p>
+
+    <hr>
+    <p><strong>Alghorithm 1</strong> Greedy Search </p>
+    <hr>
+    <p><strong>Input</strong>: a data set D from X, an initial DAG G (usually the empty DAG),
+    a score function Score(G,D).</p>
+    <p><strong>Output</strong>: the DAG G_{max} that maximises Score(G,D).</p>
+    <ol>
+    <li>Compute the score of G, S_G = Score(G,D).</li>
+    <li>Set S_{max} = S<em>G and G</em>{max} = G.</li>
+    <li><strong>Hill climbing</strong>: repeat as long as S_{max} increases:<ol>
+    <li>for every possible arc addition, deletion or reversal in G_{max} resulting in a DAG:<ol>
+    <li>compute the score of the modified DAG G^∗, S_{G^∗} = Score(G^∗,D):</li>
+    <li>if S<em>{G^∗} &gt; S</em>{max} and S_{G^∗} &gt; S_G, set G = G^∗ and S<em>G = S</em>{G^∗} .</li>
+    </ol>
+    </li>
+    <li>if S<em>G &gt; S</em>{max}, set S_{max} = S<em>G and G</em>{max} = G.</li>
+    </ol>
+    </li>
+    </ol>
+    <hr>
+    <h3 id="input">Input</h3>
+    <p>The inputs needed by the algorithm are:</p>
+    <ol>
+    <li>an initial DAG G, that is the DAG from which the search will start</li>
+    <li>a dataset D and a score function Score(G, D); these two elements are necessary to evaluate a DAG. Indeed, the score function provides a mathematical expression that can be used to compare a candidate DAG G with collected data D. If the DAG has a high score, it is likely to <strong>correctly represent</strong> the structure of the causal model that has generated the data.</li>
+    </ol>
+    <p>The score function used in this notebook is the log-likelihood (LL) and it will be described in a specific section.</p>
+    <h3 id="step-1-step-2">Step 1 &amp; Step 2</h3>
+    <p>The first and second steps are simply initialization steps, and they consist in:</p>
+    <ol>
+    <li>evaluate the initial DAG G </li>
+    <li>initialize the value of the variables S<em>{max} and G</em>{max}. At the end of the procedure, this quantity will correspond to the optimal DAG and its value with respect to the chosen score function</li>
+    </ol>
+    <h3 id="step-3">Step 3</h3>
+    <p>A brief description of <strong><em>hill climbing</em></strong>. The <strong><em>hill climbing</em></strong> is an optimization technique that follows an iterative procedure. The method produces at each iteration a set of candidate solutions modifying the previous ones in some way. Then it updates the current solution only if at least one of the new candidates has a better score than the actual solution, otherwise, it stops.</p>
+    <p>The <strong><em>hill climnbing</em></strong> technique belongs to the so-called <strong><em>local search</em></strong> methods. Indeed, at each iteration, it explores new possible solutions obtained using a local move starting from the actual one. </p>
+    <p>Furthermore, because it updates the current solutions only if a new, better solution is found, this method is only able to reach the global optimal in <strong><em>convex optimization</em></strong> problems. Otherwise, it could get stacked in a <strong><em>local maxima or minima</em></strong>.</p>
+    <p>In <strong><em>Algorithm 1</em></strong> local moves correspond to:</p>
+    <ul>
+    <li>addition</li>
+    <li>deletion</li>
+    <li>reversal</li>
+    </ul>
+    <p>the step:</p>
+    <ul>
+    <li>1.1. compute a new candidate DAG applying one of the previous moves</li>
+    <li>1.2. verify if the new DAG is better than the best DAG obtained up to this moment and update the variables if necessary </li>
+    </ul>
+    <h3 id="output">Output</h3>
+    <p>The DAG that maximises the score function, which is a local optimal solution or the global optimal one. </p>
+
+    
     <p> <a href="https://github.com/marco-scatassi/Casual-Network-Project" target="_blank" class="w3-hover-text-green"><b>Here</b></a>, you can find the related <b>GitHub</b> folder with more details</p>
 </div>
