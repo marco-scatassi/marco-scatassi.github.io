@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musica | Marco Scatassi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stoneBg: '#f7f6f0',
+                        cardBg: '#ffffff',
+                        earthText: '#2d3748',
+                        accentTerracotta: '#bc6c25'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stoneBg text-earthText font-sans antialiased">
+    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="../personal.html" class="text-sm font-semibold text-accentTerracotta hover:underline flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left"></i> Spazio Personale
+            </a>
+            <span class="font-bold text-stone-900">Musica & Chitarra</span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-16 space-y-8">
+        <div class="space-y-4">
+            <h1 class="text-4xl font-extrabold text-stone-900">Chitarra & Canzoni</h1>
+            <p class="text-stone-600 text-lg">Suonare la chitarra acustica è il mio modo per disconnettermi e condividere momenti autentici.</p>
+        </div>
+
+        <div class="bg-cardBg p-8 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+            <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                <i class="fa-solid fa-video text-accentTerracotta"></i> Video in Evidenza
+            </h2>
+            <div class="bg-stone-50 border border-stone-200 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div>
+                    <h3 class="font-bold text-stone-900">Esibizione per strada con un amico</h3>
+                    <p class="text-sm text-stone-600">Un pezzo acustico improvvisato per strada.</p>
+                </div>
+                <a href="https://www.instagram.com/reel/DMLa-QJIqcX/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==" target="_blank" class="px-5 py-3 rounded-xl bg-accentTerracotta text-white font-medium hover:bg-accentTerracotta/90 transition flex items-center gap-2 text-sm shrink-0">
+                    <i class="fa-brands fa-instagram text-lg"></i> Guarda su Instagram
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
