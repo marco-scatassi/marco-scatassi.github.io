@@ -37,66 +37,60 @@
     <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
         <div class="space-y-3 text-center max-w-2xl mx-auto">
             <h1 class="text-4xl font-extrabold text-stone-900">Photobook Naturale</h1>
-            <p class="text-stone-600 text-lg">Racconti visivi di sentieri, boschi e cime montuose.</p>
+            <p class="text-stone-600 text-lg">Racconti visivi di sentieri, boschi e grandi spazi aperti.</p>
         </div>
 
-        <!-- Griglia Fotobook (Modificabile ed Estendibile) -->
+        <!-- Griglia Album -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             
-            <!-- Foto 1 -->
-            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature1.jpg', 'Sentiero nei boschi')">
-                <img src="images/nature1.jpg" alt="Sentiero nei boschi" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                    <p class="text-white text-sm font-medium">Sentiero nei boschi</p>
+            <!-- Album: Heart of the Rockies -->
+            <a href="../album.html?id=heart-of-the-rockies" class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 block">
+                <img src="../images/heart-of-the-rockies/cover.jpg" alt="Heart of the Rockies" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent flex flex-col justify-end p-6">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-accentSage bg-white/90 px-2.5 py-1 rounded-md w-max mb-2">Album</span>
+                    <h2 class="text-white text-xl font-bold">Heart of the Rockies</h2>
+                    <p class="text-stone-300 text-xs mt-1">Esplora la galleria completa ➔</p>
                 </div>
-            </div>
+            </a>
 
-            <!-- Foto 2 -->
-            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature2.jpg', 'Panorama Alpino')">
-                <img src="images/nature2.jpg" alt="Panorama Alpino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                    <p class="text-white text-sm font-medium">Panorama Alpino</p>
+            <!-- Album di esempio 2: Montagna -->
+            <a href="../album.html?id=montagna" class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 block">
+                <img src="../images/montagna/cover.jpg" alt="Montagna & Cime" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent flex flex-col justify-end p-6">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-accentSage bg-white/90 px-2.5 py-1 rounded-md w-max mb-2">Album</span>
+                    <h2 class="text-white text-xl font-bold">Montagna & Cime</h2>
+                    <p class="text-stone-300 text-xs mt-1">Esplora la galleria completa ➔</p>
                 </div>
-            </div>
+            </a>
 
-            <!-- Foto 3 -->
-            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature3.jpg', 'Silenzio e riflessi')">
-                <img src="images/nature3.jpg" alt="Silenzio e riflessi" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                    <p class="text-white text-sm font-medium">Silenzio e riflessi</p>
+            <!-- Album di esempio 3: Boschi -->
+            <a href="../album.html?id=boschi" class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 block">
+                <img src="../images/boschi/cover.jpg" alt="Boschi & Sentieri" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent flex flex-col justify-end p-6">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-accentSage bg-white/90 px-2.5 py-1 rounded-md w-max mb-2">Album</span>
+                    <h2 class="text-white text-xl font-bold">Boschi & Sentieri</h2>
+                    <p class="text-stone-300 text-xs mt-1">Esplora la galleria completa ➔</p>
                 </div>
-            </div>
+            </a>
 
         </div>
 
-        <div class="bg-cardBg border border-stone-200 rounded-2xl p-6 text-center text-sm text-stone-500">
-            💡 <strong>Come aggiungere foto:</strong> Salva i tuoi scatti nella cartella <code>images/</code> del tuo repository e duplica nel codice sopra un blocco immagine modificando il percorso e la didascalia. *(Nota: se il file locale non è ancora caricato, la pagina mostrerà un'immagine dimostrativa di riserva).*
+        <div class="bg-cardBg border border-stone-200 rounded-2xl p-6 text-center text-sm text-stone-500 space-y-1">
+            <p>💡 <strong>Come funziona:</strong> Cliccando su un album si aprirà la pagina dinamica che caricherà in automatico tutte le immagini presenti nella rispettiva cartella su GitHub (es. <code>images/heart-of-the-rockies/</code>).</p>
         </div>
     </main>
 
-    <!-- Lightbox Modale per ingrandire la foto -->
-    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closeLightbox()">
-        <div class="relative max-w-4xl w-full bg-stone-900 rounded-3xl overflow-hidden shadow-2xl p-2" onclick="event.stopPropagation()">
-            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-800/80 text-white flex items-center justify-center hover:bg-stone-700 transition">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <img id="lightbox-img" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl">
-            <p id="lightbox-caption" class="text-center text-stone-300 py-3 text-sm font-medium"></p>
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <p class="text-stone-200 font-bold text-lg">Marco Scatassi</p>
+                <p class="text-sm mt-1">Spazio personale & passioni</p>
+            </div>
+            <a href="../personal.html" class="text-sm text-stone-300 hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
+            </a>
         </div>
-    </div>
-
-    <script>
-        function openLightbox(src, caption) {
-            const modal = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            const cap = document.getElementById('lightbox-caption');
-            img.src = src;
-            cap.textContent = caption;
-            modal.classList.remove('hidden');
-        }
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.add('hidden');
-        }
-    </script>
+    </footer>
 </body>
 </html>
