@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natura, Musica & Diario | Marco Scatassi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stoneBg: '#f7f6f0',
+                        cardBg: '#ffffff',
+                        earthText: '#2d3748',
+                        accentSage: '#4a7c59',
+                        accentTerracotta: '#bc6c25',
+                        softBlue: '#3d5a80'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stoneBg text-earthText font-sans antialiased selection:bg-accentSage selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="text-xl font-bold tracking-tight flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-accentSage"></span>
+                Marco Scatassi
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="index.html" class="hover:text-accentSage transition flex items-center gap-1.5"><i class="fa-solid fa-arrow-left"></i> Torna al Portfolio</a>
+                <a href="#music" class="hover:text-accentSage transition">Musica</a>
+                <a href="#nature" class="hover:text-accentSage transition">Natura</a>
+                <a href="#journal" class="hover:text-accentSage transition">Diario</a>
+            </nav>
+            <a href="index.html" class="md:hidden text-sm font-semibold text-accentSage flex items-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> Portfolio
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero / Intro -->
+    <section class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accentSage/10 text-xs font-semibold uppercase tracking-wider text-accentSage">
+            <i class="fa-solid fa-leaf"></i> Spazio Personale
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-stone-900">
+            Natura, Chitarra e Riflessioni.
+        </h1>
+        <p class="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
+            Un angolo dedicato alle passioni che coltivo fuori dallo schermo: la quiete della natura, le note della chitarra acustica e appunti personali.
+        </p>
+    </section>
+
+    <!-- Music Section (Chitarra) -->
+    <section id="music" class="max-w-4xl mx-auto px-6 py-12">
+        <div class="bg-cardBg p-8 md:p-12 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="p-3 rounded-2xl bg-accentTerracotta/10 text-accentTerracotta text-xl"><i class="fa-solid fa-guitar"></i></span>
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">Musica & Chitarra</h2>
+                    <p class="text-sm text-stone-600">Suonare la chitarra è per me un modo autentico di staccare la spina.</p>
+                </div>
+            </div>
+            <div class="bg-stone-50 border border-stone-200 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 text-center md:text-left">
+                    <h3 class="font-bold text-stone-900">Chitarra in strada con un amico</h3>
+                    <p class="text-sm text-stone-600">Un momento di musica spontanea all'aperto.</p>
+                </div>
+                <a href="https://www.instagram.com/reel/DMLa-QJIqcX/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==" target="_blank" class="px-5 py-3 rounded-xl bg-accentTerracotta text-white font-medium hover:bg-accentTerracotta/90 transition flex items-center gap-2 text-sm shadow-sm">
+                    <i class="fa-brands fa-instagram text-lg"></i> Ascolta il Reel su Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nature Section -->
+    <section id="nature" class="max-w-4xl mx-auto px-6 py-12">
+        <div class="bg-cardBg p-8 md:p-12 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="p-3 rounded-2xl bg-accentSage/10 text-accentSage text-xl"><i class="fa-solid fa-tree"></i></span>
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">Natura & Esplorazione</h2>
+                    <p class="text-sm text-stone-600">Camminare nei boschi e respirare aria pulita.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div class="h-48 rounded-2xl bg-stone-200 flex items-end p-4 relative overflow-hidden">
+                    <span class="text-white text-sm font-medium bg-stone-900/40 px-3 py-1 rounded-lg backdrop-blur-sm z-10">Montagna & Sentieri</span>
+                </div>
+                <div class="h-48 rounded-2xl bg-stone-200 flex items-end p-4 relative overflow-hidden">
+                    <span class="text-white text-sm font-medium bg-stone-900/40 px-3 py-1 rounded-lg backdrop-blur-sm z-10">Silenzio & Paesaggi</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journal Section -->
+    <section id="journal" class="max-w-4xl mx-auto px-6 py-12 mb-20">
+        <div class="bg-cardBg p-8 md:p-12 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="p-3 rounded-2xl bg-softBlue/10 text-softBlue text-xl"><i class="fa-solid fa-pen-nib"></i></span>
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">Diario & Note</h2>
+                    <p class="text-sm text-stone-600">Riflessioni personali e pensieri sparsi.</p>
+                </div>
+            </div>
+            <div class="border border-dashed border-stone-300 rounded-2xl p-12 text-center space-y-3">
+                <i class="fa-solid fa-feather text-3xl text-stone-400"></i>
+                <h3 class="font-bold text-stone-800">Nessun articolo pubblicato</h3>
+                <p class="text-sm text-stone-600 max-w-md mx-auto">Questo spazio è predisposto per accogliere i tuoi futuri scritti e pensieri personali.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12">
+        <div class="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <p class="text-stone-200 font-bold text-lg">Marco Scatassi</p>
+                <p class="text-sm mt-1">Sito personale & passioni</p>
+            </div>
+            <a href="index.html" class="text-sm text-stone-300 hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Torna al Portfolio Professionale
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
