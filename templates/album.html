@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Album | Marco Scatassi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stoneBg: '#f7f6f0',
+                        cardBg: '#ffffff',
+                        earthText: '#2d3748',
+                        accentSage: '#4a7c59'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stoneBg text-earthText font-sans antialiased">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
+            </a>
+            <span id="nav-album-name" class="font-bold text-stone-900">Caricamento album...</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
+        <div class="space-y-3 text-center max-w-2xl mx-auto">
+            <h1 id="album-title" class="text-4xl font-extrabold text-stone-900">Album</h1>
+            <p id="album-desc" class="text-stone-600 text-lg">Raccolta di scatti fotografici.</p>
+        </div>
+
+        <!-- Griglia Foto Dinamica -->
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Le foto verranno inserite qui automaticamente via JavaScript -->
+        </div>
+
+        <div id="empty-notice" class="hidden bg-cardBg border border-stone-200 rounded-2xl p-12 text-center text-stone-500 space-y-2">
+            <i class="fa-solid fa-images text-3xl text-stone-400"></i>
+            <p class="font-medium">Nessuna foto trovata in questo album o cartella vuota.</p>
+        </div>
+    </main>
+
+    <!-- Lightbox Modale -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-4xl w-full bg-stone-900 rounded-3xl overflow-hidden shadow-2xl p-2" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-800/80 text-white flex items-center justify-center hover:bg-stone-700 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl">
+            <p id="lightbox-caption" class="text-center text-stone-300 py-3 text-sm font-medium"></p>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAZIONE DEGLI ALBUM (Aggiungi qui le tue cartelle e le relative foto)
+        const albumsData = {
+            "montagna": {
+                title: "Montagna & Cime",
+                description: "Escursioni in quota e panorami alpini.",
+                photos: [
+                    { src: "images/montagna/foto1.jpg", caption: "Vista dalla vetta" },
+                    { src: "images/montagna/foto2.jpg", caption: "Lungo il sentiero roccioso" }
+                ]
+            },
+            "boschi": {
+                title: "Boschi & Sentieri",
+                description: "Passeggiate nel verde e tranquillità degli alberi.",
+                photos: [
+                    { src: "images/boschi/foto1.jpg", caption: "Luce tra gli alberi" },
+                    { src: "images/boschi/foto2.jpg", caption: "Ruscelli di montagna" }
+                ]
+            }
+        };
+
+        // Legge il parametro 'id' dall'URL (es. album.html?id=montagna)
+        const urlParams = new URLSearchParams(window.location.search);
+        const albumId = urlParams.get('id');
+        const album = albumsData[albumId];
+
+        const grid = document.getElementById('gallery-grid');
+        const emptyNotice = document.getElementById('empty-notice');
+
+        if (album) {
+            document.getElementById('page-title').textContent = album.title + " | Marco Scatassi";
+            document.getElementById('nav-album-name').textContent = album.title;
+            document.getElementById('album-title').textContent = album.title;
+            document.getElementById('album-desc').textContent = album.description;
+
+            if (album.photos && album.photos.length > 0) {
+                album.photos.forEach(photo => {
+                    const item = document.createElement('div');
+                    item.className = "group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer";
+                    item.onclick = () => openLightbox(photo.src, photo.caption);
+                    
+                    item.innerHTML = `
+                        <img src="${photo.src}" alt="${photo.caption}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <p class="text-white text-sm font-medium">${photo.caption}</p>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+            } else {
+                emptyNotice.classList.remove('hidden');
+            }
+        } else {
+            document.getElementById('page-title').textContent = "Album non trovato";
+            document.getElementById('nav-album-name').textContent = "Errore";
+            document.getElementById('album-title').textContent = "Album non trovato";
+            document.getElementById('album-desc').textContent = "L'album richiesto non esiste o è stato rimosso.";
+            emptyNotice.classList.remove('hidden');
+        }
+
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-caption').textContent = caption;
+            modal.classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
