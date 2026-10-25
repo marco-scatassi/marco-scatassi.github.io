@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natura | Marco Scatassi</title>
+    <title>Natura & Fotobook | Marco Scatassi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,29 +22,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-stoneBg text-earthText font-sans antialiased">
+
+    <!-- Header -->
     <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="../personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
                 <i class="fa-solid fa-arrow-left"></i> Spazio Personale
             </a>
-            <span class="font-bold text-stone-900">Natura & Sentieri</span>
+            <span class="font-bold text-stone-900">Natura & Fotobook</span>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 py-16 space-y-8">
-        <div class="space-y-4">
-            <h1 class="text-4xl font-extrabold text-stone-900">Trekking & Aria Aperta</h1>
-            <p class="text-stone-600 text-lg">Passeggiate nei boschi, sentieri di montagna e la tranquillità dei paesaggi naturali.</p>
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
+        <div class="space-y-3 text-center max-w-2xl mx-auto">
+            <h1 class="text-4xl font-extrabold text-stone-900">Photobook Naturale</h1>
+            <p class="text-stone-600 text-lg">Racconti visivi di sentieri, boschi e cime montuose.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="h-64 rounded-3xl bg-stone-200 flex items-end p-6 border border-stone-300">
-                <span class="text-stone-800 text-sm font-semibold bg-white/80 px-4 py-2 rounded-xl backdrop-blur-sm shadow-sm">Montagna e Paesaggi</span>
+        <!-- Griglia Fotobook (Modificabile ed Estendibile) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            
+            <!-- Foto 1 -->
+            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature1.jpg', 'Sentiero nei boschi')">
+                <img src="images/nature1.jpg" alt="Sentiero nei boschi" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                    <p class="text-white text-sm font-medium">Sentiero nei boschi</p>
+                </div>
             </div>
-            <div class="h-64 rounded-3xl bg-stone-200 flex items-end p-6 border border-stone-300">
-                <span class="text-stone-800 text-sm font-semibold bg-white/80 px-4 py-2 rounded-xl backdrop-blur-sm shadow-sm">Boschi e Tranquillità</span>
+
+            <!-- Foto 2 -->
+            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature2.jpg', 'Panorama Alpino')">
+                <img src="images/nature2.jpg" alt="Panorama Alpino" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                    <p class="text-white text-sm font-medium">Panorama Alpino</p>
+                </div>
             </div>
+
+            <!-- Foto 3 -->
+            <div class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer" onclick="openLightbox('images/nature3.jpg', 'Silenzio e riflessi')">
+                <img src="images/nature3.jpg" alt="Silenzio e riflessi" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                    <p class="text-white text-sm font-medium">Silenzio e riflessi</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-cardBg border border-stone-200 rounded-2xl p-6 text-center text-sm text-stone-500">
+            💡 <strong>Come aggiungere foto:</strong> Salva i tuoi scatti nella cartella <code>images/</code> del tuo repository e duplica nel codice sopra un blocco immagine modificando il percorso e la didascalia. *(Nota: se il file locale non è ancora caricato, la pagina mostrerà un'immagine dimostrativa di riserva).*
         </div>
     </main>
+
+    <!-- Lightbox Modale per ingrandire la foto -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-4xl w-full bg-stone-900 rounded-3xl overflow-hidden shadow-2xl p-2" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-800/80 text-white flex items-center justify-center hover:bg-stone-700 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl">
+            <p id="lightbox-caption" class="text-center text-stone-300 py-3 text-sm font-medium"></p>
+        </div>
+    </div>
+
+    <script>
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+            img.src = src;
+            cap.textContent = caption;
+            modal.classList.remove('hidden');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
