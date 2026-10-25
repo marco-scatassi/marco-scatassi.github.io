@@ -1,138 +1,33 @@
 <!DOCTYPE html>
-<html lang="it" class="scroll-smooth">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Album | Marco Scatassi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        stoneBg: '#f7f6f0',
-                        cardBg: '#ffffff',
-                        earthText: '#2d3748',
-                        accentSage: '#4a7c59'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Album Fotografico</title>
+    <link rel="stylesheet" href="style.css"> <!-- Assicurati che il percorso del CSS sia corretto -->
 </head>
-<body class="bg-stoneBg text-earthText font-sans antialiased">
+<body>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="../personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
-            </a>
-            <span id="nav-album-name" class="font-bold text-stone-900">Caricamento album...</span>
-        </div>
-    </header>
+    <main class="album-container">
+        <h1>Il mio Album</h1>
+        
+        <!-- Griglia Creativa per le Foto -->
+        <div class="photo-gallery">
+            <!-- Ripeti questo blocco per ogni foto -->
+            <div class="photo-card">
+                <img src="percorso/alla/tua/foto1.jpg" alt="Foto galleria" loading="lazy">
+            </div>
+            
+            <div class="photo-card">
+                <img src="percorso/alla/tua/foto2.jpg" alt="Foto galleria" loading="lazy">
+            </div>
 
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
-        <div class="space-y-3 text-center max-w-2xl mx-auto">
-            <h1 id="album-title" class="text-4xl font-extrabold text-stone-900 capitalize">Album</h1>
-            <p id="album-desc" class="text-stone-600 text-lg">Raccolta di scatti fotografici caricati su GitHub.</p>
-        </div>
-
-        <!-- Griglia Foto Automatica -->
-        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <!-- Le foto verranno inserite qui automaticamente -->
-        </div>
-
-        <div id="loading-notice" class="bg-cardBg border border-stone-200 rounded-2xl p-12 text-center text-stone-500 space-y-2">
-            <i class="fa-solid fa-spinner fa-spin text-3xl text-accentSage"></i>
-            <p class="font-medium">Caricamento delle foto da GitHub...</p>
-        </div>
-
-        <div id="empty-notice" class="hidden bg-cardBg border border-stone-200 rounded-2xl p-12 text-center text-stone-500 space-y-2">
-            <i class="fa-solid fa-images text-3xl text-stone-400"></i>
-            <p class="font-medium">Nessuna foto trovata in questa cartella.</p>
+            <div class="photo-card">
+                <img src="percorso/alla/tua/foto3.jpg" alt="Foto galleria" loading="lazy">
+            </div>
+            <!-- Fine blocco -->
         </div>
     </main>
 
-    <!-- Lightbox Modale -->
-    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closeLightbox()">
-        <div class="relative max-w-4xl w-full bg-stone-900 rounded-3xl overflow-hidden shadow-2xl p-2" onclick="event.stopPropagation()">
-            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-stone-800/80 text-white flex items-center justify-center hover:bg-stone-700 transition">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <img id="lightbox-img" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl">
-            <p id="lightbox-caption" class="text-center text-stone-300 py-3 text-sm font-medium"></p>
-        </div>
-    </div>
-
-    <script>
-        // Legge il parametro 'id' dall'URL (es. album.html?id=montagna)
-        const urlParams = new URLSearchParams(window.location.search);
-        const albumId = urlParams.get('id') || 'montagna';
-
-        // Pulisce e formatta il titolo dell'album (es. "panorami-alpinistici" -> "Panorami Alpinistici")
-        const formattedTitle = albumId.replace(/-/g, ' ');
-        document.getElementById('page-title').textContent = formattedTitle + " | Marco Scatassi";
-        document.getElementById('nav-album-name').textContent = formattedTitle;
-        document.getElementById('album-title').textContent = formattedTitle;
-
-        // Chiamata alle API di GitHub per leggere i file nella cartella images/<albumId>
-        const repoOwner = "marco-scatassi";
-        const repoName = "marco-scatassi.github.io";
-        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/images/${albumId}`;
-
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) throw new Error("Cartella non trovata");
-                return response.json();
-            })
-            .then(files => {
-                document.getElementById('loading-notice').classList.add('hidden');
-                const grid = document.getElementById('gallery-grid');
-                
-                // Filtra solo i file immagine (.jpg, .jpeg, .png, .webp)
-                const imageFiles = files.filter(file => file.type === 'file' && /\.(jpg|jpeg|png|webp)$/i.test(file.name));
-
-                if (imageFiles.length > 0) {
-                    imageFiles.forEach(file => {
-                        const item = document.createElement('div');
-                        item.className = "group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer";
-                        
-                        // Genera una didascalia pulita dal nome del file (es. "tramonto_vetta.jpg" -> "tramonto vetta")
-                        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
-
-                        item.onclick = () => openLightbox(file.download_url, cleanName);
-                        
-                        item.innerHTML = `
-                            <img src="${file.download_url}" alt="${cleanName}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                                <p class="text-white text-sm font-medium capitalize">${cleanName}</p>
-                            </div>
-                        `;
-                        grid.appendChild(item);
-                    });
-                } else {
-                    document.getElementById('empty-notice').classList.remove('hidden');
-                }
-            })
-            .catch(error => {
-                document.getElementById('loading-notice').classList.add('hidden');
-                document.getElementById('empty-notice').classList.remove('hidden');
-                console.error("Errore nel recupero delle foto da GitHub:", error);
-            });
-
-        function openLightbox(src, caption) {
-            const modal = document.getElementById('lightbox');
-            document.getElementById('lightbox-img').src = src;
-            document.getElementById('lightbox-caption').textContent = caption;
-            modal.classList.remove('hidden');
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.add('hidden');
-        }
-    </script>
 </body>
 </html>
