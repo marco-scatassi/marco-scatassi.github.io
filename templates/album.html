@@ -26,7 +26,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
         <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
+            <a href="../personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
                 <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
             </a>
             <span id="nav-album-name" class="font-bold text-stone-900">Caricamento album...</span>
@@ -36,18 +36,23 @@
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
         <div class="space-y-3 text-center max-w-2xl mx-auto">
-            <h1 id="album-title" class="text-4xl font-extrabold text-stone-900">Album</h1>
-            <p id="album-desc" class="text-stone-600 text-lg">Raccolta di scatti fotografici.</p>
+            <h1 id="album-title" class="text-4xl font-extrabold text-stone-900 capitalize">Album</h1>
+            <p id="album-desc" class="text-stone-600 text-lg">Raccolta di scatti fotografici caricati su GitHub.</p>
         </div>
 
-        <!-- Griglia Foto Dinamica -->
+        <!-- Griglia Foto Automatica -->
         <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <!-- Le foto verranno inserite qui automaticamente via JavaScript -->
+            <!-- Le foto verranno inserite qui automaticamente -->
+        </div>
+
+        <div id="loading-notice" class="bg-cardBg border border-stone-200 rounded-2xl p-12 text-center text-stone-500 space-y-2">
+            <i class="fa-solid fa-spinner fa-spin text-3xl text-accentSage"></i>
+            <p class="font-medium">Caricamento delle foto da GitHub...</p>
         </div>
 
         <div id="empty-notice" class="hidden bg-cardBg border border-stone-200 rounded-2xl p-12 text-center text-stone-500 space-y-2">
             <i class="fa-solid fa-images text-3xl text-stone-400"></i>
-            <p class="font-medium">Nessuna foto trovata in questo album o cartella vuota.</p>
+            <p class="font-medium">Nessuna foto trovata in questa cartella.</p>
         </div>
     </main>
 
@@ -63,64 +68,60 @@
     </div>
 
     <script>
-        // CONFIGURAZIONE DEGLI ALBUM (Aggiungi qui le tue cartelle e le relative foto)
-        const albumsData = {
-            "montagna": {
-                title: "Montagna & Cime",
-                description: "Escursioni in quota e panorami alpini.",
-                photos: [
-                    { src: "images/montagna/foto1.jpg", caption: "Vista dalla vetta" },
-                    { src: "images/montagna/foto2.jpg", caption: "Lungo il sentiero roccioso" }
-                ]
-            },
-            "boschi": {
-                title: "Boschi & Sentieri",
-                description: "Passeggiate nel verde e tranquillità degli alberi.",
-                photos: [
-                    { src: "images/boschi/foto1.jpg", caption: "Luce tra gli alberi" },
-                    { src: "images/boschi/foto2.jpg", caption: "Ruscelli di montagna" }
-                ]
-            }
-        };
-
         // Legge il parametro 'id' dall'URL (es. album.html?id=montagna)
         const urlParams = new URLSearchParams(window.location.search);
-        const albumId = urlParams.get('id');
-        const album = albumsData[albumId];
+        const albumId = urlParams.get('id') || 'montagna';
 
-        const grid = document.getElementById('gallery-grid');
-        const emptyNotice = document.getElementById('empty-notice');
+        // Pulisce e formatta il titolo dell'album (es. "panorami-alpinistici" -> "Panorami Alpinistici")
+        const formattedTitle = albumId.replace(/-/g, ' ');
+        document.getElementById('page-title').textContent = formattedTitle + " | Marco Scatassi";
+        document.getElementById('nav-album-name').textContent = formattedTitle;
+        document.getElementById('album-title').textContent = formattedTitle;
 
-        if (album) {
-            document.getElementById('page-title').textContent = album.title + " | Marco Scatassi";
-            document.getElementById('nav-album-name').textContent = album.title;
-            document.getElementById('album-title').textContent = album.title;
-            document.getElementById('album-desc').textContent = album.description;
+        // Chiamata alle API di GitHub per leggere i file nella cartella images/<albumId>
+        const repoOwner = "marco-scatassi";
+        const repoName = "marco-scatassi.github.io";
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/images/${albumId}`;
 
-            if (album.photos && album.photos.length > 0) {
-                album.photos.forEach(photo => {
-                    const item = document.createElement('div');
-                    item.className = "group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer";
-                    item.onclick = () => openLightbox(photo.src, photo.caption);
-                    
-                    item.innerHTML = `
-                        <img src="${photo.src}" alt="${photo.caption}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                            <p class="text-white text-sm font-medium">${photo.caption}</p>
-                        </div>
-                    `;
-                    grid.appendChild(item);
-                });
-            } else {
-                emptyNotice.classList.remove('hidden');
-            }
-        } else {
-            document.getElementById('page-title').textContent = "Album non trovato";
-            document.getElementById('nav-album-name').textContent = "Errore";
-            document.getElementById('album-title').textContent = "Album non trovato";
-            document.getElementById('album-desc').textContent = "L'album richiesto non esiste o è stato rimosso.";
-            emptyNotice.classList.remove('hidden');
-        }
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("Cartella non trovata");
+                return response.json();
+            })
+            .then(files => {
+                document.getElementById('loading-notice').classList.add('hidden');
+                const grid = document.getElementById('gallery-grid');
+                
+                // Filtra solo i file immagine (.jpg, .jpeg, .png, .webp)
+                const imageFiles = files.filter(file => file.type === 'file' && /\.(jpg|jpeg|png|webp)$/i.test(file.name));
+
+                if (imageFiles.length > 0) {
+                    imageFiles.forEach(file => {
+                        const item = document.createElement('div');
+                        item.className = "group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 cursor-pointer";
+                        
+                        // Genera una didascalia pulita dal nome del file (es. "tramonto_vetta.jpg" -> "tramonto vetta")
+                        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, ' ');
+
+                        item.onclick = () => openLightbox(file.download_url, cleanName);
+                        
+                        item.innerHTML = `
+                            <img src="${file.download_url}" alt="${cleanName}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                                <p class="text-white text-sm font-medium capitalize">${cleanName}</p>
+                            </div>
+                        `;
+                        grid.appendChild(item);
+                    });
+                } else {
+                    document.getElementById('empty-notice').classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading-notice').classList.add('hidden');
+                document.getElementById('empty-notice').classList.remove('hidden');
+                console.error("Errore nel recupero delle foto da GitHub:", error);
+            });
 
         function openLightbox(src, caption) {
             const modal = document.getElementById('lightbox');
