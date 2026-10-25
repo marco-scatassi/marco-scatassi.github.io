@@ -37,6 +37,7 @@
                 <a href="#experience" class="hover:text-accentSage transition">Esperienza</a>
                 <a href="#projects" class="hover:text-accentSage transition">Progetti</a>
                 <a href="#skills" class="hover:text-accentSage transition">Competenze</a>
+                <a href="#contact" class="hover:text-accentSage transition">Contatti</a>
                 <a href="personal.html" class="px-4 py-2 rounded-full bg-accentSage/10 text-accentSage hover:bg-accentSage hover:text-white transition flex items-center gap-2">
                     <i class="fa-solid fa-leaf"></i> Natura & Passioni
                 </a>
@@ -50,12 +51,13 @@
             <a href="#experience" class="block hover:text-accentSage">Esperienza</a>
             <a href="#projects" class="block hover:text-accentSage">Progetti</a>
             <a href="#skills" class="block hover:text-accentSage">Competenze</a>
+            <a href="#contact" class="block hover:text-accentSage">Contatti</a>
             <a href="personal.html" class="block text-accentSage font-semibold">🍃 Natura & Passioni</a>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="max-w-6xl mx-auto px-6 py-20 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+    <section id="about" class="max-w-6xl mx-auto px-6 py-20 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
         <div class="md:col-span-7 space-y-6">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/70 text-xs font-semibold uppercase tracking-wider text-stone-700">
                 <i class="fa-solid fa-code text-accentSage"></i> Data Engineer & Data Scientist
@@ -268,6 +270,61 @@
         </div>
     </section>
 
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 max-w-6xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <h2 class="text-3xl font-bold tracking-tight">Mettiamoci in Contatto</h2>
+            <p class="text-stone-600">Hai un progetto o vuoi scambiare due chiacchiere? Inviami un messaggio.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            <div class="md:col-span-5 bg-cardBg p-8 rounded-2xl border border-stone-200/80 space-y-6 shadow-sm">
+                <h3 class="text-xl font-bold text-stone-900">Informazioni di Contatto</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <span class="w-10 h-10 rounded-xl bg-accentSage/10 text-accentSage flex items-center justify-center text-lg"><i class="fa-solid fa-envelope"></i></span>
+                        <div>
+                            <p class="text-xs text-stone-500 font-semibold uppercase">Email</p>
+                            <a href="mailto:marco.scatassi@gmail.com" class="text-stone-800 font-medium hover:text-accentSage transition">marco.scatassi@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="w-10 h-10 rounded-xl bg-softBlue/10 text-softBlue flex items-center justify-center text-lg"><i class="fa-solid fa-location-dot"></i></span>
+                        <div>
+                            <p class="text-xs text-stone-500 font-semibold uppercase">Posizione</p>
+                            <p class="text-stone-800 font-medium">Milano, Italia</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="w-10 h-10 rounded-xl bg-accentTerracotta/10 text-accentTerracotta flex items-center justify-center text-lg"><i class="fa-brands fa-linkedin"></i></span>
+                        <div>
+                            <p class="text-xs text-stone-500 font-semibold uppercase">LinkedIn</p>
+                            <a href="https://linkedin.com" target="_blank" class="text-stone-800 font-medium hover:text-accentSage transition">linkedin.com/in/marco-scatassi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:col-span-7 bg-cardBg p-8 rounded-2xl border border-stone-200/80 shadow-sm">
+                <form action="mailto:marco.scatassi@gmail.com" method="post" enctype="text/plain" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-stone-700 mb-1">Nome</label>
+                        <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="Il tuo nome">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-stone-700 mb-1">Email</label>
+                        <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="tua.email@esempio.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-stone-700 mb-1">Messaggio</label>
+                        <textarea name="message" rows="4" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="Scrivi qui il tuo messaggio..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl bg-accentSage text-white font-medium hover:bg-accentSage/90 transition shadow-sm">
+                        Invia Messaggio
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-stone-900 text-stone-400 py-12">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -278,7 +335,7 @@
             <div class="flex items-center gap-6 text-xl">
                 <a href="https://github.com/marco-scatassi" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-github"></i></a>
                 <a href="https://linkedin.com" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="mailto:marco.scatassi@email.com" class="hover:text-white transition"><i class="fa-solid fa-envelope"></i></a>
+                <a href="mailto:marco.scatassi@gmail.com" class="hover:text-white transition"><i class="fa-solid fa-envelope"></i></a>
             </div>
         </div>
     </footer>
