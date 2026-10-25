@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marco Scatassi | Data Engineer & Data Scientist</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter & Fira Code -->
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Fira Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -18,24 +21,36 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                         mono: ['Fira Code', 'monospace']
                     },
                     colors: {
-                        slate: {
-                            950: '#070a12',
-                            900: '#0B1120',
-                            850: '#111827',
-                            800: '#1e293b'
+                        sand: {
+                            50: '#fcfbf9',
+                            100: '#f7f4ee',
+                            200: '#ebe5da',
+                            300: '#dacfc0',
+                            800: '#4a443b',
+                            900: '#2b2721'
                         },
-                        cyan: {
-                            400: '#22d3ee',
-                            500: '#06b6d4'
+                        earth: {
+                            100: '#fdf4f0',
+                            500: '#c86d51',
+                            600: '#b35338',
+                            700: '#8c3c26'
                         },
-                        emerald: {
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669'
+                        sage: {
+                            100: '#f0f4f0',
+                            500: '#5b8254',
+                            600: '#486b42',
+                            700: '#2d5a27',
+                            800: '#1f3e1b'
+                        },
+                        slateblue: {
+                            100: '#eff3f6',
+                            500: '#3b5e78',
+                            700: '#2c4a5e',
+                            900: '#1a364a'
                         }
                     }
                 }
@@ -44,200 +59,170 @@
     </script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0B1120;
-            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcfbf9;
+            color: #2b2721;
             overflow-x: hidden;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Soft Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0B1120;
+            background: #f7f4ee;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #dacfc0;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
+            background: #b35338;
         }
 
-        /* Ambient Glow effects */
-        .glow-cyan {
-            box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.25);
-        }
-        .glow-emerald {
-            box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
-        }
-
-        /* Organic Mesh Gradient background */
-        .bg-organic-mesh {
+        /* Subtle Organic Mesh Background */
+        .bg-organic-light {
             background-image: 
-                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+                radial-gradient(at 10% 10%, rgba(91, 130, 84, 0.06) 0px, transparent 40%),
+                radial-gradient(at 90% 20%, rgba(200, 109, 81, 0.05) 0px, transparent 40%),
+                radial-gradient(at 50% 90%, rgba(44, 74, 94, 0.05) 0px, transparent 50%);
+        }
+
+        .soft-card {
+            background-color: #ffffff;
+            border: 1px solid #ebe5da;
+            box-shadow: 0 4px 20px -2px rgba(43, 39, 33, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .soft-card:hover {
+            border-color: #dacfc0;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(43, 39, 33, 0.06);
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+<body class="bg-sand-50 text-sand-900 antialiased selection:bg-earth-500 selection:text-white">
 
-    <!-- NAVBAR -->
-    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/60 transition-all duration-300" id="navbar">
+    <!-- ================= NAVBAR MODULE ================= -->
+    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-sand-50/90 border-b border-sand-200/60 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <!-- Brand Logo -->
             <a href="#hero" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-emerald-500 to-indigo-600 p-[2px] transition-transform duration-300 group-hover:scale-105">
-                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                        <span class="font-mono font-bold text-lg bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">MS</span>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sage-600 via-earth-500 to-slate-700 p-[2px] transition-transform duration-300 group-hover:scale-105">
+                    <div class="w-full h-full bg-sand-50 rounded-[10px] flex items-center justify-center">
+                        <span class="font-mono font-bold text-sm text-sage-700">MS</span>
                     </div>
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-bold text-slate-100 group-hover:text-cyan-400 transition-colors">Marco Scatassi</span>
-                    <span class="text-xs text-slate-400 font-mono">Data & Natural Systems</span>
+                    <span class="font-bold text-sand-900 group-hover:text-earth-600 transition-colors">Marco Scatassi</span>
+                    <span class="text-xs text-sand-800/70 font-mono">Data Engineer & Scientist</span>
                 </div>
             </a>
 
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
-                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
-                <a href="#skills" class="hover:text-cyan-400 transition-colors">Stack</a>
-                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
-                <a href="#journal" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                    <i class="fa-solid font-xs text-emerald-400"></i> Nature & Music
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-sand-800">
+                <a href="#about" class="hover:text-earth-600 transition-colors">About</a>
+                <a href="#skills" class="hover:text-earth-600 transition-colors">Stack & Skills</a>
+                <a href="#projects" class="hover:text-earth-600 transition-colors">Projects</a>
+                <a href="#personal" class="hover:text-sage-700 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-compass text-xs text-sage-600"></i> Nature & Music
                 </a>
-                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+                <a href="#contact" class="hover:text-earth-600 transition-colors">Contact</a>
             </nav>
 
             <!-- Actions -->
             <div class="hidden md:flex items-center gap-4">
-                <button onclick="openCvModal()" class="px-4 py-2 text-xs font-mono rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-500/60 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-file-pdf"></i> CV / Resume
+                <button onclick="openCvModal()" class="px-4 py-2 text-xs font-mono rounded-xl border border-sand-300 bg-sand-100 text-sand-900 hover:border-earth-500 hover:text-earth-600 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-earth-500"></i> CV / Resume
                 </button>
             </div>
 
-            <!-- Mobile Hamburger -->
-            <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-400 hover:text-white">
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-sand-800 hover:text-earth-600">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
         </div>
 
         <!-- Mobile Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-950 border-b border-slate-800 px-4 pt-2 pb-6 space-y-3 font-medium text-slate-300">
-            <a href="#about" class="block py-2 hover:text-cyan-400">About</a>
-            <a href="#skills" class="block py-2 hover:text-cyan-400">Stack</a>
-            <a href="#projects" class="block py-2 hover:text-cyan-400">Projects</a>
-            <a href="#journal" class="block py-2 text-emerald-400">Nature & Music</a>
-            <a href="#contact" class="block py-2 hover:text-cyan-400">Contact</a>
-            <button onclick="openCvModal()" class="w-full mt-2 px-4 py-2 text-xs font-mono rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-center flex items-center justify-center gap-2">
-                <i class="fa-solid fa-file-pdf"></i> Download CV
+        <div id="mobile-menu" class="hidden md:hidden bg-sand-50 border-b border-sand-200 px-4 pt-2 pb-6 space-y-3 font-medium text-sand-800">
+            <a href="#about" class="block py-2 hover:text-earth-600">About</a>
+            <a href="#skills" class="block py-2 hover:text-earth-600">Stack & Skills</a>
+            <a href="#projects" class="block py-2 hover:text-earth-600">Projects</a>
+            <a href="#personal" class="block py-2 text-sage-700">Nature & Music</a>
+            <a href="#contact" class="block py-2 hover:text-earth-600">Contact</a>
+            <button onclick="openCvModal()" class="w-full mt-2 px-4 py-2 text-xs font-mono rounded-xl border border-sand-300 bg-sand-100 text-sand-900 text-center flex items-center justify-center gap-2">
+                <i class="fa-solid fa-file-pdf text-earth-500"></i> Download CV
             </button>
         </div>
     </header>
 
-    <!-- HERO SECTION WITH CANVAS WAVE VISUALIZER -->
-    <section id="hero" class="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden bg-organic-mesh">
-        <!-- Background Canvas Animation -->
-        <canvas id="hero-canvas" class="absolute inset-0 pointer-events-none opacity-40"></canvas>
+    <!-- ================= HERO SECTION MODULE ================= -->
+    <section id="hero" class="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden bg-organic-light">
+        <canvas id="hero-canvas" class="absolute inset-0 pointer-events-none opacity-30"></canvas>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
-                <!-- Hero Left Column Text -->
+                <!-- Hero Text -->
                 <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-mono">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Data Engineer & Scientist @ Milano
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-sage-500/30 bg-sage-100/70 text-sage-800 text-xs font-mono">
+                        <span class="w-2 h-2 rounded-full bg-sage-600"></span>
+                        Data Engineer & Scientist • Based in Milan, IT
                     </div>
 
-                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                        Bridging <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent">Mathematical Logic</span> with Scalable Data Systems.
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight text-sand-900">
+                        Building reliable <span class="text-earth-600">data systems</span> & analytical solutions.
                     </h1>
 
-                    <p class="text-slate-400 text-lg max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
-                        I build robust data pipelines, machine learning models, and analytical tools. Inspired by natural algorithms, mathematical patterns, and sound dynamics.
+                    <p class="text-sand-800/80 text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                        Mathematics background applied to data engineering, cloud data warehousing, and statistical modeling. Currently consulting at Nimbus Intelligence.
                     </p>
 
-                    <!-- CTA Group -->
-                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
-                        <a href="#projects" class="px-6 py-3.5 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 shadow-lg shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
-                            <i class="fa-solid fa-code"></i> Explore Projects
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#projects" class="px-6 py-3.5 rounded-2xl font-semibold bg-earth-500 hover:bg-earth-600 text-white shadow-sm transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-code text-sm"></i> View Portfolio
                         </a>
-                        <a href="#journal" class="px-6 py-3.5 rounded-xl font-semibold bg-slate-800/80 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 text-slate-200 transition-all flex items-center gap-2 group">
-                            <i class="fa-solid fa-[#10b981] fa-tree group-hover:text-emerald-400"></i> Nature & Music Journal
+                        <a href="#contact" class="px-6 py-3.5 rounded-2xl font-semibold bg-white border border-sand-300 hover:border-earth-500 text-sand-900 transition-all flex items-center gap-2">
+                            <i class="fa-regular fa-envelope text-sm text-earth-500"></i> Get in Touch
                         </a>
                     </div>
 
-                    <!-- Quick Tech Badges -->
-                    <div class="pt-8 border-t border-slate-800/80 flex items-center justify-center lg:justify-start gap-6 text-slate-400 text-xs font-mono">
-                        <span class="flex items-center gap-2"><i class="fa-brands fa-python text-cyan-400"></i> Python</span>
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-database text-indigo-400"></i> Snowflake / dbt</span>
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-diagram-project text-emerald-400"></i> PySpark</span>
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-amber-400"></i> Mathematics</span>
+                    <!-- Tech Stack Pills -->
+                    <div class="pt-8 border-t border-sand-200 flex flex-wrap items-center justify-center lg:justify-start gap-5 text-sand-800 text-xs font-mono">
+                        <span class="flex items-center gap-2"><i class="fa-brands fa-python text-earth-500"></i> Python</span>
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-snowflake text-slateblue-700"></i> Snowflake & dbt</span>
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-database text-sage-700"></i> PySpark</span>
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-square-root-variable text-sand-800"></i> Applied Mathematics</span>
                     </div>
                 </div>
 
-                <!-- Hero Right Column Avatar / Visual Representation -->
+                <!-- Hero Profile / Abstract Card -->
                 <div class="lg:col-span-5 flex justify-center">
                     <div class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-                        <!-- Outer Ambient Glow Ring -->
-                        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500/20 via-emerald-500/20 to-indigo-500/20 blur-2xl animate-pulse"></div>
-                        
-                        <!-- Main Avatar Container -->
-                        <div class="relative w-full h-full rounded-3xl bg-slate-900 border border-slate-700/60 p-6 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-xl group">
+                        <div class="soft-card relative w-full h-full rounded-3xl p-6 flex flex-col justify-between overflow-hidden">
                             
-                            <!-- Header Info -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
-                                    <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
-                                    <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
-                                </div>
-                                <span class="text-xs font-mono text-slate-400">marco_node.py</span>
+                            <div class="flex items-center justify-between font-mono text-xs text-sand-800/60">
+                                <span>marco_scatassi.py</span>
+                                <span class="text-sage-700">online</span>
                             </div>
 
-                            <!-- SVG Avatar Dynamic Graphic -->
-                            <div class="my-auto flex flex-col items-center justify-center relative py-4">
-                                <svg class="w-44 h-44 text-cyan-400 transition-transform duration-700 group-hover:scale-105" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Organic Concentric Data & Sound Rings -->
-                                    <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-opacity="0.15" stroke-width="2" stroke-dasharray="4 4" />
-                                    <circle cx="100" cy="100" r="70" stroke="url(#cyan-emerald)" stroke-width="2" />
-                                    <circle cx="100" cy="100" r="50" stroke="#4F46E5" stroke-width="1.5" stroke-dasharray="8 4" />
-                                    
-                                    <!-- Central Tech / Math Avatar Silhouette -->
-                                    <path d="M100 65C86.1929 65 75 76.1929 75 90C75 103.807 86.1929 115 100 115C113.807 115 125 103.807 125 90C125 76.1929 113.807 65 100 65Z" fill="#0F172A" stroke="url(#cyan-emerald)" stroke-width="3"/>
-                                    <!-- Headphones/Waveform Concept -->
-                                    <path d="M60 95C60 70 78 50 100 50C122 50 140 70 140 95" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
-                                    <rect x="52" y="85" width="16" height="24" rx="8" fill="#06B6D4"/>
-                                    <rect x="132" y="85" width="16" height="24" rx="8" fill="#06B6D4"/>
-
-                                    <!-- Waveform Bars inside inner circle -->
-                                    <line x1="85" y1="90" x2="85" y2="100" stroke="#34D399" stroke-width="3" stroke-linecap="round" />
-                                    <line x1="95" y1="82" x2="95" y2="105" stroke="#22D3EE" stroke-width="3" stroke-linecap="round" />
-                                    <line x1="105" y1="85" x2="105" y2="102" stroke="#818CF8" stroke-width="3" stroke-linecap="round" />
-                                    <line x1="115" y1="88" x2="115" y2="98" stroke="#34D399" stroke-width="3" stroke-linecap="round" />
-
-                                    <defs>
-                                        <linearGradient id="cyan-emerald" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-                                            <stop stop-color="#06B6D4" />
-                                            <stop offset="1" stop-color="#10B981" />
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-
-                                <div class="mt-2 text-center">
-                                    <span class="text-xs font-mono text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800">
-                                        <i class="fa-solid fa-code-branch"></i> Data Pipelines & Math Logic
-                                    </span>
+                            <div class="my-auto flex flex-col items-center justify-center relative py-4 text-center">
+                                <div class="w-32 h-32 rounded-full bg-sand-100 border border-sand-300 flex items-center justify-center mb-4">
+                                    <svg class="w-20 h-20 text-sage-700" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/>
+                                        <circle cx="50" cy="50" r="28" stroke="#c86d51" stroke-width="2"/>
+                                        <circle cx="50" cy="50" r="14" fill="#2c4a5e"/>
+                                    </svg>
                                 </div>
+                                <h3 class="font-bold text-sand-900 text-base">Marco Scatassi</h3>
+                                <p class="text-xs font-mono text-sand-800/70 mt-1">UNIBO Math → UNIMIB Data Science</p>
                             </div>
 
-                            <!-- Footer Stats mini-card -->
-                            <div class="bg-slate-950/80 rounded-xl p-3 border border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
-                                <span>UNIBO ➔ UNIMIB</span>
-                                <span class="text-cyan-400">Milano, IT</span>
+                            <div class="bg-sand-100/80 rounded-2xl p-3 border border-sand-200 flex items-center justify-between text-xs font-mono text-sand-800">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot text-earth-500"></i> Milano, Italy</span>
+                                <span class="text-sage-700">Data Consulting</span>
                             </div>
                         </div>
                     </div>
@@ -247,296 +232,289 @@
         </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="py-24 border-t border-slate-800/60 bg-slate-950/40 relative">
+    <!-- ================= ABOUT & TIMELINE MODULE ================= -->
+    <section id="about" class="py-24 border-t border-sand-200/80 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <h2 class="text-xs font-mono text-cyan-400 uppercase tracking-widest">// Background & Story</h2>
-                <p class="text-3xl sm:text-4xl font-bold">Mathematical Foundations meet Modern Data Engineering</p>
+            <div class="max-w-3xl mb-16 space-y-3">
+                <span class="text-xs font-mono text-earth-600 uppercase tracking-widest">// Profile & Background</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-sand-900">Academic Foundations & Technical Journey</h2>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 
-                <!-- Narrative Paragraphs -->
-                <div class="lg:col-span-7 space-y-6 text-slate-300 leading-relaxed text-base">
+                <!-- Authentic Bio -->
+                <div class="lg:col-span-7 space-y-6 text-sand-800 leading-relaxed text-base">
                     <p>
-                        My journey began with a <strong class="text-slate-100">Bachelor’s degree in Mathematics at the University of Bologna</strong>. Developing rigorous analytical thinking and formal problem-solving laid the ground for my transition into advanced computing and statistics.
+                        I earned my <strong class="text-sand-900">Bachelor's Degree in Mathematics at the University of Bologna</strong>, where I built a solid base in theoretical logic, probability, linear algebra, and mathematical analysis.
                     </p>
                     <p>
-                        To apply mathematical models to real-world challenges, I completed a <strong class="text-slate-100">Master’s degree in Data Science at Università degli Studi di Milano-Bicocca</strong>, focusing on Distributed Data Architectures, Machine Learning, and Big Data Technologies.
+                        To direct these analytical tools toward large-scale computational challenges, I completed my <strong class="text-sand-900">Master's Degree in Data Science at Università degli Studi di Milano-Bicocca</strong>. My studies centered around big data architectures, distributed computing with PySpark, machine learning algorithms, and software development practices.
                     </p>
                     <p>
-                        Currently working in <strong class="text-slate-100">Data Consulting & Engineering (Nimbus Intelligence)</strong>, I help organizations build scalable, maintainable, and efficient cloud data pipelines using tools like Snowflake, dbt, Python, and PySpark.
+                        I work as a <strong class="text-sand-900">Data Engineering Trainee / Consultant at Nimbus Intelligence</strong> in Milan, designing modular, scalable data transformation flows with Snowflake, dbt, Python, and SQL.
                     </p>
-                    <div class="p-4 rounded-xl bg-slate-900 border-l-4 border-emerald-500 font-mono text-sm text-slate-300">
-                        <i class="fa-solid fa-quote-left text-emerald-400 mr-2"></i>
-                        "Whether modeling semiconductor wafer defects or listening to acoustic harmonics, patterns govern everything."
+                    
+                    <div class="p-5 rounded-2xl bg-sand-100/70 border-l-4 border-sage-600 text-sm text-sand-800 font-mono">
+                        "Focusing on clean logic, maintainable transformation models, and robust pipeline engineering."
                     </div>
                 </div>
 
-                <!-- Interactive Timeline / Cards -->
+                <!-- Experience & Education Cards -->
                 <div class="lg:col-span-5 space-y-4">
-                    <!-- Academic Card 1 -->
-                    <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-                            <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    
+                    <!-- Nimbus Intelligence -->
+                    <div class="soft-card p-5 rounded-2xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-briefcase text-lg"></i>
                         </div>
                         <div>
-                            <span class="text-xs font-mono text-cyan-400">Università di Bologna</span>
-                            <h3 class="font-bold text-slate-100">B.Sc. in Mathematics</h3>
-                            <p class="text-xs text-slate-400 mt-1">Foundational pure & applied mathematics, logic, linear algebra, and probability theory.</p>
+                            <span class="text-xs font-mono text-earth-600">Nimbus Intelligence • Present</span>
+                            <h3 class="font-bold text-sand-900 text-base">Data Engineering Consultant</h3>
+                            <p class="text-xs text-sand-800/80 mt-1">Data warehousing, Snowflake modelling, dbt transformations, and cloud analytics integration.</p>
                         </div>
                     </div>
 
-                    <!-- Academic Card 2 -->
-                    <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-                            <i class="fa-solid fa-microchip text-xl"></i>
+                    <!-- UNIMIB -->
+                    <div class="soft-card p-5 rounded-2xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-graduation-cap text-lg"></i>
                         </div>
                         <div>
-                            <span class="text-xs font-mono text-indigo-400">Milano-Bicocca</span>
-                            <h3 class="font-bold text-slate-100">M.Sc. in Data Science</h3>
-                            <p class="text-xs text-slate-400 mt-1">Deep Learning, PySpark, Distributed Systems, Statistical Modeling, and Big Data.</p>
+                            <span class="text-xs font-mono text-slate-700">Università degli Studi di Milano-Bicocca</span>
+                            <h3 class="font-bold text-sand-900 text-base">M.Sc. in Data Science</h3>
+                            <p class="text-xs text-sand-800/80 mt-1">Distributed computing, PySpark, Machine Learning, Deep Learning, and Statistical Inference.</p>
                         </div>
                     </div>
 
-                    <!-- Work Experience Card -->
-                    <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                            <i class="fa-solid fa-briefcase text-xl"></i>
+                    <!-- UNIBO -->
+                    <div class="soft-card p-5 rounded-2xl flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-book text-lg"></i>
                         </div>
                         <div>
-                            <span class="text-xs font-mono text-emerald-400">Nimbus Intelligence</span>
-                            <h3 class="font-bold text-slate-100">Data Engineering Trainee / Consultant</h3>
-                            <p class="text-xs text-slate-400 mt-1">Building modern data stack pipelines, Snowflake transformations with dbt, and cloud workflows.</p>
+                            <span class="text-xs font-mono text-sage-700">Università di Bologna</span>
+                            <h3 class="font-bold text-sand-900 text-base">B.Sc. in Mathematics</h3>
+                            <p class="text-xs text-sand-800/80 mt-1">Pure & applied mathematics, analysis, linear algebra, numerical methods, and probability.</p>
                         </div>
                     </div>
+
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- TECH STACK & SKILLS -->
-    <section id="skills" class="py-24 border-t border-slate-800/60 bg-slate-900/60">
+    <!-- ================= SKILLS & STACK MODULE ================= -->
+    <section id="skills" class="py-24 border-t border-sand-200/80 bg-sand-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <h2 class="text-xs font-mono text-cyan-400 uppercase tracking-widest">// Technical Toolbox</h2>
-                <p class="text-3xl sm:text-4xl font-bold">Skills & Technologies</p>
-                <p class="text-slate-400 text-sm">Categorized tools I use daily for data transformation, modeling, and system design.</p>
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+                <span class="text-xs font-mono text-earth-600 uppercase tracking-widest">// Stack & Competencies</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-sand-900">Technical Toolbox</h2>
+                <p class="text-sand-800/70 text-sm">Clear breakdown of tools and frameworks used for data transformation and modeling.</p>
             </div>
 
-            <!-- Category Tabs Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <!-- Data Engineering -->
-                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-cyan-500/50 transition-all space-y-6">
+                <div class="soft-card p-6 rounded-3xl space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
-                            <i class="fa-solid fa-server text-lg"></i>
+                        <div class="w-10 h-10 rounded-xl bg-earth-100 text-earth-600 flex items-center justify-center">
+                            <i class="fa-solid fa-server"></i>
                         </div>
-                        <h3 class="font-bold text-lg text-slate-100">Data Engineering</h3>
+                        <h3 class="font-bold text-lg text-sand-900">Data Engineering</h3>
                     </div>
 
-                    <div class="space-y-3 font-mono text-xs">
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Snowflake & dbt</span>
-                            <span class="text-cyan-400">Advanced</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Python & SQL</span>
-                            <span class="text-cyan-400">Proficient</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Fivetran & Airflow</span>
-                            <span class="text-cyan-400">Pipeline Orchestration</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Terraform & Git</span>
-                            <span class="text-cyan-400">IaC / DevOps</span>
-                        </div>
-                    </div>
+                    <ul class="space-y-3 font-mono text-xs">
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Snowflake & dbt</span>
+                            <span class="text-earth-600 font-semibold">Warehouse / Modeling</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Python & SQL</span>
+                            <span class="text-earth-600 font-semibold">Core Languages</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Fivetran & Airflow</span>
+                            <span class="text-earth-600 font-semibold">Orchestration</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Git & Terraform</span>
+                            <span class="text-earth-600 font-semibold">DevOps / IaC</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Machine Learning & Data Science -->
-                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-indigo-500/50 transition-all space-y-6">
+                <div class="soft-card p-6 rounded-3xl space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-                            <i class="fa-solid fa-brain text-lg"></i>
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
+                            <i class="fa-solid fa-brain"></i>
                         </div>
-                        <h3 class="font-bold text-lg text-slate-100">ML & Data Science</h3>
+                        <h3 class="font-bold text-lg text-sand-900">ML & Data Science</h3>
                     </div>
 
-                    <div class="space-y-3 font-mono text-xs">
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">PySpark / Big Data</span>
-                            <span class="text-indigo-400">Distributed ML</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">TensorFlow & PyTorch</span>
-                            <span class="text-indigo-400">Deep Learning</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Scikit-Learn & R</span>
-                            <span class="text-indigo-400">Statistical Models</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Pandas / NumPy</span>
-                            <span class="text-indigo-400">Data Wrangling</span>
-                        </div>
-                    </div>
+                    <ul class="space-y-3 font-mono text-xs">
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>PySpark</span>
+                            <span class="text-slate-700 font-semibold">Distributed Analytics</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>TensorFlow / PyTorch</span>
+                            <span class="text-slate-700 font-semibold">Deep Learning</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Scikit-Learn & R</span>
+                            <span class="text-slate-700 font-semibold">Statistical Models</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Pandas & NumPy</span>
+                            <span class="text-slate-700 font-semibold">Data Analysis</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Analytics & Visualization -->
-                <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 transition-all space-y-6">
+                <!-- Analytics & Workflows -->
+                <div class="soft-card p-6 rounded-3xl space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
-                            <i class="fa-solid fa-chart-pie text-lg"></i>
+                        <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center">
+                            <i class="fa-solid fa-chart-line"></i>
                         </div>
-                        <h3 class="font-bold text-lg text-slate-100">Analytics & Viz</h3>
+                        <h3 class="font-bold text-lg text-sand-900">Analytics & Tooling</h3>
                     </div>
 
-                    <div class="space-y-3 font-mono text-xs">
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Tableau & PowerBI</span>
-                            <span class="text-emerald-400">Dashboards</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">KNIME Analytics</span>
-                            <span class="text-emerald-400">Data Workflows</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Matplotlib / Seaborn</span>
-                            <span class="text-emerald-400">Exploratory Viz</span>
-                        </div>
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-                            <span class="text-slate-200">Docker & Kubernetes</span>
-                            <span class="text-emerald-400">Containers</span>
-                        </div>
-                    </div>
+                    <ul class="space-y-3 font-mono text-xs">
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Tableau & PowerBI</span>
+                            <span class="text-sage-700 font-semibold">Visualization</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>KNIME Analytics</span>
+                            <span class="text-sage-700 font-semibold">Visual Workflows</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Matplotlib & Seaborn</span>
+                            <span class="text-sage-700 font-semibold">Exploratory Plots</span>
+                        </li>
+                        <li class="bg-sand-50 p-3 rounded-xl border border-sand-200 flex justify-between items-center">
+                            <span>Docker & Linux</span>
+                            <span class="text-sage-700 font-semibold">Environments</span>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- PROJECTS SECTION -->
-    <section id="projects" class="py-24 border-t border-slate-800/60 bg-slate-950/80">
+    <!-- ================= PROJECTS PORTFOLIO MODULE ================= -->
+    <section id="projects" class="py-24 border-t border-sand-200/80 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
-                <h2 class="text-xs font-mono text-cyan-400 uppercase tracking-widest">// Portfolio Showcase</h2>
-                <p class="text-3xl sm:text-4xl font-bold">Featured Projects</p>
-                <p class="text-slate-400 text-sm">Applied Data Science, Deep Learning, and Data Pipelines.</p>
+            <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+                <span class="text-xs font-mono text-earth-600 uppercase tracking-widest">// Selected Works</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-sand-900">Featured Projects</h2>
+                <p class="text-sand-800/70 text-sm">Projects from academic research and personal technical exploration.</p>
             </div>
 
-            <!-- Filter Buttons -->
+            <!-- Filter Categories -->
             <div class="flex justify-center gap-2 mb-12 flex-wrap font-mono text-xs">
-                <button onclick="filterProjects('all')" class="project-filter-btn px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-semibold transition-all" data-filter="all">All Projects</button>
-                <button onclick="filterProjects('de')" class="project-filter-btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-all" data-filter="de">Data Engineering</button>
-                <button onclick="filterProjects('ml')" class="project-filter-btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-all" data-filter="ml">Machine Learning / DL</button>
-                <button onclick="filterProjects('analytics')" class="project-filter-btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-all" data-filter="analytics">Analytics & Viz</button>
+                <button onclick="filterProjects('all')" class="project-filter-btn px-4 py-2 rounded-xl bg-earth-500 text-white font-semibold transition-all" data-filter="all">All</button>
+                <button onclick="filterProjects('de')" class="project-filter-btn px-4 py-2 rounded-xl bg-sand-100 border border-sand-300 hover:border-earth-500 text-sand-800 transition-all" data-filter="de">Data Engineering</button>
+                <button onclick="filterProjects('ml')" class="project-filter-btn px-4 py-2 rounded-xl bg-sand-100 border border-sand-300 hover:border-earth-500 text-sand-800 transition-all" data-filter="ml">Machine Learning / DL</button>
+                <button onclick="filterProjects('analytics')" class="project-filter-btn px-4 py-2 rounded-xl bg-sand-100 border border-sand-300 hover:border-earth-500 text-sand-800 transition-all" data-filter="analytics">Analytics</button>
             </div>
 
             <!-- Project Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
                 
-                <!-- Project 1: WaferMap DL -->
-                <div class="project-card group rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 overflow-hidden transition-all" data-category="ml">
-                    <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="px-3 py-1 rounded-full text-xs font-mono bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">Deep Learning & Computer Vision</span>
-                            <i class="fa-solid fa-microchip text-slate-600 group-hover:text-cyan-400 transition-colors"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 group-hover:text-cyan-300 transition-colors">WM-811K WaferMap Defect Pattern Detection</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Convolutional neural network models implemented to classify semiconductor wafer maps, detecting spatial defect patterns automatically to optimize manufacturing yield.
-                        </p>
-                        <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-slate-300">
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Python</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">TensorFlow / PyTorch</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">CNN</span>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800 flex items-center justify-between font-mono text-xs">
-                            <a href="https://github.com/marco-scatassi" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1">
-                                <i class="fa-brands fa-github"></i> View Repo
-                            </a>
-                            <span class="text-slate-400">Master Thesis Project</span>
-                        </div>
+                <!-- Project 1 -->
+                <div class="project-card soft-card rounded-3xl p-6 space-y-4" data-category="ml">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-slate-100 text-slate-700 border border-slate-200">Deep Learning</span>
+                        <i class="fa-solid fa-microchip text-sand-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sand-900">WM-811K WaferMap Defect Pattern Detection</h3>
+                    <p class="text-sand-800/80 text-sm leading-relaxed">
+                        Master's thesis project focused on CNN models for semiconductor wafer map classification, automating spatial defect pattern identification.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-sand-800">
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Python</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">TensorFlow / PyTorch</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">CNN</span>
+                    </div>
+                    <div class="pt-4 border-t border-sand-200 flex items-center justify-between font-mono text-xs">
+                        <a href="https://github.com/marco-scatassi/wafermap-defect-detection" target="_blank" rel="noopener noreferrer" class="text-earth-600 hover:underline flex items-center gap-1.5">
+                            <i class="fa-brands fa-github text-sm"></i> Repository
+                        </a>
+                        <span class="text-sand-800/60">UNIMIB Master Thesis</span>
                     </div>
                 </div>
 
-                <!-- Project 2: Milan Traffic Analysis -->
-                <div class="project-card group rounded-2xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 overflow-hidden transition-all" data-category="de">
-                    <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">PySpark & Urban Data</span>
-                            <i class="fa-solid fa-car text-slate-600 group-hover:text-indigo-400 transition-colors"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 group-hover:text-indigo-300 transition-colors">Milan Urban Traffic & Congestion Pipeline</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            A distributed data ingestion and processing framework using PySpark to analyze real-time sensor data across Milan's transportation network.
-                        </p>
-                        <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-slate-300">
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">PySpark</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Geospatial Data</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">SQL Pipeline</span>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800 flex items-center justify-between font-mono text-xs">
-                            <a href="https://github.com/marco-scatassi" target="_blank" class="text-indigo-400 hover:underline flex items-center gap-1">
-                                <i class="fa-brands fa-github"></i> View Repo
-                            </a>
-                            <span class="text-slate-400">UNIMIB Data Project</span>
-                        </div>
+                <!-- Project 2 -->
+                <div class="project-card soft-card rounded-3xl p-6 space-y-4" data-category="de">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-earth-100 text-earth-600 border border-earth-200">PySpark Pipeline</span>
+                        <i class="fa-solid fa-car text-sand-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sand-900">Milan Urban Traffic Data Processing</h3>
+                    <p class="text-sand-800/80 text-sm leading-relaxed">
+                        Distributed data ingestion and batch processing framework using PySpark to analyze traffic flow metrics across Milan.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-sand-800">
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">PySpark</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Geospatial</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">SQL</span>
+                    </div>
+                    <div class="pt-4 border-t border-sand-200 flex items-center justify-between font-mono text-xs">
+                        <a href="https://github.com/marco-scatassi/milan-traffic-pyspark" target="_blank" rel="noopener noreferrer" class="text-earth-600 hover:underline flex items-center gap-1.5">
+                            <i class="fa-brands fa-github text-sm"></i> Repository
+                        </a>
+                        <span class="text-sand-800/60">UNIMIB Data Project</span>
                     </div>
                 </div>
 
-                <!-- Project 3: Reddit Topic Modeling -->
-                <div class="project-card group rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 overflow-hidden transition-all" data-category="ml">
-                    <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">NLP & Sentiment Analysis</span>
-                            <i class="fa-solid fa-[#10b981] fa-comments text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-300 transition-colors">Reddit Text Summarization & Topic Extraction</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            Scraping and analyzing large online discussion communities. Utilized Latent Dirichlet Allocation (LDA) and transformer models to extract evolving discussion trends.
-                        </p>
-                        <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-slate-300">
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">NLP</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">BERT / Transformers</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Python</span>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800 flex items-center justify-between font-mono text-xs">
-                            <a href="https://github.com/marco-scatassi" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-1">
-                                <i class="fa-brands fa-github"></i> View Repo
-                            </a>
-                            <span class="text-slate-400">NLP Analytics</span>
-                        </div>
+                <!-- Project 3 -->
+                <div class="project-card soft-card rounded-3xl p-6 space-y-4" data-category="ml">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-sage-100 text-sage-700 border border-sage-200">NLP & Topic Extraction</span>
+                        <i class="fa-solid fa-comments text-sand-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sand-900">Reddit Text Summarization & LDA Topic Modeling</h3>
+                    <p class="text-sand-800/80 text-sm leading-relaxed">
+                        Natural Language Processing pipeline applying Latent Dirichlet Allocation (LDA) and transformer models for online discussion analysis.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-sand-800">
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">NLP</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Transformers</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Python</span>
+                    </div>
+                    <div class="pt-4 border-t border-sand-200 flex items-center justify-between font-mono text-xs">
+                        <a href="https://github.com/marco-scatassi/reddit-nlp-summarization" target="_blank" rel="noopener noreferrer" class="text-earth-600 hover:underline flex items-center gap-1.5">
+                            <i class="fa-brands fa-github text-sm"></i> Repository
+                        </a>
+                        <span class="text-sand-800/60">NLP Analytics</span>
                     </div>
                 </div>
 
-                <!-- Project 4: KNIME Energy Price Forecasting -->
-                <div class="project-card group rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 overflow-hidden transition-all" data-category="analytics">
-                    <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="px-3 py-1 rounded-full text-xs font-mono bg-amber-500/10 border border-amber-500/30 text-amber-400">Time Series Forecasting</span>
-                            <i class="fa-solid fa-bolt text-slate-600 group-hover:text-amber-400 transition-colors"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-100 group-hover:text-amber-300 transition-colors">European Energy Market Price Modeling</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed">
-                            End-to-end KNIME analytics workflow for clean time series preprocessing, feature engineering, and forecasting energy market fluctuations.
-                        </p>
-                        <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-slate-300">
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">KNIME</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Time Series</span>
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">Tableau</span>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800 flex items-center justify-between font-mono text-xs">
-                            <a href="https://github.com/marco-scatassi" target="_blank" class="text-amber-400 hover:underline flex items-center gap-1">
-                                <i class="fa-brands fa-github"></i> View Repo
-                            </a>
-                            <span class="text-slate-400">Predictive Analytics</span>
-                        </div>
+                <!-- Project 4 -->
+                <div class="project-card soft-card rounded-3xl p-6 space-y-4" data-category="analytics">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-sand-200 text-sand-900 border border-sand-300">KNIME & Forecasting</span>
+                        <i class="fa-solid fa-bolt text-sand-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sand-900">European Energy Market Price Analysis</h3>
+                    <p class="text-sand-800/80 text-sm leading-relaxed">
+                        End-to-end KNIME analytics workflow for time series data cleaning, feature extraction, and energy price trend forecasting.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2 font-mono text-[11px] text-sand-800">
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">KNIME</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Time Series</span>
+                        <span class="bg-sand-100 px-2.5 py-1 rounded-md border border-sand-200">Tableau</span>
+                    </div>
+                    <div class="pt-4 border-t border-sand-200 flex items-center justify-between font-mono text-xs">
+                        <a href="https://github.com/marco-scatassi/energy-market-knime" target="_blank" rel="noopener noreferrer" class="text-earth-600 hover:underline flex items-center gap-1.5">
+                            <i class="fa-brands fa-github text-sm"></i> Repository
+                        </a>
+                        <span class="text-sand-800/60">Predictive Modeling</span>
                     </div>
                 </div>
 
@@ -544,207 +522,190 @@
         </div>
     </section>
 
-    <!-- PERSONAL JOURNAL / PASSIONS (MUSIC & NATURE THEME) -->
-    <section id="journal" class="py-24 border-t border-slate-800/60 relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-        
-        <!-- Subtle Natural Background Patterns -->
-        <div class="absolute right-0 top-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute left-0 bottom-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-mono text-xs">
-                    <i class="fa-solid fa-seedling"></i> Beyond the Code
-                </div>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-100">Harmonics, Nature & Thought</h2>
-                <p class="text-slate-400 text-base">
-                    How acoustic physics, natural mathematical patterns, and outdoor exploration inspire my logical frameworks.
+    <!-- ================= PERSONAL CORNER (NATURE & MUSIC) MODULE ================= -->
+    <section id="personal" class="py-24 border-t border-sand-200/80 bg-sand-100/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="max-w-3xl mb-16 space-y-3">
+                <span class="text-xs font-mono text-sage-700 uppercase tracking-widest">// Personal Hobbies</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-sand-900">Nature & Music</h2>
+                <p class="text-sand-800/80 text-base">
+                    Outside of technical work, I spend time exploring outdoors and playing with music and synthesizers.
                 </p>
             </div>
 
-            <!-- Passions Highlights Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+            <!-- Hobbies Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                 
-                <!-- Music Card with Live Synth Visualizer -->
-                <div class="lg:col-span-7 p-8 rounded-3xl bg-slate-900/90 border border-emerald-500/30 hover:border-emerald-500/60 transition-all space-y-6 glow-emerald">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
-                                <i class="fa-solid fa-music"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-xl text-slate-100">Sound & Acoustic Harmonics</h3>
-                                <p class="text-xs text-slate-400 font-mono">Frequencies, Signal Processing & Audio</p>
-                            </div>
+                <!-- Music Corner -->
+                <div class="soft-card p-8 rounded-3xl space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-sage-100 text-sage-700 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-music"></i>
                         </div>
-                        <button onclick="toggleAudioDemo()" id="synth-btn" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all">
-                            <i class="fa-solid fa-play"></i> Play Harmonic Synth
-                        </button>
+                        <div>
+                            <h3 class="font-bold text-xl text-sand-900">Music & Sound Exploration</h3>
+                            <p class="text-xs font-mono text-sand-800/60">Acoustic & Synthesizers</p>
+                        </div>
                     </div>
 
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Music theory is fundamentally applied mathematics and signal analysis. From Fourier transforms in sound waves to rhythm algorithms, my fascination with acoustics feeds directly into how I conceptualize data flows and temporal structures.
+                    <p class="text-sand-800 text-sm leading-relaxed">
+                        I enjoy playing music, experimenting with simple synthesis tools, and listening to diverse musical styles from modern acoustic to electronic sounds.
                     </p>
 
-                    <!-- Interactive Waveform Graphic -->
-                    <div class="h-24 bg-slate-950 rounded-2xl border border-slate-800 p-4 flex items-end justify-between gap-1 overflow-hidden" id="waveform-container">
-                        <!-- JS generated wave bars -->
+                    <!-- Interactive Synthesizer Audio Demo -->
+                    <div class="pt-2 flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-sand-800/70">Interactive Scale Player (Web Audio API)</span>
+                            <button onclick="toggleAudioDemo()" id="synth-btn" class="px-4 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold text-xs flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-play text-xs"></i> Play Pentatonic Tone
+                            </button>
+                        </div>
+                        <div class="h-16 bg-sand-50 rounded-2xl border border-sand-200 p-3 flex items-end justify-between gap-1 overflow-hidden" id="waveform-container">
+                            <!-- JS Generated Bars -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- Nature & Generative Geometry Card -->
-                <div class="lg:col-span-5 p-8 rounded-3xl bg-slate-900/90 border border-amber-500/30 hover:border-amber-500/60 transition-all space-y-6">
+                <!-- Nature & Outdoor Corner -->
+                <div class="soft-card p-8 rounded-3xl space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-tree"></i>
+                        <div class="w-12 h-12 rounded-2xl bg-earth-100 text-earth-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-mountain-sun"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-xl text-slate-100">Organic Mathematics</h3>
-                            <p class="text-xs text-slate-400 font-mono">Fibonacci, Fractals & Hiking</p>
+                            <h3 class="font-bold text-xl text-sand-900">Outdoors & Hiking</h3>
+                            <p class="text-xs font-mono text-sand-800/60">Alps & Trails</p>
                         </div>
                     </div>
 
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Excursions in mountain landscapes and nature observation reveal nature's innate efficiency. Natural branching, fractal geometry, and self-organizing systems inspire resilient data architecture designs.
+                    <p class="text-sand-800 text-sm leading-relaxed">
+                        Trekking in mountain regions is my favorite way to clear my mind. High altitude trails across the Italian Alps offer focus, peace, and fresh perspectives.
                     </p>
 
-                    <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-4 text-xs font-mono text-amber-300">
-                        <i class="fa-solid fa-[#f59e0b] fa-compass text-2xl"></i>
-                        <span>Favorite Reset: High-altitude trekking across the Italian Alps & Dolomites.</span>
+                    <div class="p-4 rounded-2xl bg-sand-50 border border-sand-200 flex items-center gap-4 text-xs font-mono text-sand-800">
+                        <i class="fa-solid fa-compass text-2xl text-earth-500"></i>
+                        <span>Favorite spots: Trekking paths across Lombardy, Piedmont, and the Dolomites.</span>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Blog / Notes Preview Section -->
+            <!-- Notes & Journal Section (Authentic structure without fake posts) -->
             <div class="space-y-6">
-                <h3 class="text-lg font-bold text-slate-200 flex items-center gap-2 font-mono">
-                    <i class="fa-solid fa-book-open text-emerald-400"></i> Personal Notes & Articles
-                </h3>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-sand-900 flex items-center gap-2 font-mono">
+                        <i class="fa-regular fa-bookmark text-earth-500"></i> Journal & Notes
+                    </h3>
+                    <span class="text-xs font-mono text-sand-800/60">Updated periodically</span>
+                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Note 1 -->
-                    <article class="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 transition-all group">
-                        <span class="text-xs font-mono text-emerald-400">Essay / Sound & Math</span>
-                        <h4 class="text-lg font-bold text-slate-100 group-hover:text-emerald-300 transition-colors mt-2">
-                            Harmonics in Algorithms: How Music Theory Connects to Data Pipelines
-                        </h4>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Exploring resonance, frequency transformations, and how timing in distributed systems reflects orchestral syncopation.
-                        </p>
-                        <div class="mt-4 flex items-center gap-2 text-xs font-mono text-slate-400">
-                            <span>Read time: 5 min</span> • <span>Published: 2026</span>
-                        </div>
-                    </article>
-
-                    <!-- Note 2 -->
-                    <article class="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 transition-all group">
-                        <span class="text-xs font-mono text-cyan-400">Data Engineering / Learnings</span>
-                        <h4 class="text-lg font-bold text-slate-100 group-hover:text-cyan-300 transition-colors mt-2">
-                            From Pure Math to Production dbt: Lessons Learned in Data Engineering
-                        </h4>
-                        <p class="text-slate-400 text-xs mt-2 leading-relaxed">
-                            Bridging theoretical mathematical rigor with real-world enterprise data warehouse design on Snowflake.
-                        </p>
-                        <div class="mt-4 flex items-center gap-2 text-xs font-mono text-slate-400">
-                            <span>Read time: 7 min</span> • <span>Published: 2026</span>
-                        </div>
-                    </article>
+                <!-- Empty State / Placeholder Container Ready for Authentic Notes -->
+                <div class="soft-card p-8 rounded-3xl border border-dashed border-sand-300 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-full bg-sand-100 text-sand-800 mx-auto flex items-center justify-center">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+                    <h4 class="font-bold text-sand-900 text-base">Personal notes coming soon</h4>
+                    <p class="text-xs text-sand-800/70 max-w-md mx-auto">
+                        This section will host future personal notes, technical summaries, and updates.
+                    </p>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- CONTACT SECTION -->
-    <section id="contact" class="py-24 border-t border-slate-800/60 bg-slate-950 relative">
+    <!-- ================= CONTACT MODULE ================= -->
+    <section id="contact" class="py-24 border-t border-sand-200/80 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 
-                <!-- Contact Info Left -->
+                <!-- Left Info -->
                 <div class="lg:col-span-5 space-y-8">
                     <div>
-                        <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">// Let's Connect</span>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100 mt-2">Get in Touch</h2>
-                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                            Open to discussions on Data Engineering projects, Data Science research, technical consulting, or sharing music & outdoor recommendations.
+                        <span class="text-xs font-mono text-earth-600 uppercase tracking-widest">// Reach Out</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-sand-900 mt-2">Get in Touch</h2>
+                        <p class="text-sand-800/80 text-sm mt-3 leading-relaxed">
+                            Feel free to contact me for technical inquiries, data engineering topics, or professional networking.
                         </p>
                     </div>
 
-                    <div class="space-y-4 font-mono text-sm">
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-                            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-sand-50 border border-sand-200">
+                            <div class="w-10 h-10 rounded-xl bg-earth-100 text-earth-600 flex items-center justify-center text-base">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block">Email</span>
-                                <a href="mailto:marco.scatassi.99@gmail.com" class="text-slate-200 hover:text-cyan-400 transition-colors">marco.scatassi.99@gmail.com</a>
+                                <span class="text-sand-800/60 block">Email</span>
+                                <a href="mailto:marco.scatassi.99@gmail.com" class="text-sand-900 hover:text-earth-600 transition-colors font-semibold">marco.scatassi.99@gmail.com</a>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-                            <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
-                                <i class="fa-brands fa-linkedin"></i>
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-sand-50 border border-sand-200">
+                            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-base">
+                                <i class="fa-brands fa-linkedin-in"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block">LinkedIn</span>
-                                <a href="https://linkedin.com/in/marco-scatassi" target="_blank" class="text-slate-200 hover:text-indigo-400 transition-colors">marco-scatassi</a>
+                                <span class="text-sand-800/60 block">LinkedIn</span>
+                                <a href="https://linkedin.com/in/marco-scatassi" target="_blank" rel="noopener noreferrer" class="text-sand-900 hover:text-slate-700 transition-colors font-semibold">marco-scatassi</a>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-sand-50 border border-sand-200">
+                            <div class="w-10 h-10 rounded-xl bg-sage-100 text-sage-700 flex items-center justify-center text-base">
                                 <i class="fa-brands fa-github"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block">GitHub</span>
-                                <a href="https://github.com/marco-scatassi" target="_blank" class="text-slate-200 hover:text-emerald-400 transition-colors">marco-scatassi</a>
+                                <span class="text-sand-800/60 block">GitHub</span>
+                                <a href="https://github.com/marco-scatassi" target="_blank" rel="noopener noreferrer" class="text-sand-900 hover:text-sage-700 transition-colors font-semibold">marco-scatassi</a>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-900 border border-slate-800">
-                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg">
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-sand-50 border border-sand-200">
+                            <div class="w-10 h-10 rounded-xl bg-sand-200 text-sand-800 flex items-center justify-center text-base">
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div>
-                                <span class="text-xs text-slate-400 block">Location</span>
-                                <span class="text-slate-200">Milano, Lombardia, Italy</span>
+                                <span class="text-sand-800/60 block">Location</span>
+                                <span class="text-sand-900 font-semibold">Milan, Italy</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Contact Form Right -->
-                <div class="lg:col-span-7 p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6">
-                    <h3 class="text-xl font-bold text-slate-100">Send a Message</h3>
+                <!-- Right Form -->
+                <div class="lg:col-span-7 soft-card p-8 rounded-3xl space-y-6">
+                    <h3 class="text-xl font-bold text-sand-900">Send a Message</h3>
+                    
                     <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-mono text-slate-400 mb-1">Your Name</label>
-                                <input type="text" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-cyan-500 text-sm" placeholder="e.g. Ada Lovelace">
+                                <label class="block text-xs font-mono text-sand-800/70 mb-1">Your Name</label>
+                                <input type="text" required class="w-full bg-sand-50 border border-sand-200 rounded-xl p-3 text-sand-900 focus:outline-none focus:border-earth-500 text-sm" placeholder="Your name">
                             </div>
                             <div>
-                                <label class="block text-xs font-mono text-slate-400 mb-1">Your Email</label>
-                                <input type="email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-cyan-500 text-sm" placeholder="ada@example.com">
+                                <label class="block text-xs font-mono text-sand-800/70 mb-1">Your Email</label>
+                                <input type="email" required class="w-full bg-sand-50 border border-sand-200 rounded-xl p-3 text-sand-900 focus:outline-none focus:border-earth-500 text-sm" placeholder="email@domain.com">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Subject</label>
-                            <input type="text" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-cyan-500 text-sm" placeholder="Data Engineering Collaboration / Chat">
+                            <label class="block text-xs font-mono text-sand-800/70 mb-1">Subject</label>
+                            <input type="text" required class="w-full bg-sand-50 border border-sand-200 rounded-xl p-3 text-sand-900 focus:outline-none focus:border-earth-500 text-sm" placeholder="Data Engineering / General Chat">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-mono text-slate-400 mb-1">Message</label>
-                            <textarea rows="4" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-cyan-500 text-sm" placeholder="Write your message here..."></textarea>
+                            <label class="block text-xs font-mono text-sand-800/70 mb-1">Message</label>
+                            <textarea rows="4" required class="w-full bg-sand-50 border border-sand-200 rounded-xl p-3 text-sand-900 focus:outline-none focus:border-earth-500 text-sm" placeholder="Write your message here..."></textarea>
                         </div>
 
-                        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-slate-950 font-bold transition-all hover:opacity-90 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> Send Message
+                        <button type="submit" class="w-full py-3.5 rounded-xl bg-earth-500 hover:bg-earth-600 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-xs"></i> Send Message
                         </button>
                     </form>
-                    <div id="form-response" class="hidden p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono text-center">
-                        Message sent successfully! I will reply as soon as possible.
+
+                    <div id="form-response" class="hidden p-3 rounded-xl bg-sage-100 border border-sage-200 text-sage-800 text-xs font-mono text-center">
+                        Message sent successfully!
                     </div>
                 </div>
 
@@ -752,71 +713,71 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="py-8 border-t border-slate-800/60 bg-slate-950 font-mono text-xs text-slate-400 text-center">
+    <!-- ================= FOOTER MODULE ================= -->
+    <footer class="py-8 border-t border-sand-200/80 bg-sand-100/60 font-mono text-xs text-sand-800/70 text-center">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-                © 2026 Marco Scatassi. Crafted with logic & natural rhythm.
+                © 2026 Marco Scatassi. All rights reserved.
             </div>
             <div class="flex items-center gap-6">
-                <a href="https://github.com/marco-scatassi" target="_blank" class="hover:text-cyan-400">GitHub</a>
-                <a href="https://linkedin.com/in/marco-scatassi" target="_blank" class="hover:text-cyan-400">LinkedIn</a>
-                <a href="#hero" class="hover:text-emerald-400">Back to Top ↑</a>
+                <a href="https://github.com/marco-scatassi" target="_blank" rel="noopener noreferrer" class="hover:text-earth-600">GitHub</a>
+                <a href="https://linkedin.com/in/marco-scatassi" target="_blank" rel="noopener noreferrer" class="hover:text-earth-600">LinkedIn</a>
+                <a href="#hero" class="hover:text-sage-700">Back to Top ↑</a>
             </div>
         </div>
     </footer>
 
-    <!-- CV DOWNLOAD MODAL -->
-    <div id="cv-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 relative shadow-2xl">
-            <button onclick="closeCvModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+    <!-- ================= CV MODAL MODULE ================= -->
+    <div id="cv-modal" class="fixed inset-0 z-50 bg-sand-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-sand-200 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 relative shadow-xl">
+            <button onclick="closeCvModal()" class="absolute top-4 right-4 text-sand-400 hover:text-sand-800 text-xl">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 mx-auto flex items-center justify-center text-2xl">
+                <div class="w-14 h-14 rounded-2xl bg-earth-100 text-earth-600 mx-auto flex items-center justify-center text-xl">
                     <i class="fa-solid fa-file-pdf"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-100">Marco Scatassi CV</h3>
-                <p class="text-xs text-slate-400">Data Engineer & Scientist Resume</p>
+                <h3 class="text-xl font-bold text-sand-900">Marco Scatassi CV</h3>
+                <p class="text-xs text-sand-800/70">Data Engineer & Scientist Resume</p>
             </div>
 
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs font-mono text-slate-300">
+            <div class="bg-sand-50 p-4 rounded-2xl border border-sand-200 space-y-2 text-xs font-mono text-sand-800">
                 <div class="flex justify-between">
                     <span>Education:</span>
-                    <span class="text-cyan-400">B.Sc. Math + M.Sc. Data Science</span>
+                    <span class="text-earth-600 font-semibold">B.Sc. Math + M.Sc. Data Science</span>
                 </div>
                 <div class="flex justify-between">
                     <span>Focus:</span>
-                    <span class="text-emerald-400">Snowflake, PySpark, dbt, ML</span>
+                    <span class="text-sage-700 font-semibold">Snowflake, dbt, PySpark</span>
                 </div>
                 <div class="flex justify-between">
                     <span>Location:</span>
-                    <span>Milan, Italy</span>
+                    <span>Milan, IT</span>
                 </div>
             </div>
 
             <div class="space-y-3">
-                <a href="https://github.com/marco-scatassi/marco-scatassi.github.io" target="_blank" class="w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 transition-all">
-                    <i class="fa-solid fa-download"></i> Download Latest PDF
+                <a href="https://github.com/marco-scatassi/marco-scatassi.github.io/raw/main/Marco_Scatassi_CV.pdf" download target="_blank" class="w-full py-3 rounded-xl bg-earth-500 hover:bg-earth-600 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-download"></i> Download PDF
                 </a>
-                <button onclick="closeCvModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs transition-all">
-                    Close Window
+                <button onclick="closeCvModal()" class="w-full py-2.5 rounded-xl bg-sand-100 hover:bg-sand-200 text-sand-800 font-mono text-xs transition-all">
+                    Close
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT ANIMATIONS & INTERACTION -->
+    <!-- ================= JAVASCRIPT APP CONTROLLER ================= -->
     <script>
-        // 1. Mobile Menu Toggle
+        // 1. Mobile Menu Drawer logic
         const menuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // 2. CV Modal Handlers
+        // 2. CV Download Modal logic
         function openCvModal() {
             document.getElementById('cv-modal').classList.remove('hidden');
         }
@@ -824,16 +785,16 @@
             document.getElementById('cv-modal').classList.add('hidden');
         }
 
-        // 3. Project Filter Logic
+        // 3. Portfolio Projects Filter Module
         function filterProjects(category) {
             const cards = document.querySelectorAll('.project-card');
             const btns = document.querySelectorAll('.project-filter-btn');
 
             btns.forEach(btn => {
                 if(btn.getAttribute('data-filter') === category) {
-                    btn.className = 'project-filter-btn px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 font-semibold transition-all';
+                    btn.className = 'project-filter-btn px-4 py-2 rounded-xl bg-earth-500 text-white font-semibold transition-all';
                 } else {
-                    btn.className = 'project-filter-btn px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-all';
+                    btn.className = 'project-filter-btn px-4 py-2 rounded-xl bg-sand-100 border border-sand-300 hover:border-earth-500 text-sand-800 transition-all';
                 }
             });
 
@@ -846,7 +807,7 @@
             });
         }
 
-        // 4. Hero Background Canvas Animation (Waves + Particles)
+        // 4. Hero Background Canvas Animation (Subtle Organic Waveform)
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -861,25 +822,25 @@
         let step = 0;
         function animateHeroCanvas() {
             ctx.clearRect(0, 0, width, height);
-            step += 0.015;
+            step += 0.008;
 
-            // Draw organic waveform line
+            // Sage organic wave
             ctx.beginPath();
             ctx.lineWidth = 1.5;
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.25)';
-            for (let x = 0; x < width; x += 10) {
-                const y = Math.sin(x * 0.005 + step) * 40 + Math.cos(x * 0.01 + step * 0.8) * 20 + height * 0.5;
+            ctx.strokeStyle = 'rgba(91, 130, 84, 0.3)';
+            for (let x = 0; x < width; x += 15) {
+                const y = Math.sin(x * 0.003 + step) * 35 + Math.cos(x * 0.006 + step * 0.8) * 15 + height * 0.5;
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
 
-            // Draw second secondary wave (emerald)
+            // Earth secondary wave
             ctx.beginPath();
             ctx.lineWidth = 1;
-            ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)';
-            for (let x = 0; x < width; x += 15) {
-                const y = Math.cos(x * 0.004 - step) * 50 + height * 0.55;
+            ctx.strokeStyle = 'rgba(200, 109, 81, 0.2)';
+            for (let x = 0; x < width; x += 20) {
+                const y = Math.cos(x * 0.002 - step) * 45 + height * 0.52;
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
@@ -893,21 +854,21 @@
             initWaveformVisualizer();
         };
 
-        // 5. Sound Visualizer Bars Generator
+        // 5. Sound Waveform Bars Generator
         function initWaveformVisualizer() {
             const container = document.getElementById('waveform-container');
             container.innerHTML = '';
-            const totalBars = 36;
+            const totalBars = 32;
             for(let i = 0; i < totalBars; i++) {
                 const bar = document.createElement('div');
-                bar.className = 'w-1.5 rounded-full bg-emerald-500/60 transition-all duration-300';
-                const randomHeight = Math.floor(Math.random() * 70) + 15;
+                bar.className = 'w-1.5 rounded-full bg-sage-600/70 transition-all duration-300';
+                const randomHeight = Math.floor(Math.random() * 65) + 15;
                 bar.style.height = randomHeight + '%';
                 container.appendChild(bar);
             }
         }
 
-        // Synth audio synthesis demo using Web Audio API
+        // 6. Web Audio API Synth Demo
         let audioCtx = null;
         let isPlaying = false;
 
@@ -920,19 +881,19 @@
                 }
                 playHarmonicScale();
                 isPlaying = true;
-                btn.innerHTML = '<i class="fa-solid fa-square"></i> Stop Synth';
-                btn.className = 'px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all';
+                btn.innerHTML = '<i class="fa-solid fa-square text-xs"></i> Stop Sound';
+                btn.className = 'px-4 py-2 rounded-xl bg-earth-500 text-white font-bold text-xs flex items-center gap-2 transition-all';
             } else {
                 isPlaying = false;
-                btn.innerHTML = '<i class="fa-solid fa-play"></i> Play Harmonic Synth';
-                btn.className = 'px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all';
+                btn.innerHTML = '<i class="fa-solid fa-play text-xs"></i> Play Pentatonic Tone';
+                btn.className = 'px-4 py-2 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold text-xs flex items-center gap-2 transition-all';
             }
         }
 
         function playHarmonicScale() {
             if(!isPlaying || !audioCtx) return;
 
-            const frequencies = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // Pentatonic scale (C4, D4, E4, G4, A4, C5)
+            const frequencies = [261.63, 293.66, 329.63, 392.00, 440.00]; // C4, D4, E4, G4, A4
             const freq = frequencies[Math.floor(Math.random() * frequencies.length)];
 
             const osc = audioCtx.createOscillator();
@@ -941,24 +902,23 @@
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.8);
+            osc.stop(audioCtx.currentTime + 0.6);
 
-            // Animate visualizer bars
             initWaveformVisualizer();
 
             if(isPlaying) {
-                setTimeout(playHarmonicScale, 400);
+                setTimeout(playHarmonicScale, 500);
             }
         }
 
-        // Form Submit Handler
+        // 7. Contact Form Handler
         function handleFormSubmit(event) {
             event.preventDefault();
             const resp = document.getElementById('form-response');
