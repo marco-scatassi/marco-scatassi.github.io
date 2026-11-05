@@ -3,139 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marco Scatassi | Cloud & Data Engineer</title>
+    <title>Marco Scatassi | Cloud & Data Engineer [CYBERPUNK]</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        stoneBg: '#f7f6f0',
-                        cardBg: '#ffffff',
-                        earthText: '#2d3748',
-                        accentSage: '#4a7c59',
-                        accentTerracotta: '#bc6c25',
-                        softBlue: '#3d5a80'
+                        cyberBg: '#05050a',
+                        cyberCard: '#0c0e1a',
+                        cyberCyan: '#00f0ff',
+                        cyberPink: '#ff0055',
+                        cyberYellow: '#fcee0a',
+                        cyberText: '#a0aabf'
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 15px rgba(0, 240, 255, 0.25)',
+                        'neon-pink': '0 0 15px rgba(255, 0, 85, 0.25)',
+                        'neon-yellow': '0 0 15px rgba(252, 238, 10, 0.25)',
                     }
                 }
             }
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .glitch-border {
+            position: relative;
+        }
+        .glitch-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #ff0055);
+        }
+    </style>
 </head>
-<body class="bg-stoneBg text-earthText font-sans antialiased selection:bg-accentSage selection:text-white">
+<body class="bg-cyberBg text-cyberText font-sans antialiased selection:bg-cyberPink selection:text-white">
 
     <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
+    <header class="sticky top-0 z-50 bg-cyberBg/90 backdrop-blur-md border-b border-cyberCyan/20 glitch-border">
         <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="text-xl font-bold tracking-tight flex items-center gap-2">
-                <span class="w-3 h-3 rounded-full bg-accentSage"></span>
-                Marco Scatassi
+            <a href="index.html" class="text-lg font-black tracking-wider text-white flex items-center gap-2">
+                <span class="w-3 h-3 bg-cyberCyan shadow-neon-cyan animate-pulse"></span>
+                MARCO_SCATASSI<span class="text-cyberPink">.exe</span>
             </a>
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="#about" class="hover:text-accentSage transition">About</a>
-                <a href="#experience" class="hover:text-accentSage transition">Esperienza</a>
-                <a href="#projects" class="hover:text-accentSage transition">Progetti</a>
-                <a href="#skills" class="hover:text-accentSage transition">Competenze</a>
-                <a href="#certifications" class="hover:text-accentSage transition">Certificazioni</a>
-                <a href="#contact" class="hover:text-accentSage transition">Contatti</a>
-                <a href="personal.html" class="px-4 py-2 rounded-full bg-accentSage/10 text-accentSage hover:bg-accentSage hover:text-white transition flex items-center gap-2">
-                    <i class="fa-solid fa-leaf"></i> Natura & Passioni
+            <nav class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest">
+                <a href="#about" class="hover:text-cyberCyan transition">About</a>
+                <a href="#experience" class="hover:text-cyberCyan transition">Esperienza</a>
+                <a href="#projects" class="hover:text-cyberCyan transition">Progetti</a>
+                <a href="#skills" class="hover:text-cyberCyan transition">Stack</a>
+                <a href="#certifications" class="hover:text-cyberCyan transition">Cert</a>
+                <a href="#contact" class="hover:text-cyberCyan transition">Contatti</a>
+                <a href="personal.html" class="px-4 py-2 rounded bg-cyberPink/10 border border-cyberPink/40 text-cyberPink hover:bg-cyberPink hover:text-white transition shadow-neon-pink flex items-center gap-2">
+                    <i class="fa-solid fa-skull"></i> Netrunner Mode
                 </a>
             </nav>
-            <button id="menu-btn" class="md:hidden text-2xl text-earthText focus:outline-none">
-                <i class="fa-solid fa-bars"></i>
+            <button id="menu-btn" class="md:hidden text-2xl text-cyberCyan focus:outline-none">
+                <i class="fa-solid fa-terminal"></i>
             </button>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-stoneBg border-b border-stone-200 px-6 py-4 space-y-3">
-            <a href="#about" class="block hover:text-accentSage">About</a>
-            <a href="#experience" class="block hover:text-accentSage">Esperienza</a>
-            <a href="#projects" class="block hover:text-accentSage">Progetti</a>
-            <a href="#skills" class="block hover:text-accentSage">Competenze</a>
-            <a href="#certifications" class="block hover:text-accentSage">Certificazioni</a>
-            <a href="#contact" class="block hover:text-accentSage">Contatti</a>
-            <a href="personal.html" class="block text-accentSage font-semibold">🍃 Natura & Passioni</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-cyberCard border-b border-cyberCyan/20 px-6 py-4 space-y-3 text-xs uppercase font-bold tracking-widest">
+            <a href="#about" class="block hover:text-cyberCyan">About</a>
+            <a href="#experience" class="block hover:text-cyberCyan">Esperienza</a>
+            <a href="#projects" class="block hover:text-cyberCyan">Progetti</a>
+            <a href="#skills" class="block hover:text-cyberCyan">Stack</a>
+            <a href="#certifications" class="block hover:text-cyberCyan">Certificazioni</a>
+            <a href="#contact" class="block hover:text-cyberCyan">Contatti</a>
+            <a href="personal.html" class="block text-cyberPink font-bold">💀 Netrunner Mode</a>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section id="about" class="max-w-6xl mx-auto px-6 py-20 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
         <div class="md:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/70 text-xs font-semibold uppercase tracking-wider text-stone-700">
-                <i class="fa-solid fa-code text-accentSage"></i> Cloud Engineer & Data Specialist
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-cyberCyan/10 border border-cyberCyan/30 text-xs font-mono uppercase tracking-widest text-cyberCyan shadow-neon-cyan">
+                <i class="fa-solid fa-microchip"></i> SYSTEM_ROLE: Cloud & Data Engineer
             </div>
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-stone-900 leading-tight">
-                Ingegneria Cloud, Data Architecture e Governance dei Dati.
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white leading-tight">
+                Architecting Cloud Data & <span class="text-cyberCyan">Neural Systems.</span>
             </h1>
-            <p class="text-lg text-stone-600 leading-relaxed">
-                Laureato in Matematica all'Università di Bologna e Magistrale in Data Science alla Milano-Bicocca. Attualmente Cloud Engineer in Nimbus Intelligence, specializzato su Snowflake, Terraform e automazione CI/CD.
+            <p class="text-base md:text-lg text-cyberText leading-relaxed font-mono">
+                Laureato in Matematica (UNIBO) e Magistrale in Data Science (Milano-Bicocca)[cite: 2]. Attualmente Cloud Engineer in Nimbus Intelligence[cite: 2], specializzato su Snowflake, Terraform e automazione CI/CD[cite: 2].
             </p>
             <div class="flex flex-wrap gap-4 pt-4">
-                <a href="#projects" class="px-6 py-3 rounded-xl bg-accentSage text-white font-medium hover:bg-accentSage/90 transition shadow-sm">
-                    Esplora Progetti
+                <a href="#projects" class="px-6 py-3 rounded bg-cyberCyan text-cyberBg font-bold hover:bg-cyberCyan/90 transition shadow-neon-cyan uppercase text-xs tracking-widest">
+                    [ Esplora Progetti ]
                 </a>
-                <a href="assets/CV_Marco_Scatassi.pdf" download class="px-6 py-3 rounded-xl border border-stone-300 font-medium hover:bg-stone-100 transition inline-block text-center">
-                    Scarica CV
+                <a href="CV_Marco_Scatassi.pdf" download class="px-6 py-3 rounded border border-cyberPink text-cyberPink font-bold hover:bg-cyberPink/10 transition uppercase text-xs tracking-widest shadow-neon-pink">
+                    [ Scarica CV ]
                 </a>
-                <a href="personal.html" class="px-6 py-3 rounded-xl bg-stone-200/80 font-medium hover:bg-stone-300 transition flex items-center gap-2">
-                    <i class="fa-solid fa-seedling text-accentSage"></i> Il mio lato personale
+                <a href="personal.html" class="px-6 py-3 rounded border border-stone-700 text-stone-300 font-bold hover:border-white transition uppercase text-xs tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-user-secret text-cyberYellow"></i> Spazio Personale
                 </a>
             </div>
         </div>
         <div class="md:col-span-5 flex justify-center">
-            <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-xl border-4 border-white bg-stone-200">
-                <img src="images/profile1.jpeg" alt="Marco Scatassi" class="w-full h-full object-cover">
+            <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-neon-pink border-2 border-cyberPink bg-cyberCard">
+                <img src="images/profile1.jpeg" alt="Marco Scatassi" class="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition duration-500">
+                <div class="absolute inset-0 bg-cyberPink/10 pointer-events-none mix-blend-overlay"></div>
             </div>
         </div>
     </section>
 
     <!-- Experience & Education Section -->
-    <section id="experience" class="py-20 bg-stone-100/60 border-y border-stone-200/60">
+    <section id="experience" class="py-20 bg-cyberCard/50 border-y border-cyberCyan/10">
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <h2 class="text-3xl font-bold tracking-tight">Formazione ed Esperienza</h2>
-                <p class="text-stone-600">Il percorso accademico e professionale.</p>
+                <h2 class="text-3xl font-black text-white tracking-wider uppercase">Logs & Experience</h2>
+                <p class="text-xs font-mono text-cyberCyan tracking-widest uppercase">// Storico Professionale & Accademico[cite: 2]</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-cardBg p-8 rounded-2xl shadow-sm border border-stone-200/80 space-y-6">
-                    <h3 class="text-xl font-bold flex items-center gap-3 text-stone-900">
-                        <span class="p-2 rounded-lg bg-accentSage/10 text-accentSage"><i class="fa-solid fa-briefcase"></i></span> Esperienza Professionale
+                <div class="bg-cyberCard p-8 rounded-2xl shadow-lg border border-cyberCyan/20 space-y-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-cyberCyan/5 rounded-full blur-xl"></div>
+                    <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-3">
+                        <span class="p-2 rounded bg-cyberCyan/10 text-cyberCyan"><i class="fa-solid fa-terminal"></i></span> Esperienza Professionale
                     </h3>
-                    <div class="border-l-2 border-stone-200 pl-4 space-y-6">
+                    <div class="border-l-2 border-cyberCyan/30 pl-4 space-y-6 font-mono text-sm">
                         <div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-accentSage">08/2025 - Presente</span>
-                            <h4 class="text-lg font-bold text-stone-800">Cloud Engineer</h4>
-                            <p class="text-sm text-stone-600 font-medium">Nimbus Intelligence (Milano, Italia)</p>
-                            <p class="text-sm text-stone-600 mt-2">Provisioning di infrastrutture con Terraform, pipeline CI/CD in GitLab con Python, connettività sicura e gestione condivisione dati cross-account.</p>
+                            <span class="text-xs font-bold text-cyberPink uppercase">// 08/2025 - Presente[cite: 2]</span>
+                            <h4 class="text-base font-bold text-white mt-1">Cloud Engineer[cite: 2]</h4>
+                            <p class="text-xs text-cyberCyan">Nimbus Intelligence (Milano)[cite: 2]</p>
+                            <p class="text-xs text-cyberText mt-2">Infrastrutture con Terraform, pipeline CI/CD in GitLab con Python, connettività sicura e gestione condivisione dati cross-account[cite: 2].</p>
                         </div>
                         <div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-accentSage">06/2024 - 07/2025</span>
-                            <h4 class="text-lg font-bold text-stone-800">Database Administrator</h4>
-                            <p class="text-sm text-stone-600 font-medium">Nimbus Intelligence (Milano, Italia)</p>
-                            <p class="text-sm text-stone-600 mt-2">Amministrazione Snowflake, RBAC, ottimizzazione Virtual Warehouses, Time Travel, performance tuning e sviluppo di app Streamlit.</p>
+                            <span class="text-xs font-bold text-cyberPink uppercase">// 06/2024 - 07/2025[cite: 2]</span>
+                            <h4 class="text-base font-bold text-white mt-1">Database Administrator[cite: 2]</h4>
+                            <p class="text-xs text-cyberCyan">Nimbus Intelligence (Milano)[cite: 2]</p>
+                            <p class="text-xs text-cyberText mt-2">Amministrazione Snowflake, RBAC, ottimizzazione Virtual Warehouses, Time Travel, performance tuning e app Streamlit[cite: 2].</p>
                         </div>
                         <div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-stone-600">03/2022 - 10/2022</span>
-                            <h4 class="text-lg font-bold text-stone-800">University Research Support Worker</h4>
-                            <p class="text-sm text-stone-600 font-medium">Norwegian School of Economics (Bergen, Norvegia)</p>
-                            <p class="text-sm text-stone-600 mt-2">Raccolta dati via API, integrazione in tempo reale, ottimizzazione stocastica e sviluppo dashboard Streamlit.</p>
+                            <span class="text-xs font-bold text-stone-500 uppercase">// 03/2022 - 10/2022[cite: 2]</span>
+                            <h4 class="text-base font-bold text-white mt-1">University Research Support Worker[cite: 2]</h4>
+                            <p class="text-xs text-stone-400">Norwegian School of Economics (Bergen)[cite: 2]</p>
+                            <p class="text-xs text-cyberText mt-2">Raccolta dati via API, integrazione real-time, ottimizzazione stocastica e dashboard Streamlit[cite: 2].</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-cardBg p-8 rounded-2xl shadow-sm border border-stone-200/80 space-y-6">
-                    <h3 class="text-xl font-bold flex items-center gap-3 text-stone-900">
-                        <span class="p-2 rounded-lg bg-softBlue/10 text-softBlue"><i class="fa-solid fa-graduation-cap"></i></span> Formazione
+                <div class="bg-cyberCard p-8 rounded-2xl shadow-lg border border-cyberPink/20 space-y-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-cyberPink/5 rounded-full blur-xl"></div>
+                    <h3 class="text-lg font-black text-white uppercase tracking-wider flex items-center gap-3">
+                        <span class="p-2 rounded bg-cyberPink/10 text-cyberPink"><i class="fa-solid fa-graduation-cap"></i></span> Formazione
                     </h3>
-                    <div class="border-l-2 border-stone-200 pl-4 space-y-6">
+                    <div class="border-l-2 border-cyberPink/30 pl-4 space-y-6 font-mono text-sm">
                         <div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-softBlue">2021 - 2023 (EQF 7)</span>
-                            <h4 class="text-lg font-bold text-stone-800">Magistrale in Data Science</h4>
-                            <p class="text-sm text-stone-600 font-medium">Università degli Studi di Milano-Bicocca</p>
+                            <span class="text-xs font-bold text-cyberYellow uppercase">// 2021 - 2023 (EQF 7)[cite: 2]</span>
+                            <h4 class="text-base font-bold text-white mt-1">Magistrale in Data Science[cite: 2]</h4>
+                            <p class="text-xs text-cyberPink">Università degli Studi di Milano-Bicocca[cite: 2]</p>
                         </div>
                         <div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-softBlue">2018 - 2021 (EQF 6)</span>
-                            <h4 class="text-lg font-bold text-stone-800">Laurea Triennale in Matematica</h4>
-                            <p class="text-sm text-stone-600 font-medium">Alma Mater Studiorum - Università di Bologna (UNIBO)</p>
+                            <span class="text-xs font-bold text-cyberYellow uppercase">// 2018 - 2021 (EQF 6)[cite: 2]</span>
+                            <h4 class="text-base font-bold text-white mt-1">Laurea Triennale in Matematica[cite: 2]</h4>
+                            <p class="text-xs text-cyberPink">Alma Mater Studiorum - UNIBO[cite: 2]</p>
                         </div>
                     </div>
                 </div>
@@ -147,140 +166,140 @@
     <section id="projects" class="py-20 max-w-6xl mx-auto px-6">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div class="space-y-3">
-                <h2 class="text-3xl font-bold tracking-tight">Progetti in Evidenza</h2>
-                <p class="text-stone-600">Repository GitHub ufficiali.</p>
+                <h2 class="text-3xl font-black text-white tracking-wider uppercase">Active Projects</h2>
+                <p class="text-xs font-mono text-cyberYellow tracking-widest uppercase">// Repository GitHub ufficiali</p>
             </div>
-            <a href="https://github.com/marco-scatassi?tab=repositories" target="_blank" class="mt-4 md:mt-0 text-accentSage font-semibold flex items-center gap-2 hover:underline">
-                Vedi tutti su GitHub <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            <a href="https://github.com/marco-scatassi?tab=repositories" target="_blank" class="mt-4 md:mt-0 text-cyberCyan font-mono text-xs uppercase tracking-widest flex items-center gap-2 hover:underline">
+                [ Visualizza Database Completo ] <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
             </a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Project 1 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-microchip text-2xl text-accentSage"></i>
-                        <a href="https://github.com/marco-scatassi/WM-811K-WaferMap-A-deep-learning-approach" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-microchip text-2xl text-cyberCyan"></i>
+                        <a href="https://github.com/marco-scatassi/WM-811K-WaferMap-A-deep-learning-approach" target="_blank" class="text-cyberText hover:text-cyberCyan transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">WM-811K WaferMap DL</h3>
-                    <p class="text-sm text-stone-600">Approccio di Deep Learning per la classificazione di wafer map.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberCyan transition">WM-811K WaferMap DL</h3>
+                    <p class="text-xs text-cyberText font-mono">Approccio di Deep Learning per la classificazione di wafer map industriali.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Python</span>
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Deep Learning</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">Python</span>
+                    <span class="px-2 py-1 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">Deep Learning</span>
                 </div>
             </div>
             <!-- Project 2 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-car text-2xl text-softBlue"></i>
-                        <a href="https://github.com/marco-scatassi/Milan-Traffic" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-car text-2xl text-cyberPink"></i>
+                        <a href="https://github.com/marco-scatassi/Milan-Traffic" target="_blank" class="text-cyberText hover:text-cyberPink transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">Milan Traffic Analysis</h3>
-                    <p class="text-sm text-stone-600">Analisi dei flussi di traffico nella città di Milano.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberPink transition">Milan Traffic Analysis</h3>
+                    <p class="text-xs text-cyberText font-mono">Analisi avanzata dei flussi di traffico urbano nella città di Milano.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Python</span>
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Data Science</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/30">Python</span>
+                    <span class="px-2 py-1 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/30">Data Science</span>
                 </div>
             </div>
             <!-- Project 3 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-comments text-2xl text-accentTerracotta"></i>
-                        <a href="https://github.com/marco-scatassi/reddit-tldr-summarizer-and-topic-modeling" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-comments text-2xl text-cyberYellow"></i>
+                        <a href="https://github.com/marco-scatassi/reddit-tldr-summarizer-and-topic-modeling" target="_blank" class="text-cyberText hover:text-cyberYellow transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">Reddit TL;DR Summarizer</h3>
-                    <p class="text-sm text-stone-600">Topic modeling e summarization automatica di thread Reddit.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberYellow transition">Reddit TL;DR Summarizer</h3>
+                    <p class="text-xs text-cyberText font-mono">Topic modeling e summarization automatica di thread estratti da Reddit.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">NLP</span>
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Transformers</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/30">NLP</span>
+                    <span class="px-2 py-1 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/30">Transformers</span>
                 </div>
             </div>
             <!-- Project 4 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-bolt text-2xl text-accentTerracotta"></i>
-                        <a href="https://github.com/marco-scatassi/Energy-Price-Prediction-Knime-Project" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-bolt text-2xl text-cyberYellow"></i>
+                        <a href="https://github.com/marco-scatassi/Energy-Price-Prediction-Knime-Project" target="_blank" class="text-cyberText hover:text-cyberYellow transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">Energy Price Prediction</h3>
-                    <p class="text-sm text-stone-600">Pipeline di previsione dei prezzi energetici su KNIME.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberYellow transition">Energy Price Prediction</h3>
+                    <p class="text-xs text-cyberText font-mono">Pipeline di previsione dei prezzi energetici implementata su KNIME.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">KNIME</span>
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Analytics</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/30">KNIME</span>
+                    <span class="px-2 py-1 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/30">Analytics</span>
                 </div>
             </div>
             <!-- Project 5 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-chart-pie text-2xl text-accentSage"></i>
-                        <a href="https://github.com/marco-scatassi/bodyfat-dataset-analysis" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-chart-pie text-2xl text-cyberCyan"></i>
+                        <a href="https://github.com/marco-scatassi/bodyfat-dataset-analysis" target="_blank" class="text-cyberText hover:text-cyberCyan transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">Bodyfat Dataset Analysis</h3>
-                    <p class="text-sm text-stone-600">Studio statistico sulle stime della percentuale di grasso corporeo.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberCyan transition">Bodyfat Dataset Analysis</h3>
+                    <p class="text-xs text-cyberText font-mono">Studio statistico approfondito sulle stime della percentuale di grasso corporeo.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Statistics</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/30">Statistics</span>
                 </div>
             </div>
             <!-- Project 6 -->
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex flex-col justify-between hover:border-cyberCyan hover:shadow-neon-cyan transition group">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <i class="fa-solid fa-network-wired text-2xl text-softBlue"></i>
-                        <a href="https://github.com/marco-scatassi/Casual-Network-Project" target="_blank" class="text-stone-400 hover:text-stone-900 transition"><i class="fa-brands fa-github text-xl"></i></a>
+                        <i class="fa-solid fa-network-wired text-2xl text-cyberPink"></i>
+                        <a href="https://github.com/marco-scatassi/Casual-Network-Project" target="_blank" class="text-cyberText hover:text-cyberPink transition"><i class="fa-brands fa-github text-xl"></i></a>
                     </div>
-                    <h3 class="text-xl font-bold text-stone-900">Causal Network Project</h3>
-                    <p class="text-sm text-stone-600">Analisi di reti causali e inferenza statistica.</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-cyberPink transition">Causal Network Project</h3>
+                    <p class="text-xs text-cyberText font-mono">Analisi di reti causali e inferenza statistica avanzata.</p>
                 </div>
-                <div class="pt-6 flex flex-wrap gap-2 text-xs font-medium">
-                    <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700">Network Analysis</span>
+                <div class="pt-6 flex flex-wrap gap-2 text-xs font-mono">
+                    <span class="px-2 py-1 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/30">Network Analysis</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-20 bg-stone-100/60 border-t border-stone-200/60">
+    <section id="skills" class="py-20 bg-cyberCard/50 border-t border-cyberCyan/10">
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <h2 class="text-3xl font-bold tracking-tight">Competenze & Stack Tecnologico</h2>
-                <p class="text-stone-600">Sviluppate attraverso esperienze cloud e percorsi accademici.</p>
+                <h2 class="text-3xl font-black text-white tracking-wider uppercase">Tech Stack & Hardware</h2>
+                <p class="text-xs font-mono text-cyberCyan tracking-widest uppercase">// Moduli di competenza caricati nel sistema[cite: 2]</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 space-y-4">
-                    <h3 class="font-bold text-lg text-stone-900 flex items-center gap-2"><i class="fa-solid fa-cloud text-accentSage"></i> Cloud & Infrastructure</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Snowflake (Admin & Data Warehouse)</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Terraform (IaC)</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">GitLab CI/CD</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Cloud Architecture</span>
+                <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 space-y-4 shadow-lg">
+                    <h3 class="font-bold text-base text-white flex items-center gap-2 uppercase font-mono"><i class="fa-solid fa-cloud text-cyberCyan"></i> Cloud & Infrastructure</h3>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-3 py-1.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20">Snowflake (Admin & DW)[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20">Terraform (IaC)[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20">GitLab CI/CD[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberCyan/10 text-cyberCyan border border-cyberCyan/20">Cloud Architecture[cite: 2]</span>
                     </div>
                 </div>
-                <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 space-y-4">
-                    <h3 class="font-bold text-lg text-stone-900 flex items-center gap-2"><i class="fa-solid fa-database text-softBlue"></i> Data Engineering & Tools</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Python</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">SQL</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">dbt</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Databricks</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Streamlit</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">ETL & Data Loading</span>
+                <div class="bg-cyberCard p-6 rounded-2xl border border-cyberPink/30 space-y-4 shadow-lg">
+                    <h3 class="font-bold text-base text-white flex items-center gap-2 uppercase font-mono"><i class="fa-solid fa-database text-cyberPink"></i> Data Engineering</h3>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">Python[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">SQL[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">dbt[cite: 3]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">Databricks[cite: 3]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">Streamlit[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberPink/10 text-cyberPink border border-cyberPink/20">ETL & Loading[cite: 2]</span>
                     </div>
                 </div>
-                <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 space-y-4">
-                    <h3 class="font-bold text-lg text-stone-900 flex items-center gap-2"><i class="fa-solid fa-brain text-accentTerracotta"></i> Data Science & Governance</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Machine Learning</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">RBAC & Security</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Performance Tuning</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-sm">Statistical Modeling</span>
+                <div class="bg-cyberCard p-6 rounded-2xl border border-cyberYellow/30 space-y-4 shadow-lg">
+                    <h3 class="font-bold text-base text-white flex items-center gap-2 uppercase font-mono"><i class="fa-solid fa-brain text-cyberYellow"></i> Data Science & Gov</h3>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-3 py-1.5 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/20">Machine Learning[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/20">RBAC & Security[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/20">Performance Tuning[cite: 2]</span>
+                        <span class="px-3 py-1.5 rounded bg-cyberYellow/10 text-cyberYellow border border-cyberYellow/20">Statistical Modeling[cite: 2]</span>
                     </div>
                 </div>
             </div>
@@ -290,95 +309,95 @@
     <!-- Certifications Section -->
     <section id="certifications" class="py-20 max-w-6xl mx-auto px-6">
         <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <h2 class="text-3xl font-bold tracking-tight">Certificazioni Professionali</h2>
-            <p class="text-stone-600">Competenze certificate in ambito Cloud e Data Analytics.</p>
+            <h2 class="text-3xl font-black text-white tracking-wider uppercase">Verified Neural Certs</h2>
+            <p class="text-xs font-mono text-cyberPink tracking-widest uppercase">// Credenziali di sicurezza ufficiali[cite: 3]</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex items-start gap-4">
-                <span class="p-3 rounded-xl bg-accentSage/10 text-accentSage text-xl"><i class="fa-solid fa-certificate"></i></span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex items-start gap-4">
+                <span class="p-3 rounded bg-cyberCyan/10 text-cyberCyan text-xl"><i class="fa-solid fa-shield-halved"></i></span>
                 <div class="space-y-1">
-                    <h3 class="font-bold text-stone-900">SnowPro Advanced: Administrator Certification</h3>
-                    <p class="text-xs text-stone-500 font-semibold">Snowflake • Rilasciata: 16/04/2026</p>
-                    <p class="text-sm text-stone-600 pt-1">Amministrazione avanzata di account Snowflake, sicurezza, governance e ottimizzazione.</p>
+                    <h3 class="font-bold text-white text-sm uppercase">SnowPro Advanced: Administrator</h3>
+                    <p class="text-cyberCyan font-semibold">// Snowflake • 16/04/2026[cite: 3]</p>
+                    <p class="text-cyberText pt-1">Amministrazione avanzata di account Snowflake, sicurezza, governance e ottimizzazione[cite: 3].</p>
                 </div>
             </div>
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex items-start gap-4">
-                <span class="p-3 rounded-xl bg-softBlue/10 text-softBlue text-xl"><i class="fa-solid fa-certificate"></i></span>
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberPink/30 shadow-lg flex items-start gap-4">
+                <span class="p-3 rounded bg-cyberPink/10 text-cyberPink text-xl"><i class="fa-solid fa-shield-halved"></i></span>
                 <div class="space-y-1">
-                    <h3 class="font-bold text-stone-900">SnowPro Core Certification</h3>
-                    <p class="text-xs text-stone-500 font-semibold">Snowflake • Rilasciata: 09/02/2024</p>
-                    <p class="text-sm text-stone-600 pt-1">Competenza approfondita nella progettazione e gestione di soluzioni Snowflake.</p>
+                    <h3 class="font-bold text-white text-sm uppercase">SnowPro Core Certification</h3>
+                    <p class="text-cyberPink font-semibold">// Snowflake • 09/02/2024[cite: 3]</p>
+                    <p class="text-cyberText pt-1">Competenza nella progettazione e gestione di soluzioni sicure e scalabili[cite: 3].</p>
                 </div>
             </div>
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex items-start gap-4">
-                <span class="p-3 rounded-xl bg-accentTerracotta/10 text-accentTerracotta text-xl"><i class="fa-solid fa-certificate"></i></span>
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberYellow/30 shadow-lg flex items-start gap-4">
+                <span class="p-3 rounded bg-cyberYellow/10 text-cyberYellow text-xl"><i class="fa-solid fa-shield-halved"></i></span>
                 <div class="space-y-1">
-                    <h3 class="font-bold text-stone-900">dbt Analytics Engineering</h3>
-                    <p class="text-xs text-stone-500 font-semibold">dbt Labs • Rilasciata: 04/04/2024</p>
-                    <p class="text-sm text-stone-600 pt-1">Capacità di costruire, testare e mantenere modelli di trasformazione dati.</p>
+                    <h3 class="font-bold text-white text-sm uppercase">dbt Analytics Engineering</h3>
+                    <p class="text-cyberYellow font-semibold">// dbt Labs • 04/04/2024[cite: 3]</p>
+                    <p class="text-cyberText pt-1">Capacità di costruire, testare e mantenere modelli di trasformazione dati[cite: 3].</p>
                 </div>
             </div>
-            <div class="bg-cardBg p-6 rounded-2xl border border-stone-200/80 shadow-sm flex items-start gap-4">
-                <span class="p-3 rounded-xl bg-accentSage/10 text-accentSage text-xl"><i class="fa-solid fa-certificate"></i></span>
+            <div class="bg-cyberCard p-6 rounded-2xl border border-cyberCyan/30 shadow-lg flex items-start gap-4">
+                <span class="p-3 rounded bg-cyberCyan/10 text-cyberCyan text-xl"><i class="fa-solid fa-shield-halved"></i></span>
                 <div class="space-y-1">
-                    <h3 class="font-bold text-stone-900">Databricks Fundamentals</h3>
-                    <p class="text-xs text-stone-500 font-semibold">Databricks • Rilasciata: 18/06/2024</p>
-                    <p class="text-sm text-stone-600 pt-1">Comprensione dei concetti chiave della Databricks Data Intelligence Platform.</p>
+                    <h3 class="font-bold text-white text-sm uppercase">Databricks Fundamentals</h3>
+                    <p class="text-cyberCyan font-semibold">// Databricks • 18/06/2024[cite: 3]</p>
+                    <p class="text-cyberText pt-1">Comprensione dei concetti chiave della Databricks Data Intelligence Platform[cite: 3].</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-stone-100/60 border-t border-stone-200/60">
+    <section id="contact" class="py-20 bg-cyberCard/50 border-t border-cyberCyan/10">
         <div class="max-w-6xl mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-                <h2 class="text-3xl font-bold tracking-tight">Mettiamoci in Contatto</h2>
-                <p class="text-stone-600">Hai un progetto o vuoi scambiare due chiacchiere? Inviami un messaggio.</p>
+                <h2 class="text-3xl font-black text-white tracking-wider uppercase">Establish Uplink</h2>
+                <p class="text-xs font-mono text-cyberCyan tracking-widest uppercase">// Invia una trasmissione criptata</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                <div class="md:col-span-5 bg-cardBg p-8 rounded-2xl border border-stone-200/80 space-y-6 shadow-sm">
-                    <h3 class="text-xl font-bold text-stone-900">Informazioni di Contatto</h3>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start font-mono text-xs">
+                <div class="md:col-span-5 bg-cyberCard p-8 rounded-2xl border border-cyberCyan/30 space-y-6 shadow-lg">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-widest">// Direct Channels</h3>
                     <div class="space-y-4">
                         <div class="flex items-center gap-4">
-                            <span class="w-10 h-10 rounded-xl bg-accentSage/10 text-accentSage flex items-center justify-center text-lg"><i class="fa-solid fa-envelope"></i></span>
+                            <span class="w-10 h-10 rounded bg-cyberCyan/10 text-cyberCyan flex items-center justify-center text-base"><i class="fa-solid fa-envelope"></i></span>
                             <div>
-                                <p class="text-xs text-stone-500 font-semibold uppercase">Email</p>
-                                <a href="mailto:marco.scatassi@nimbusintelligence.com" class="text-stone-800 font-medium hover:text-accentSage transition">marco.scatassi@nimbusintelligence.com</a>
+                                <p class="text-[10px] text-cyberText uppercase">Secure Email</p>
+                                <a href="mailto:marco.scatassi@nimbusintelligence.com" class="text-white hover:text-cyberCyan transition">marco.scatassi@nimbusintelligence.com</a>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
-                            <span class="w-10 h-10 rounded-xl bg-softBlue/10 text-softBlue flex items-center justify-center text-lg"><i class="fa-solid fa-location-dot"></i></span>
+                            <span class="w-10 h-10 rounded bg-cyberPink/10 text-cyberPink flex items-center justify-center text-base"><i class="fa-solid fa-location-dot"></i></span>
                             <div>
-                                <p class="text-xs text-stone-500 font-semibold uppercase">Posizione</p>
-                                <p class="text-stone-800 font-medium">Milano, Italia</p>
+                                <p class="text-[10px] text-cyberText uppercase">Node Location</p>
+                                <p class="text-white">Milano, Italia</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
-                            <span class="w-10 h-10 rounded-xl bg-accentTerracotta/10 text-accentTerracotta flex items-center justify-center text-lg"><i class="fa-brands fa-github"></i></span>
+                            <span class="w-10 h-10 rounded bg-cyberYellow/10 text-cyberYellow flex items-center justify-center text-base"><i class="fa-brands fa-github"></i></span>
                             <div>
-                                <p class="text-xs text-stone-500 font-semibold uppercase">GitHub</p>
-                                <a href="https://github.com/marco-scatassi" target="_blank" class="text-stone-800 font-medium hover:text-accentSage transition">github.com/marco-scatassi</a>
+                                <p class="text-[10px] text-cyberText uppercase">GitHub Source</p>
+                                <a href="https://github.com/marco-scatassi" target="_blank" class="text-white hover:text-cyberYellow transition">github.com/marco-scatassi</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="md:col-span-7 bg-cardBg p-8 rounded-2xl border border-stone-200/80 shadow-sm">
+                <div class="md:col-span-7 bg-cyberCard p-8 rounded-2xl border border-cyberPink/30 shadow-lg">
                     <form action="mailto:marco.scatassi@nimbusintelligence.com" method="post" enctype="text/plain" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-stone-700 mb-1">Nome</label>
-                            <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="Il tuo nome">
+                            <label class="block text-xs font-bold text-cyberText uppercase mb-1">Identificativo (Nome)</label>
+                            <input type="text" name="name" required class="w-full px-4 py-2.5 rounded bg-cyberBg border border-cyberCyan/30 focus:outline-none focus:border-cyberCyan text-white text-xs" placeholder="Inserisci nome...">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-stone-700 mb-1">Email</label>
-                            <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="tua.email@esempio.com">
+                            <label class="block text-xs font-bold text-cyberText uppercase mb-1">Indirizzo Rete (Email)</label>
+                            <input type="email" name="email" required class="w-full px-4 py-2.5 rounded bg-cyberBg border border-cyberCyan/30 focus:outline-none focus:border-cyberCyan text-white text-xs" placeholder="nome@dominio.net">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-stone-700 mb-1">Messaggio</label>
-                            <textarea name="message" rows="4" required class="w-full px-4 py-2.5 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-accentSage/50 text-sm" placeholder="Scrivi qui il tuo messaggio..."></textarea>
+                            <label class="block text-xs font-bold text-cyberText uppercase mb-1">Payload (Messaggio)</label>
+                            <textarea name="message" rows="4" required class="w-full px-4 py-2.5 rounded bg-cyberBg border border-cyberCyan/30 focus:outline-none focus:border-cyberCyan text-white text-xs" placeholder="Scrivi trasmissione..."></textarea>
                         </div>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-accentSage text-white font-medium hover:bg-accentSage/90 transition shadow-sm">
-                            Invia Messaggio
+                        <button type="submit" class="w-full py-3 rounded bg-cyberPink text-white font-bold hover:bg-cyberPink/90 transition shadow-neon-pink uppercase tracking-widest text-xs">
+                            [ Trasmetti Pacchetto ]
                         </button>
                     </form>
                 </div>
@@ -387,15 +406,15 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-stone-900 text-stone-400 py-12">
+    <footer class="bg-cyberBg text-stone-500 py-12 border-t border-cyberCyan/20 font-mono text-xs">
         <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-                <p class="text-stone-200 font-bold text-lg">Marco Scatassi</p>
-                <p class="text-sm mt-1">Cloud & Data Engineer • Milano</p>
+                <p class="text-white font-bold">MARCO SCATASSI // SYSTEM ONLINE</p>
+                <p class="text-[10px] mt-1 text-cyberCyan">Cloud & Data Engineer • Milano Node</p>
             </div>
-            <div class="flex items-center gap-6 text-xl">
-                <a href="https://github.com/marco-scatassi" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-github"></i></a>
-                <a href="mailto:marco.scatassi@nimbusintelligence.com" class="hover:text-white transition"><i class="fa-solid fa-envelope"></i></a>
+            <div class="flex items-center gap-6 text-lg">
+                <a href="https://github.com/marco-scatassi" target="_blank" class="hover:text-cyberCyan transition"><i class="fa-brands fa-github"></i></a>
+                <a href="mailto:marco.scatassi@nimbusintelligence.com" class="hover:text-cyberCyan transition"><i class="fa-solid fa-envelope"></i></a>
             </div>
         </div>
     </footer>
