@@ -1,56 +1,159 @@
+
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Musica | Marco Scatassi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        stoneBg: '#f7f6f0',
-                        cardBg: '#ffffff',
-                        earthText: '#2d3748',
-                        accentTerracotta: '#bc6c25'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Musica | Marco Scatassi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg:#f5f8fc; --cyan:#00aeca; --pink:#e83e91;
+      --yellow:#f4c542; --ink:#17243a;
+    }
+    * { box-sizing:border-box }
+    body {
+      background:var(--bg); color:var(--ink);
+      font-family:Inter,system-ui,sans-serif;
+      background-image:
+        linear-gradient(rgba(0,174,202,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,174,202,.045) 1px,transparent 1px);
+      background-size:34px 34px;
+    }
+    .glow {
+      position:fixed; width:380px; height:380px; border-radius:50%;
+      filter:blur(90px); opacity:.2; pointer-events:none; z-index:-1;
+    }
+    .glass {
+      background:rgba(255,255,255,.76);
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:0 18px 55px rgba(31,55,85,.09);
+      backdrop-filter:blur(16px);
+    }
+    .gradient-text {
+      background:linear-gradient(100deg,var(--cyan),var(--pink));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .neon-button {
+      background:linear-gradient(110deg,var(--cyan),#2789d5);
+      box-shadow:0 8px 25px rgba(0,174,202,.22);
+      transition:.25s ease;
+    }
+    .neon-button:hover {
+      transform:translateY(-3px);
+      box-shadow:0 12px 32px rgba(0,174,202,.35);
+    }
+    .reveal { opacity:0; transform:translateY(22px); transition:.7s ease }
+    .reveal.visible { opacity:1; transform:translateY(0) }
+    .music-disc {
+      width:150px; aspect-ratio:1; border-radius:50%;
+      background:repeating-radial-gradient(circle,#202b40 0 3px,#34445c 4px 5px);
+      box-shadow:0 15px 35px #17243a33;
+      display:grid; place-items:center; animation:spin 14s linear infinite;
+    }
+    .music-disc i {
+      width:42px; height:42px; display:grid; place-items:center;
+      background:var(--pink); color:white; border-radius:50%;
+    }
+    @keyframes spin { to { transform:rotate(360deg) } }
+    @media(prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
+      .reveal { opacity:1; transform:none }
+    }
+  </style>
 </head>
-<body class="bg-stoneBg text-earthText font-sans antialiased">
-    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="../personal.html" class="text-sm font-semibold text-accentTerracotta hover:underline flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-left"></i> Spazio Personale
-            </a>
-            <span class="font-bold text-stone-900">Musica & Chitarra</span>
-        </div>
-    </header>
+<body class="antialiased">
+  <div class="glow" style="background:var(--cyan);top:80px;left:-150px"></div>
+  <div class="glow" style="background:var(--pink);right:-160px;top:400px"></div>
 
-    <main class="max-w-4xl mx-auto px-6 py-16 space-y-8">
-        <div class="space-y-4">
-            <h1 class="text-4xl font-extrabold text-stone-900">Chitarra & Canzoni</h1>
-            <p class="text-stone-600 text-lg">Suonare la chitarra acustica è il mio modo per disconnettermi e condividere momenti autentici.</p>
-        </div>
+  <header class="sticky top-0 z-50 glass border-b border-white/70">
+    <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="../personal.html" class="font-semibold text-sm flex items-center gap-2 hover:text-cyan-600 transition">
+        <i class="fa-solid fa-arrow-left"></i> Spazio Personale
+      </a>
+      <span class="font-black tracking-wide">MUSIC<span class="gradient-text">_LAB</span></span>
+    </div>
+  </header>
 
-        <div class="bg-cardBg p-8 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
-            <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-                <i class="fa-solid fa-video text-accentTerracotta"></i> Video in Evidenza
-            </h2>
-            <div class="bg-stone-50 border border-stone-200 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div>
-                    <h3 class="font-bold text-stone-900">Esibizione per strada con un amico</h3>
-                    <p class="text-sm text-stone-600">Un pezzo acustico improvvisato per strada.</p>
-                </div>
-                <a href="https://www.instagram.com/reel/DMLa-QJIqcX/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==" target="_blank" class="px-5 py-3 rounded-xl bg-accentTerracotta text-white font-medium hover:bg-accentTerracotta/90 transition flex items-center gap-2 text-sm shrink-0">
-                    <i class="fa-brands fa-instagram text-lg"></i> Guarda su Instagram
-                </a>
-            </div>
+  <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
+    <section class="grid md:grid-cols-[1.3fr_.7fr] gap-10 items-center">
+      <div class="reveal">
+        <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
+          Personal frequency / 001
+        </p>
+        <h1 class="text-5xl md:text-6xl font-black tracking-tight leading-tight">
+          Chitarra <span class="gradient-text">&</span><br>Canzoni
+        </h1>
+        <p class="text-slate-600 text-lg mt-6 max-w-xl leading-relaxed">
+          Suonare la chitarra acustica è il mio modo per disconnettermi e condividere momenti autentici.
+        </p>
+        <div class="flex flex-wrap gap-2 mt-7">
+          <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold">ACOUSTIC</span>
+          <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-800 text-xs font-bold">LIVE MOMENTS</span>
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">CREATIVITY</span>
         </div>
-    </main>
+      </div>
+      <div class="reveal flex justify-center">
+        <div class="music-disc"><i class="fa-solid fa-music"></i></div>
+      </div>
+    </section>
+
+    <section class="glass rounded-[2rem] p-7 md:p-10 reveal">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 grid place-items-center">
+          <i class="fa-solid fa-video text-lg"></i>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Featured moment</p>
+          <h2 class="text-2xl font-black">Video in Evidenza</h2>
+        </div>
+      </div>
+
+      <div class="rounded-2xl bg-gradient-to-br from-cyan-50 via-white to-pink-50 border border-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-7">
+        <div>
+          <span class="text-xs font-bold text-pink-600 tracking-widest uppercase">Street session</span>
+          <h3 class="text-xl md:text-2xl font-extrabold mt-2">Esibizione per strada con un amico</h3>
+          <p class="text-slate-600 mt-3">Un pezzo acustico improvvisato per strada.</p>
+        </div>
+        <a href="https://www.instagram.com/reel/DMLa-QJIqcX/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA=="
+           target="_blank" rel="noopener noreferrer"
+           class="neon-button text-white rounded-xl px-6 py-4 font-bold text-sm flex items-center gap-3 shrink-0">
+          <i class="fa-brands fa-instagram text-xl"></i>
+          Guarda su Instagram
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+        </a>
+      </div>
+    </section>
+
+    <div class="reveal text-center py-5">
+      <p class="text-xs font-bold tracking-[.3em] text-slate-400 uppercase">End of transmission</p>
+      <p class="text-sm text-slate-500 mt-2">La musica è un altro modo di raccontare storie.</p>
+    </div>
+  </main>
+
+  <footer class="bg-slate-950 text-slate-400 py-9">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>
+        <p class="font-bold text-white">Marco Scatassi</p>
+        <p class="text-xs mt-1">Personal space / Music</p>
+      </div>
+      <a href="../personal.html" class="text-sm hover:text-cyan-300 transition">
+        <i class="fa-solid fa-arrow-left mr-2"></i>Torna allo Spazio Personale
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
