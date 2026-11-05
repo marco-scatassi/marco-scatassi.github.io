@@ -1,80 +1,174 @@
+
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photobook | Marco Scatassi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        stoneBg: '#f7f6f0',
-                        cardBg: '#ffffff',
-                        earthText: '#2d3748',
-                        accentSage: '#4a7c59'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photobook | Marco Scatassi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg:#f5f8fc; --cyan:#00aeca; --pink:#e83e91;
+      --yellow:#f4c542; --ink:#17243a;
+    }
+    * { box-sizing:border-box }
+    body {
+      background:var(--bg); color:var(--ink);
+      font-family:Inter,system-ui,sans-serif;
+      background-image:
+        linear-gradient(rgba(0,174,202,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,174,202,.045) 1px,transparent 1px);
+      background-size:34px 34px;
+    }
+    .glow {
+      position:fixed; width:380px; height:380px; border-radius:50%;
+      filter:blur(90px); opacity:.2; pointer-events:none; z-index:-1;
+    }
+    .glass {
+      background:rgba(255,255,255,.76);
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:0 18px 55px rgba(31,55,85,.09);
+      backdrop-filter:blur(16px);
+    }
+    .gradient-text {
+      background:linear-gradient(100deg,var(--cyan),var(--pink));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .album {
+      position:relative; height:390px; overflow:hidden;
+      border-radius:26px; isolation:isolate;
+      box-shadow:0 12px 35px rgba(23,36,58,.13);
+      transition:transform .4s ease,box-shadow .4s ease;
+    }
+    .album:hover {
+      transform:translateY(-8px);
+      box-shadow:0 22px 48px rgba(23,36,58,.22);
+    }
+    .album img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .7s ease;
+    }
+    .album:hover img { transform:scale(1.09) }
+    .album::after {
+      content:""; position:absolute; inset:0; z-index:0;
+      background:linear-gradient(to top,rgba(8,18,35,.88),rgba(8,18,35,.05) 70%);
+    }
+    .album-content { position:absolute; z-index:1; inset:auto 0 0; padding:25px }
+    .reveal { opacity:0; transform:translateY(22px); transition:.7s ease }
+    .reveal.visible { opacity:1; transform:translateY(0) }
+    @media(prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
+      .reveal { opacity:1; transform:none }
+    }
+  </style>
 </head>
-<body class="bg-stoneBg text-earthText font-sans antialiased">
+<body class="antialiased">
+  <div class="glow" style="background:var(--cyan);top:80px;left:-150px"></div>
+  <div class="glow" style="background:var(--pink);right:-160px;top:450px"></div>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-stoneBg/90 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="../personal.html" class="text-sm font-semibold text-accentSage hover:underline flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-left"></i> Spazio Personale
-            </a>
-            <span class="font-bold text-stone-900">Photobook</span>
+  <header class="sticky top-0 z-50 glass border-b border-white/70">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="../personal.html" class="font-semibold text-sm flex items-center gap-2 hover:text-cyan-600 transition">
+        <i class="fa-solid fa-arrow-left"></i> Spazio Personale
+      </a>
+      <span class="font-black tracking-wide">PHOTO<span class="gradient-text">BOOK</span></span>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-16 md:py-24 space-y-14">
+    <section class="text-center max-w-3xl mx-auto reveal">
+      <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
+        Visual memories / 002
+      </p>
+      <h1 class="text-5xl md:text-6xl font-black tracking-tight">
+        Photo<span class="gradient-text">book</span>
+      </h1>
+      <p class="text-slate-600 text-lg leading-relaxed mt-6">
+        Nei viaggi ricerco sempre il contatto con la natura animale e umana. Alcuni di questi mi hanno fatto crescere, altri mi hanno dato dei ricordi preziosi ed ognuno mi ha lasciato delle storie da poter raccontare.
+      </p>
+      <div class="flex justify-center gap-2 mt-7">
+        <span class="w-10 h-1 rounded-full bg-cyan-500"></span>
+        <span class="w-10 h-1 rounded-full bg-pink-500"></span>
+        <span class="w-10 h-1 rounded-full bg-amber-400"></span>
+      </div>
+    </section>
+
+    <section>
+      <div class="flex items-center justify-between mb-6 reveal">
+        <div>
+          <p class="text-xs font-bold tracking-widest text-slate-400 uppercase">Archive / Gallery</p>
+          <h2 class="text-2xl font-black mt-1">Le mie gallerie</h2>
         </div>
-    </header>
+        <span class="text-xs font-bold text-cyan-700 bg-cyan-100 px-3 py-2 rounded-full">02 ALBUM</span>
+      </div>
 
-    <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-6 py-16 space-y-12">
-        <div class="space-y-3 text-center max-w-2xl mx-auto">
-            <h1 class="text-4xl font-extrabold text-stone-900">Photobook</h1>
-            <p class="text-stone-600 text-lg">Nei viaggi ricerco sempre il contatto con la natura animale e umana. Alcuni di questi mi hanno fatto crescere, altri mi hanno dato dei ricordi preziosi ed ognuno mi ha lasciato delle storie da poter raccontare.</p>
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <a href="../templates/album.html?id=heart-of-the-rockies"
+           class="album reveal block">
+          <img src="../images/heart-of-the-rockies/DSCF1897.jpg"
+               alt="Heart of the Rockies"
+               onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
+          <div class="album-content">
+            <span class="inline-block text-xs font-bold tracking-widest uppercase text-cyan-900 bg-cyan-100 px-3 py-1.5 rounded-lg mb-3">
+              Album / 01
+            </span>
+            <h2 class="text-white text-2xl font-black">USA: Heart of the Rockies</h2>
+            <p class="text-slate-300 text-sm mt-2 flex items-center gap-2">
+              Esplora la galleria completa
+              <i class="fa-solid fa-arrow-right text-cyan-300"></i>
+            </p>
+          </div>
+        </a>
 
-        <!-- Griglia Album -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            
-            <!-- Album: Heart of the Rockies -->
-            <a href="../templates/album.html?id=heart-of-the-rockies" class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 block">
-                <img src="../images/heart-of-the-rockies/DSCF1897.jpg" alt="Heart of the Rockies" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent flex flex-col justify-end p-6">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-accentSage bg-white/90 px-2.5 py-1 rounded-md w-max mb-2">Album</span>
-                    <h2 class="text-white text-xl font-bold">USA: Heart of the Rockies</h2>
-                    <p class="text-stone-300 text-xs mt-1">Esplora la galleria completa ➔</p>
-                </div>
-            </a>
+        <a href="../templates/album.html?id=london-2026"
+           class="album reveal block">
+          <img src="../images/london-2026/DSCF0072.JPG"
+               alt="London"
+               onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
+          <div class="album-content">
+            <span class="inline-block text-xs font-bold tracking-widest uppercase text-pink-900 bg-pink-100 px-3 py-1.5 rounded-lg mb-3">
+              Album / 02
+            </span>
+            <h2 class="text-white text-2xl font-black">London</h2>
+            <p class="text-slate-300 text-sm mt-2 flex items-center gap-2">
+              Esplora la galleria completa
+              <i class="fa-solid fa-arrow-right text-pink-300"></i>
+            </p>
+          </div>
+        </a>
+      </div>
+    </section>
 
-            <!-- Album: London 2026 -->
-            <a href="../templates/album.html?id=london-2026" class="group relative h-80 rounded-3xl overflow-hidden shadow-sm border border-stone-200 bg-stone-200 block">
-                <img src="../images/london-2026/DSCF0072.JPG" alt="London" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'">
-                <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent flex flex-col justify-end p-6">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-accentSage bg-white/90 px-2.5 py-1 rounded-md w-max mb-2">Album</span>
-                    <h2 class="text-white text-xl font-bold">London</h2>
-                    <p class="text-stone-300 text-xs mt-1">Esplora la galleria completa ➔</p>
-                </div>
-            </a>
-    </main>
+    <section class="glass rounded-3xl p-7 md:p-9 text-center reveal">
+      <i class="fa-solid fa-camera-retro text-3xl gradient-text"></i>
+      <p class="font-bold text-xl mt-3">Ogni viaggio lascia una traccia.</p>
+      <p class="text-slate-500 text-sm mt-2">Queste sono alcune delle storie che ho scelto di conservare.</p>
+    </section>
+  </main>
 
-    <!-- Footer -->
-    <footer class="bg-stone-900 text-stone-400 py-12 border-t border-stone-800">
-        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-                <p class="text-stone-200 font-bold text-lg">Marco Scatassi</p>
-                <p class="text-sm mt-1">Spazio personale & passioni</p>
-            </div>
-            <a href="../personal.html" class="text-sm text-stone-300 hover:text-white transition flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
-            </a>
-        </div>
-    </footer>
+  <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <p class="text-white font-bold text-lg">Marco Scatassi</p>
+        <p class="text-sm mt-1">Spazio personale & passioni</p>
+      </div>
+      <a href="../personal.html" class="text-sm hover:text-cyan-300 transition flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i> Torna allo Spazio Personale
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
