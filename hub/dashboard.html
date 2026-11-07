@@ -139,6 +139,15 @@
       display: none;
       margin-top: 15px;
     }
+
+    .youtube-playlist {
+      padding: 12px 0;
+      border-top: 1px solid #e5eaf0;
+    }
+
+    .youtube-playlist p {
+      margin: 5px 0 0;
+    }
   </style>
 </head>
 
@@ -206,6 +215,7 @@
         </p>
         <button id="youtube-connect-button" type="button">Collega YouTube</button>
         <p class="muted" id="youtube-status">Non ancora verificato</p>
+        <div id="youtube-playlists" aria-live="polite"></div>
       </div>
 
     </div>
@@ -362,19 +372,17 @@
 
       loginLink.style.display = "none";
 
-      // Verifica sul Worker se il collegamento YouTube è stato salvato.
+      // Verifica collegamento e carica le playlist YouTube.
       youtubeStatus.textContent = "Verifica collegamento YouTube...";
       try {
+        const authHeaders = {
+          Authorization: `Bearer ${session.access_token}`
+        };
+
         const youtubeResponse = await fetch(
           `${WORKER_URL}/api/youtube/status`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${session.access_token}`
-            }
-          }
+          { method: "GET", headers: authHeaders }
         );
-
         const youtubeResult = await youtubeResponse.json();
 
         if (!youtubeResponse.ok) {
@@ -384,15 +392,58 @@
         }
 
         if (youtubeResult.connected) {
-          youtubeStatus.textContent = "YouTube collegato correttamente.";
+          youtubeStatus.textContent = "YouTube collegato. Caricamento playlist...";
           youtubeConnectButton.textContent = "Ricollega YouTube";
+
+          const playlistsResponse = await fetch(
+            `${WORKER_URL}/api/youtube/playlists`,
+            { method: "GET", headers: authHeaders }
+          );
+          const playlistsResult = await playlistsResponse.json();
+
+          if (!playlistsResponse.ok) {
+            throw new Error(
+              `Lettura playlist HTTP ${playlistsResponse.status}: ${playlistsResult.error || "richiesta non riuscita"}`
+            );
+          }
+
+          const playlists = Array.isArray(playlistsResult.items)
+            ? playlistsResult.items
+            : [];
+
+          const playlistContainer = document.getElementById("youtube-playlists");
+          playlistContainer.replaceChildren();
+
+          if (playlists.length === 0) {
+            youtubeStatus.textContent = "Collegato, ma Google non ha restituito playlist.";
+          } else {
+            youtubeStatus.textContent = `Collegato. ${playlists.length} playlist caricate.`;
+
+            playlists.forEach((playlist) => {
+              const item = document.createElement("div");
+              item.className = "youtube-playlist";
+
+              const title = document.createElement("strong");
+              title.textContent = playlist.snippet?.title || "Playlist senza titolo";
+
+              const details = document.createElement("p");
+              details.className = "muted";
+              const count = playlist.contentDetails?.itemCount;
+              details.textContent = Number.isInteger(count)
+                ? `${count} video`
+                : "Numero video non disponibile";
+
+              item.append(title, details);
+              playlistContainer.appendChild(item);
+            });
+          }
         } else {
           youtubeStatus.textContent = "YouTube non ancora collegato.";
           youtubeConnectButton.textContent = "Collega YouTube";
         }
       } catch (youtubeError) {
         youtubeStatus.textContent =
-          "Impossibile verificare YouTube: " + youtubeError.message;
+          "Errore YouTube: " + youtubeError.message;
       }
 
     } catch (error) {
