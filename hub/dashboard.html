@@ -232,7 +232,10 @@
       });
 
       if (!response.ok) {
-        throw new Error("Account non autorizzato.");
+        const details = await response.text();
+        throw new Error(
+          `Cloudflare ha risposto con HTTP ${response.status}: ${details}`
+        );
       }
 
       const result = await response.json();
@@ -246,13 +249,11 @@
 
     } catch (error) {
       console.error("Errore di autenticazione:", error);
-
+    
       messageElement.textContent =
-        "Sessione non valida o account non autorizzato. Reindirizzamento...";
-
-      await supabaseClient.auth.signOut();
-
-      window.location.replace("./index.html");
+        "Errore durante la verifica: " + error.message;
+    
+      logoutButton.disabled = false;
     }
   }
 
