@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Hub — Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f8fc;
+      color: #172638;
+      font-family: system-ui, sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6%;
+      background: white;
+      box-shadow: 0 2px 12px #17263810;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    main {
+      width: min(900px, calc(100% - 32px));
+      margin: 50px auto;
+    }
+
+    .card {
+      background: white;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #17263810;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 11px;
+      border-radius: 20px;
+      background: #e1f7eb;
+      color: #167443;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .account {
+      margin-top: 18px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 17px;
+      background: #172638;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.88;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .module {
+      padding: 22px;
+      border: 1px solid #e5eaf0;
+      border-radius: 13px;
+      background: #fff;
+    }
+
+    .module h3 {
+      margin-top: 0;
+    }
+
+    #message {
+      color: #b42318;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Personal Hub</h1>
+  <button id="logout-button" type="button">Esci</button>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>Benvenuto nel tuo Hub</h2>
+    <span class="status">Sessione autorizzata</span>
+
+    <div class="account">
+      <div>
+        <strong>Account:</strong>
+        <span id="user-email">Verifica in corso...</span>
+      </div>
+
+      <div>
+        <strong>User ID:</strong>
+        <span id="user-id">—</span>
+      </div>
+    </div>
+
+    <p class="muted">
+      Il tuo accesso è stato verificato da Supabase e Cloudflare.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>I tuoi servizi</h2>
+
+    <div class="modules">
+
+      <div class="module">
+        <h3>Google Photos</h3>
+        <p class="muted">
+          Le tue foto e i tuoi album selezionati.
+        </p>
+        <span class="muted">In arrivo</span>
+      </div>
+
+      <div class="module">
+        <h3>Gmail</h3>
+        <p class="muted">
+          Le newsletter raccolte nel tuo spazio personale.
+        </p>
+        <span class="muted">In arrivo</span>
+      </div>
+
+      <div class="module">
+        <h3>YouTube</h3>
+        <p class="muted">
+          Le tue playlist e i tuoi contenuti preferiti.
+        </p>
+        <span class="muted">In arrivo</span>
+      </div>
+
+    </div>
+  </section>
+
+  <p id="message" role="status"></p>
+
+</main>
+
+<script>
+  const SUPABASE_URL =
+    "https://iszuojmfzolohktlkkau.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_ID9CLw3gb1TSueyzlRVGpg_JZsvxLTN";
+
+  const WORKER_URL =
+    "https://personal-hub-api.marco-scatassi-99.workers.dev";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
+
+  const emailElement = document.getElementById("user-email");
+  const idElement = document.getElementById("user-id");
+  const messageElement = document.getElementById("message");
+  const logoutButton = document.getElementById("logout-button");
+
+  async function checkAccess() {
+    try {
+      const {
+        data: { session },
+        error
+      } = await supabaseClient.auth.getSession();
+
+      if (error) throw error;
+
+      if (!session) {
+        window.location.replace("./index.html");
+        return;
+      }
+
+      const response = await fetch(`${WORKER_URL}/api/me`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Account non autorizzato.");
+      }
+
+      const result = await response.json();
+
+      if (!result.authenticated) {
+        throw new Error("Verifica dell'account non riuscita.");
+      }
+
+      emailElement.textContent = session.user.email || "Non disponibile";
+      idElement.textContent = session.user.id;
+
+    } catch (error) {
+      console.error("Errore di autenticazione:", error);
+
+      messageElement.textContent =
+        "Sessione non valida o account non autorizzato. Reindirizzamento...";
+
+      await supabaseClient.auth.signOut();
+
+      window.location.replace("./index.html");
+    }
+  }
+
+  logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Uscita...";
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+      messageElement.textContent = error.message;
+      logoutButton.disabled = false;
+      logoutButton.textContent = "Esci";
+      return;
+    }
+
+    window.location.replace("./index.html");
+  });
+
+  checkAccess();
+</script>
+
+</body>
+</html>
