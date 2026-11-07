@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Hub — Accesso</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #f5f8fc;
+      font-family: system-ui, sans-serif;
+      color: #172638;
+    }
+    main {
+      width: min(380px, calc(100% - 48px));
+      padding: 32px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px #17263815;
+    }
+    h1 { margin-top: 0; }
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 13px;
+      margin-top: 12px;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+    input { border: 1px solid #ccd5df; }
+    button {
+      border: 0;
+      background: #00aeca;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #message { font-size: 14px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Personal Hub</h1>
+  <p>Accedi al tuo spazio personale.</p>
+
+  <form id="login-form">
+    <input id="email" type="email" placeholder="Email"
+      autocomplete="username" required>
+    <input id="password" type="password" placeholder="Password"
+      autocomplete="current-password" required>
+    <button id="submit" type="submit">Accedi</button>
+  </form>
+
+  <p id="message" role="status"></p>
+</main>
+
+<script>
+  const SUPABASE_URL = "https://iszuojmfzolohktlkkau.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_ID9CLw3gb1TSueyzlRVGpg_JZsvxLTN";
+  const WORKER_URL =
+    "https://personal-hub-api.marco-scatassi-99.workers.dev";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
+
+  const form = document.getElementById("login-form");
+  const message = document.getElementById("message");
+  const button = document.getElementById("submit");
+
+  async function verifySession() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) return false;
+
+    const response = await fetch(`${WORKER_URL}/api/me`, {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`
+      }
+    });
+
+    if (!response.ok) {
+      await supabase.auth.signOut();
+      return false;
+    }
+
+    const result = await response.json();
+
+    if (!result.authenticated) {
+      await supabase.auth.signOut();
+      return false;
+    }
+
+    return true;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    button.disabled = true;
+    message.textContent = "Accesso in corso...";
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: document.getElementById("email").value.trim(),
+        password: document.getElementById("password").value
+      });
+
+      if (error) throw error;
+
+      const authorized = await verifySession();
+
+      if (!authorized) {
+        throw new Error("Account non autorizzato.");
+      }
+
+      message.textContent = "Accesso verificato. Benvenuto!";
+
+      // Destinazione temporanea: la completeremo nel prossimo passaggio.
+      window.location.href = "./dashboard.html";
+
+    } catch (error) {
+      message.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  verifySession().then((authorized) => {
+    if (authorized) {
+      window.location.href = "./dashboard.html";
+    }
+  });
+</script>
+</body>
+</html>
