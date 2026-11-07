@@ -300,21 +300,8 @@
       );
 
       if (!session) {
-        statusElement.textContent =
-          "Sessione non trovata";
-
-        emailElement.textContent =
-          "Non autenticato";
-
-        idElement.textContent = "—";
-
-        messageElement.style.color = "#b42318";
-
-        messageElement.textContent = storedSession
-          ? "La sessione è presente nel browser, ma Supabase non riesce a recuperarla."
-          : "Supabase non trova una sessione attiva nel browser.";
-
-        loginLink.style.display = "inline-block";
+        // Nessuna sessione: non mostrare la dashboard e torna al login.
+        window.location.replace("./index.html");
         return;
       }
 
