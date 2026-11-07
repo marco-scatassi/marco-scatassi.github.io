@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -94,7 +95,10 @@
 
     .modules {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+      );
       gap: 16px;
     }
 
@@ -110,8 +114,13 @@
     }
 
     #message {
-      color: #b42318;
       font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    #login-link {
+      display: none;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -127,12 +136,15 @@
 
   <section class="card">
     <h2>Benvenuto nel tuo Hub</h2>
-    <span class="status">Sessione autorizzata</span>
+
+    <span class="status" id="status">
+      Verifica in corso...
+    </span>
 
     <div class="account">
       <div>
         <strong>Account:</strong>
-        <span id="user-email">Verifica in corso...</span>
+        <span id="user-email">In attesa...</span>
       </div>
 
       <div>
@@ -142,7 +154,7 @@
     </div>
 
     <p class="muted">
-      Il tuo accesso è stato verificato da Supabase e Cloudflare.
+      Il tuo accesso viene verificato da Supabase e Cloudflare.
     </p>
   </section>
 
@@ -180,9 +192,14 @@
 
   <p id="message" role="status"></p>
 
+  <button id="login-link" type="button">
+    Torna al login
+  </button>
+
 </main>
 
 <script>
+  // CONFIGURAZIONE
   const SUPABASE_URL =
     "https://iszuojmfzolohktlkkau.supabase.co";
 
@@ -192,8 +209,10 @@
   const WORKER_URL =
     "https://personal-hub-api.marco-scatassi-99.workers.dev";
 
+  // DEVE ESSERE IDENTICA A index.html
   const AUTH_STORAGE_KEY = "personal-hub-auth";
-  
+
+  // CLIENT SUPABASE
   const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
@@ -208,96 +227,184 @@
     }
   );
 
-  const emailElement = document.getElementById("user-email");
-  const idElement = document.getElementById("user-id");
-  const messageElement = document.getElementById("message");
-  const logoutButton = document.getElementById("logout-button");
+  const emailElement =
+    document.getElementById("user-email");
 
+  const idElement =
+    document.getElementById("user-id");
+
+  const messageElement =
+    document.getElementById("message");
+
+  const statusElement =
+    document.getElementById("status");
+
+  const logoutButton =
+    document.getElementById("logout-button");
+
+  const loginLink =
+    document.getElementById("login-link");
+
+  // VERIFICA SESSIONE E AUTORIZZAZIONE
   async function checkAccess() {
-    messageElement.style.color = "#b42318";
-    messageElement.textContent = "Controllo della sessione...";
-  
+    messageElement.style.color = "#172638";
+    messageElement.textContent =
+      "Controllo della sessione...";
+
     try {
-      const { data, error } =
-        await supabaseClient.auth.getSession();
-  
+      // Controlla anche la presenza fisica nel localStorage.
+      const storedSession =
+        localStorage.getItem(AUTH_STORAGE_KEY);
+
+      console.log(
+        "Sessione presente nel localStorage:",
+        !!storedSession
+      );
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.getSession();
+
       if (error) {
-        throw new Error("Errore Supabase: " + error.message);
+        throw new Error(
+          "Errore Supabase: " + error.message
+        );
       }
-  
+
       const session = data.session;
-  
+
+      console.log(
+        "Sessione recuperata da Supabase:",
+        !!session
+      );
+
       if (!session) {
-        messageElement.textContent =
-          "ERRORE: Supabase non trova una sessione attiva. " +
-          "La sessione non è stata recuperata dal browser.";
-  
-        emailElement.textContent = "Sessione assente";
+        statusElement.textContent =
+          "Sessione non trovata";
+
+        emailElement.textContent =
+          "Non autenticato";
+
         idElement.textContent = "—";
+
+        messageElement.style.color = "#b42318";
+
+        messageElement.textContent = storedSession
+          ? "La sessione è presente nel browser, ma Supabase non riesce a recuperarla."
+          : "Supabase non trova una sessione attiva nel browser.";
+
+        loginLink.style.display = "inline-block";
         return;
       }
-  
+
       messageElement.textContent =
-        "Sessione trovata. Verifica Cloudflare in corso...";
-  
-      const response = await fetch(`${WORKER_URL}/api/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
+        "Sessione trovata. Verifica Cloudflare...";
+
+      // VERIFICA CLOUDFLARE
+      const response = await fetch(
+        `${WORKER_URL}/api/me`,
+        {
+          method: "GET",
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`
+          }
         }
-      });
-  
+      );
+
       const details = await response.text();
-  
+
       if (!response.ok) {
         throw new Error(
           `Cloudflare HTTP ${response.status}: ${details}`
         );
       }
-  
+
       let result;
-  
+
       try {
         result = JSON.parse(details);
       } catch {
-        throw new Error("Cloudflare ha restituito una risposta non valida.");
+        throw new Error(
+          "Cloudflare ha restituito una risposta non valida."
+        );
       }
-  
+
       if (!result.authenticated) {
-        throw new Error("Cloudflare non ha autorizzato l'account.");
+        throw new Error(
+          "Cloudflare non ha autorizzato l'account."
+        );
       }
-  
+
+      // ACCESSO CONFERMATO
       emailElement.textContent =
         session.user.email || "Non disponibile";
-  
-      idElement.textContent = session.user.id;
-  
+
+      idElement.textContent =
+        session.user.id;
+
+      statusElement.textContent =
+        "Sessione autorizzata";
+
       messageElement.style.color = "#167443";
+
       messageElement.textContent =
         "Accesso verificato correttamente.";
-  
+
+      loginLink.style.display = "none";
+
     } catch (error) {
-      console.error("Errore dashboard:", error);
-      messageElement.textContent = error.message;
+      console.error(
+        "Errore dashboard:",
+        error
+      );
+
+      statusElement.textContent =
+        "Verifica non completata";
+
+      messageElement.style.color = "#b42318";
+      messageElement.textContent =
+        error.message;
+
+      // Non cancelliamo la sessione automaticamente.
     }
   }
 
-  logoutButton.addEventListener("click", async () => {
-    logoutButton.disabled = true;
-    logoutButton.textContent = "Uscita...";
+  // LOGOUT ESPLICITO
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Uscita...";
 
-    const { error } = await supabaseClient.auth.signOut();
+      try {
+        const { error } =
+          await supabaseClient.auth.signOut();
 
-    if (error) {
-      messageElement.textContent = error.message;
-      logoutButton.disabled = false;
-      logoutButton.textContent = "Esci";
-      return;
+        if (error) {
+          throw error;
+        }
+
+        window.location.replace("./index.html");
+
+      } catch (error) {
+        messageElement.style.color = "#b42318";
+        messageElement.textContent =
+          "Errore durante l'uscita: " + error.message;
+
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Esci";
+      }
     }
+  );
 
-    window.location.replace("./index.html");
+  // RITORNO AL LOGIN
+  loginLink.addEventListener("click", () => {
+    window.location.href = "./index.html";
   });
 
+  // AVVIO
   checkAccess();
 </script>
 
