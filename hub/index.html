@@ -1,11 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Personal Hub — Accesso</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -15,6 +22,7 @@
       font-family: system-ui, sans-serif;
       color: #172638;
     }
+
     main {
       width: min(380px, calc(100% - 48px));
       padding: 32px;
@@ -22,7 +30,11 @@
       border-radius: 20px;
       box-shadow: 0 12px 40px #17263815;
     }
-    h1 { margin-top: 0; }
+
+    h1 {
+      margin-top: 0;
+    }
+
     input, button {
       box-sizing: border-box;
       width: 100%;
@@ -31,7 +43,11 @@
       border-radius: 9px;
       font-size: 15px;
     }
-    input { border: 1px solid #ccd5df; }
+
+    input {
+      border: 1px solid #ccd5df;
+    }
+
     button {
       border: 0;
       background: #00aeca;
@@ -39,19 +55,43 @@
       font-weight: 700;
       cursor: pointer;
     }
-    #message { font-size: 14px; margin-top: 16px; }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    #message {
+      font-size: 14px;
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
   </style>
 </head>
+
 <body>
+
 <main>
   <h1>Personal Hub</h1>
   <p>Accedi al tuo spazio personale.</p>
 
   <form id="login-form">
-    <input id="email" type="email" placeholder="Email"
-      autocomplete="username" required>
-    <input id="password" type="password" placeholder="Password"
-      autocomplete="current-password" required>
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      autocomplete="username"
+      required
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+      required
+    >
+
     <button id="submit" type="submit">Accedi</button>
   </form>
 
@@ -59,13 +99,20 @@
 </main>
 
 <script>
-  const SUPABASE_URL = "https://iszuojmfzolohktlkkau.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_ID9CLw3gb1TSueyzlRVGpg_JZsvxLTN";
+  // CONFIGURAZIONE
+  const SUPABASE_URL =
+    "https://iszuojmfzolohktlkkau.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_ID9CLw3gb1TSueyzlRVGpg_JZsvxLTN";
+
   const WORKER_URL =
     "https://personal-hub-api.marco-scatassi-99.workers.dev";
 
+  // DEVE ESSERE IDENTICA ANCHE IN dashboard.html
   const AUTH_STORAGE_KEY = "personal-hub-auth";
-  
+
+  // CLIENT SUPABASE
   const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
@@ -84,45 +131,95 @@
   const message = document.getElementById("message");
   const button = document.getElementById("submit");
 
+  // VERIFICA SESSIONE CON CLOUDFLARE
   async function verifySession() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const {
+      data: { session },
+      error
+    } = await supabaseClient.auth.getSession();
 
-    if (!session) return false;
+    if (error) {
+      throw new Error("Errore Supabase: " + error.message);
+    }
+
+    if (!session) {
+      return false;
+    }
 
     const response = await fetch(`${WORKER_URL}/api/me`, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${session.access_token}`
       }
     });
 
+    const details = await response.text();
+
     if (!response.ok) {
-      await supabaseClient.auth.signOut();
-      return false;
+      throw new Error(
+        `Verifica Cloudflare fallita (HTTP ${response.status}): ${details}`
+      );
     }
 
-    const result = await response.json();
+    let result;
+
+    try {
+      result = JSON.parse(details);
+    } catch {
+      throw new Error("Risposta Cloudflare non valida.");
+    }
 
     if (!result.authenticated) {
-      await supabaseClient.auth.signOut();
-      return false;
+      throw new Error("Account non autorizzato.");
     }
 
     return true;
   }
 
+  // LOGIN
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     button.disabled = true;
+    message.style.color = "#172638";
     message.textContent = "Accesso in corso...";
 
     try {
-      const { error } = await supabaseClient.auth.signInWithPassword({
-        email: document.getElementById("email").value.trim(),
-        password: document.getElementById("password").value
-      });
+      const email =
+        document.getElementById("email").value.trim();
 
-      if (error) throw error;
+      const password =
+        document.getElementById("password").value;
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+        throw new Error("Login Supabase: " + error.message);
+      }
+
+      if (!data.session) {
+        throw new Error(
+          "Login riuscito, ma Supabase non ha restituito una sessione."
+        );
+      }
+
+      // Controlla che la sessione sia stata salvata.
+      const storedSession =
+        localStorage.getItem(AUTH_STORAGE_KEY);
+
+      if (!storedSession) {
+        throw new Error(
+          "La sessione non è stata salvata nel browser."
+        );
+      }
+
+      // Verifica che Cloudflare riconosca l'utente.
+      message.textContent =
+        "Credenziali corrette. Verifica autorizzazione...";
 
       const authorized = await verifySession();
 
@@ -130,23 +227,41 @@
         throw new Error("Account non autorizzato.");
       }
 
-      message.textContent = "Accesso verificato. Benvenuto!";
+      message.style.color = "#167443";
+      message.textContent =
+        "Accesso verificato. Apertura dashboard...";
 
-      // Destinazione temporanea: la completeremo nel prossimo passaggio.
-      window.location.href = "./dashboard.html";
+      window.location.replace("./dashboard.html");
 
     } catch (error) {
+      console.error("Errore login:", error);
+
+      message.style.color = "#b42318";
       message.textContent = error.message;
+
     } finally {
       button.disabled = false;
     }
   });
 
-  verifySession().then((authorized) => {
-    if (authorized) {
-      window.location.href = "./dashboard.html";
+  // SE ESISTE GIÀ UNA SESSIONE VALIDA, APRI LA DASHBOARD.
+  async function checkExistingSession() {
+    try {
+      const authorized = await verifySession();
+
+      if (authorized) {
+        window.location.replace("./dashboard.html");
+      }
+    } catch (error) {
+      console.error(
+        "Verifica sessione esistente:",
+        error
+      );
     }
-  });
+  }
+
+  checkExistingSession();
 </script>
+
 </body>
 </html>
