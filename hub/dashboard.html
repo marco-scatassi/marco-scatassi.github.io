@@ -204,7 +204,8 @@
         <p class="muted">
           Le tue playlist e i tuoi contenuti preferiti.
         </p>
-        <span class="muted">In arrivo</span>
+        <button id="youtube-connect-button" type="button">Collega YouTube</button>
+        <p class="muted" id="youtube-status">Non ancora verificato</p>
       </div>
 
     </div>
@@ -377,6 +378,47 @@
       // Non cancelliamo la sessione automaticamente.
     }
   }
+
+  // AVVIO COLLEGAMENTO GOOGLE / YOUTUBE
+  const youtubeConnectButton =
+    document.getElementById("youtube-connect-button");
+  const youtubeStatus = document.getElementById("youtube-status");
+
+  youtubeConnectButton.addEventListener("click", async () => {
+    youtubeConnectButton.disabled = true;
+    youtubeConnectButton.textContent = "Connessione...";
+    youtubeStatus.textContent = "Preparazione del collegamento Google...";
+
+    try {
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) throw error;
+      if (!data.session) {
+        window.location.replace("./index.html");
+        return;
+      }
+
+      const response = await fetch(`${WORKER_URL}/api/youtube/connect`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`
+        }
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(`Worker HTTP ${response.status}: ${result.error || "richiesta non riuscita"}`);
+      }
+      if (!result.authorizationUrl) {
+        throw new Error("Il Worker non ha restituito l'indirizzo di autorizzazione Google.");
+      }
+
+      window.location.assign(result.authorizationUrl);
+    } catch (error) {
+      youtubeStatus.textContent = "Errore: " + error.message;
+      youtubeConnectButton.disabled = false;
+      youtubeConnectButton.textContent = "Riprova collegamento";
+    }
+  });
 
   // LOGOUT ESPLICITO
   logoutButton.addEventListener(
