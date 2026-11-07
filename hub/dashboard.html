@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -211,49 +210,71 @@
   const logoutButton = document.getElementById("logout-button");
 
   async function checkAccess() {
+    messageElement.style.color = "#b42318";
+    messageElement.textContent = "Controllo della sessione...";
+  
     try {
-      const {
-        data: { session },
-        error
-      } = await supabaseClient.auth.getSession();
-
-      if (error) throw error;
-
+      const { data, error } =
+        await supabaseClient.auth.getSession();
+  
+      if (error) {
+        throw new Error("Errore Supabase: " + error.message);
+      }
+  
+      const session = data.session;
+  
       if (!session) {
-        window.location.replace("./index.html");
+        messageElement.textContent =
+          "ERRORE: Supabase non trova una sessione attiva. " +
+          "La sessione non è stata recuperata dal browser.";
+  
+        emailElement.textContent = "Sessione assente";
+        idElement.textContent = "—";
         return;
       }
-
+  
+      messageElement.textContent =
+        "Sessione trovata. Verifica Cloudflare in corso...";
+  
       const response = await fetch(`${WORKER_URL}/api/me`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${session.access_token}`
         }
       });
-
+  
+      const details = await response.text();
+  
       if (!response.ok) {
-        const details = await response.text();
         throw new Error(
-          `Cloudflare ha risposto con HTTP ${response.status}: ${details}`
+          `Cloudflare HTTP ${response.status}: ${details}`
         );
       }
-
-      const result = await response.json();
-
-      if (!result.authenticated) {
-        throw new Error("Verifica dell'account non riuscita.");
+  
+      let result;
+  
+      try {
+        result = JSON.parse(details);
+      } catch {
+        throw new Error("Cloudflare ha restituito una risposta non valida.");
       }
-
-      emailElement.textContent = session.user.email || "Non disponibile";
+  
+      if (!result.authenticated) {
+        throw new Error("Cloudflare non ha autorizzato l'account.");
+      }
+  
+      emailElement.textContent =
+        session.user.email || "Non disponibile";
+  
       idElement.textContent = session.user.id;
-
-    } catch (error) {
-      console.error("Errore di autenticazione:", error);
-    
+  
+      messageElement.style.color = "#167443";
       messageElement.textContent =
-        "Errore durante la verifica: " + error.message;
-    
-      logoutButton.disabled = false;
+        "Accesso verificato correttamente.";
+  
+    } catch (error) {
+      console.error("Errore dashboard:", error);
+      messageElement.textContent = error.message;
     }
   }
 
