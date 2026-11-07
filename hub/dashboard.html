@@ -362,6 +362,39 @@
 
       loginLink.style.display = "none";
 
+      // Verifica sul Worker se il collegamento YouTube è stato salvato.
+      youtubeStatus.textContent = "Verifica collegamento YouTube...";
+      try {
+        const youtubeResponse = await fetch(
+          `${WORKER_URL}/api/youtube/status`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
+          }
+        );
+
+        const youtubeResult = await youtubeResponse.json();
+
+        if (!youtubeResponse.ok) {
+          throw new Error(
+            `Worker HTTP ${youtubeResponse.status}: ${youtubeResult.error || "verifica non riuscita"}`
+          );
+        }
+
+        if (youtubeResult.connected) {
+          youtubeStatus.textContent = "YouTube collegato correttamente.";
+          youtubeConnectButton.textContent = "Ricollega YouTube";
+        } else {
+          youtubeStatus.textContent = "YouTube non ancora collegato.";
+          youtubeConnectButton.textContent = "Collega YouTube";
+        }
+      } catch (youtubeError) {
+        youtubeStatus.textContent =
+          "Impossibile verificare YouTube: " + youtubeError.message;
+      }
+
     } catch (error) {
       console.error(
         "Errore dashboard:",
