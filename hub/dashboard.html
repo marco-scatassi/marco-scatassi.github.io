@@ -192,11 +192,15 @@
   const WORKER_URL =
     "https://personal-hub-api.marco-scatassi-99.workers.dev";
 
+  const AUTH_STORAGE_KEY = "personal-hub-auth";
+  
   const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
     {
       auth: {
+        storage: window.localStorage,
+        storageKey: AUTH_STORAGE_KEY,
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
