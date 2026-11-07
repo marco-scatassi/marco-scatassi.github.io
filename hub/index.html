@@ -64,7 +64,7 @@
   const WORKER_URL =
     "https://personal-hub-api.marco-scatassi-99.workers.dev";
 
-  const supabase = window.supabase.createClient(
+ const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
     {
@@ -81,7 +81,7 @@
   const button = document.getElementById("submit");
 
   async function verifySession() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
 
     if (!session) return false;
 
@@ -92,14 +92,14 @@
     });
 
     if (!response.ok) {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
       return false;
     }
 
     const result = await response.json();
 
     if (!result.authenticated) {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
       return false;
     }
 
@@ -113,7 +113,7 @@
     message.textContent = "Accesso in corso...";
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabaseClient.auth.signInWithPassword({
         email: document.getElementById("email").value.trim(),
         password: document.getElementById("password").value
       });
