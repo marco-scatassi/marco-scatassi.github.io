@@ -397,7 +397,7 @@
           youtubeConnectButton.textContent = "Ricollega YouTube";
 
           const playlistsResponse = await fetch(
-            `${WORKER_URL}/api/youtube/playlists`,
+            `${WORKER_URL}/api/youtube/library/playlists`,
             { method: "GET", headers: authHeaders }
           );
           const playlistsResult = await playlistsResponse.json();
@@ -425,11 +425,11 @@
               item.className = "youtube-playlist";
 
               const title = document.createElement("strong");
-              title.textContent = playlist.snippet?.title || "Playlist senza titolo";
+              title.textContent = playlist.title || "Playlist senza titolo";
 
               const details = document.createElement("p");
               details.className = "muted";
-              const count = playlist.contentDetails?.itemCount;
+              const count = playlist.item_count;
               details.textContent = Number.isInteger(count)
                 ? `${count} video`
                 : "Numero video non disponibile";
