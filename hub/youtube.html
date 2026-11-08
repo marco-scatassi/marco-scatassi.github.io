@@ -22,6 +22,12 @@ h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spaci
 .playlist-card:hover{transform:translateY(-3px);border-color:var(--cyan)}.playlist-card[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 1px var(--pink),0 0 22px rgba(255,60,172,.13)}
 .playlist-thumb{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#202b3b}.thumb-placeholder{display:grid;place-items:center;aspect-ratio:16/9;color:var(--cyan);background:linear-gradient(135deg,#12283a,#26172f);font:26px var(--mono)}
 .playlist-copy{display:block;padding:13px}.playlist-title{display:block;font-size:14px;line-height:1.4;font-weight:700;overflow-wrap:anywhere}.playlist-meta{display:block;margin-top:7px;color:var(--muted);font:10px var(--mono)}
+.playlist-entry{display:grid;gap:8px;align-content:start;min-width:0}
+.playlist-publication{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid #e5eaf0;border-radius:10px;background:#fff;color:#172638;font:12px system-ui,sans-serif}
+.playlist-publication input{margin:2px 0 0;accent-color:#167443}
+.playlist-publication strong{display:block;font-size:12px}
+.playlist-publication small{display:block;margin-top:4px;color:#718096;font-size:11px;line-height:1.45}
+
 .detail-panel{margin-top:28px}.detail-title{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:17px}.video-list{display:grid;gap:10px}
 .video-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:15px;align-items:center;padding:10px;border:1px solid rgba(145,164,186,.15);border-radius:8px;background:rgba(8,11,20,.45)}
 .video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#202b3b}.video-name{margin:0;font-size:14px;line-height:1.45;overflow-wrap:anywhere}.video-sub{margin:6px 0 0;color:var(--muted);font:10px var(--mono)}
@@ -118,9 +124,45 @@ function authHeaders(){return{Authorization:`Bearer ${accessToken}`}}
 async function workerGet(path){const response=await fetch(`${WORKER_URL}${path}`,{method:"GET",headers:authHeaders()});const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
 async function workerPost(path,body=null){const headers=authHeaders();if(body!==null)headers["Content-Type"]="application/json";const response=await fetch(`${WORKER_URL}${path}`,{method:"POST",headers,body:body===null?undefined:JSON.stringify(body)});const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
 function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standard?.url||t.high?.url||t.medium?.url||t.default?.url||""}
-function renderPlaylists(playlists){grid.replaceChildren();if(!playlists.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non risultano playlist nell’account YouTube collegato.";grid.appendChild(empty);playlistCount.textContent="0 PLAYLIST";return}
-playlistCount.textContent=`${playlists.length} PLAYLIST`;playlists.forEach(playlist=>{const card=document.createElement("button");card.type="button";card.className="playlist-card";card.setAttribute("aria-pressed","false");const thumb=playlist.thumbnail_url||"";if(thumb){const img=document.createElement("img");img.className="playlist-thumb";img.src=thumb;img.alt="";img.loading="lazy";card.appendChild(img)}else{const ph=document.createElement("span");ph.className="thumb-placeholder";ph.textContent="▶";card.appendChild(ph)}
-const copy=document.createElement("span");copy.className="playlist-copy";const title=document.createElement("span");title.className="playlist-title";title.textContent=playlist.title||"Playlist senza titolo";const meta=document.createElement("span");meta.className="playlist-meta";const count=playlist.item_count;meta.textContent=Number.isInteger(count)?`${count} VIDEO`:"NUMERO VIDEO NON DISPONIBILE";copy.append(title,meta);card.appendChild(copy);card.addEventListener("click",()=>selectPlaylist(playlist.id,title.textContent,card));grid.appendChild(card)})}
+function renderPlaylists(playlists){
+  grid.replaceChildren();
+  if(!playlists.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non risultano playlist nell’account YouTube collegato.";grid.appendChild(empty);playlistCount.textContent="0 PLAYLIST";return}
+  playlistCount.textContent=`${playlists.length} PLAYLIST`;
+  playlists.forEach(playlist=>{
+    const entry=document.createElement("div");entry.className="playlist-entry";
+    const card=document.createElement("button");card.type="button";card.className="playlist-card";card.setAttribute("aria-pressed","false");
+    if(playlist.thumbnail_url){const img=document.createElement("img");img.className="playlist-thumb";img.src=playlist.thumbnail_url;img.alt="";img.loading="lazy";card.appendChild(img)}
+    else{const ph=document.createElement("span");ph.className="thumb-placeholder";ph.textContent="▶";card.appendChild(ph)}
+    const copy=document.createElement("span");copy.className="playlist-copy";
+    const title=document.createElement("span");title.className="playlist-title";title.textContent=playlist.title||"Playlist senza titolo";
+    const meta=document.createElement("span");meta.className="playlist-meta";meta.textContent=Number.isInteger(playlist.item_count)?`${playlist.item_count} VIDEO`:"NUMERO VIDEO NON DISPONIBILE";
+    copy.append(title,meta);card.appendChild(copy);card.addEventListener("click",()=>selectPlaylist(playlist.id,title.textContent,card));entry.appendChild(card);
+
+    const label=document.createElement("label");label.className="playlist-publication";
+    const checkbox=document.createElement("input");checkbox.type="checkbox";checkbox.checked=playlist.show_on_music_page===true;
+    checkbox.setAttribute("aria-label","Mostra "+(playlist.title||"playlist")+" in Personal Musicale");
+    const textWrap=document.createElement("span"),strong=document.createElement("strong"),help=document.createElement("small");
+    strong.textContent="Mostra in Personal Musicale";
+    const eligible=()=>playlist.privacy_status==="public"||playlist.privacy_status==="unlisted";
+    checkbox.disabled=!eligible()&&!checkbox.checked;
+    const helpText=()=>checkbox.checked?"Selezionata per la pagina pubblica.":eligible()?"Playlist YouTube "+(playlist.privacy_status==="public"?"pubblica":"non in elenco")+".":"Impostala prima su YouTube come Pubblica o Non in elenco.";
+    help.textContent=helpText();
+    checkbox.addEventListener("change",async()=>{
+      const desired=checkbox.checked;checkbox.disabled=true;
+      try{
+        const result=await workerPost("/api/youtube/library/playlists/publication",{playlistId:playlist.id,showOnMusicPage:desired});
+        playlist.show_on_music_page=result.playlist.show_on_music_page===true;
+        playlist.privacy_status=result.playlist.privacy_status||playlist.privacy_status;
+        checkbox.checked=playlist.show_on_music_page;checkbox.disabled=!eligible()&&!checkbox.checked;help.textContent=helpText();
+        setMessage(checkbox.checked?"Playlist aggiunta a Personal Musicale.":"Playlist rimossa da Personal Musicale.","success");
+      }catch(error){
+        checkbox.checked=playlist.show_on_music_page===true;checkbox.disabled=!eligible()&&!checkbox.checked;
+        help.textContent=error.message;setMessage("Modifica della pubblicazione non riuscita: "+error.message,"error");
+      }
+    });
+    textWrap.append(strong,help);label.append(checkbox,textWrap);entry.appendChild(label);grid.appendChild(entry);
+  });
+}
 async function loadPlaylists(){playlistCount.textContent="CARICAMENTO…";const result=await workerGet("/api/youtube/library/playlists");allPlaylists=Array.isArray(result.items)?result.items:[];playlistById=new Map(allPlaylists.map(item=>[item.id,item]));renderPlaylists(allPlaylists);if(allPlaylists.length)setMessage("Archivio caricato da Supabase. Seleziona una playlist.","success");else setMessage("Archivio vuoto. Usa Aggiorna da YouTube per importare le playlist.")}
 async function selectPlaylist(id,title,card){selectedPlaylistId=id;playlistSearchInput.value="";playlistSearchFeedback.textContent="";nextVideoPageToken=null;loadedVideoCount=0;requestedVideoTokens.clear();loadedVideoIds.clear();grid.querySelectorAll(".playlist-card").forEach(item=>item.setAttribute("aria-pressed",String(item===card)));playlistHead.hidden=true;playlistPanel.hidden=true;detailSection.hidden=false;document.getElementById("details-heading").textContent=title;videoCount.textContent="";videoList.className="empty";videoList.textContent="Caricamento dei video…";loadMoreButton.hidden=true;setMessage("");await loadVideoPage(false).catch(error=>{videoList.className="empty";videoList.textContent=error.message;setMessage("Impossibile caricare i video della playlist.","error")})}
 document.getElementById("back-to-playlists").addEventListener("click",()=>{detailSection.hidden=true;globalSearchInput.value="";playlistHead.hidden=false;playlistPanel.hidden=false;selectedPlaylistId=null;nextVideoPageToken=null;loadMoreButton.hidden=true;setMessage("")});
