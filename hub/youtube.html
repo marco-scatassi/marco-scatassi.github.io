@@ -53,6 +53,39 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 .detail-title{align-items:center}
 #back-to-playlists{background:#fff;color:#172638;border:1px solid #ccd5df}
 @media(max-width:600px){header{padding:13px 16px}main{margin-top:28px}.video-row{grid-template-columns:88px minmax(0,1fr);gap:9px}.video-thumb{width:88px}}
+
+/* Header allineato ai controlli della dashboard */
+.header-actions .nav-link,
+.header-actions .action{
+  min-height:0;
+  padding:11px 17px;
+  border-radius:9px;
+  font:700 14px system-ui,sans-serif;
+  letter-spacing:normal;
+  text-transform:none;
+}
+.header-actions .nav-link{
+  color:#172638;
+  border:1px solid #ccd5df;
+  background:#fff;
+}
+.header-actions .action{
+  color:#fff;
+  border:0;
+  background:#172638;
+}
+.header-actions .nav-link:hover{
+  background:#f5f8fc;
+  box-shadow:0 3px 12px #17263818;
+}
+.header-actions .action:hover{
+  background:#263b52;
+  color:#fff;
+  box-shadow:0 3px 12px #17263818;
+}
+/* La regola .video-row{display:grid} non deve annullare l'attributo hidden */
+.video-row[hidden]{display:none!important}
+
 </style></head>
 <body>
 <header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
