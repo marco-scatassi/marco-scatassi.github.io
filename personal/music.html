@@ -99,6 +99,15 @@
       </div>
     </section>
 
+    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10" hidden aria-labelledby="public-playlists-heading">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 grid place-items-center"><i class="fa-solid fa-headphones text-lg"></i></div>
+        <div><p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Personal collection</p><h2 id="public-playlists-heading" class="text-2xl font-black">Le mie playlist</h2></div>
+      </div>
+      <div id="public-playlists-list" class="grid md:grid-cols-2 gap-6"></div>
+      <p id="public-playlists-status" class="text-xs text-slate-500 mt-5" role="status" aria-live="polite"></p>
+    </section>
+
     <section class="glass rounded-[2rem] p-7 md:p-10 reveal">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 grid place-items-center">
@@ -154,6 +163,39 @@
       });
     }, {threshold:.12});
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    async function loadPublicMusicPlaylists() {
+      const section=document.getElementById('public-playlists-section');
+      const list=document.getElementById('public-playlists-list');
+      const status=document.getElementById('public-playlists-status');
+      try {
+        const response=await fetch('https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/music/playlists',{headers:{Accept:'application/json'}});
+        const result=await response.json();
+        if(!response.ok)throw new Error(result.error||'Catalogo musicale non disponibile.');
+        const items=Array.isArray(result.items)?result.items:[];
+        if(!items.length)return;
+        items.forEach(item=>{
+          if(typeof item.youtube_playlist_id!=='string'||!/^[A-Za-z0-9_-]{10,80}$/.test(item.youtube_playlist_id))return;
+          const card=document.createElement('article');
+          card.className='rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
+          const player=document.createElement('iframe');
+          player.className='w-full aspect-video bg-slate-950';
+          player.src='https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(item.youtube_playlist_id);
+          player.title='Playlist YouTube: '+(item.title||'Playlist musicale');
+          player.loading='lazy';player.referrerPolicy='strict-origin-when-cross-origin';
+          player.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          player.allowFullscreen=true;card.appendChild(player);
+          const copy=document.createElement('div');copy.className='p-5';
+          const title=document.createElement('h3');title.className='font-extrabold text-lg text-slate-900';title.textContent=item.title||'Playlist musicale';
+          const meta=document.createElement('p');meta.className='text-xs text-slate-500 mt-2';meta.textContent=Number.isInteger(item.item_count)?item.item_count+' brani/video':'Playlist YouTube';
+          copy.append(title,meta);card.appendChild(copy);list.appendChild(card);
+        });
+        if(list.childElementCount){section.hidden=false;section.classList.add('reveal','visible')}
+      } catch(error) {
+        status.textContent='Le playlist musicali non sono momentaneamente disponibili.';
+      }
+    }
+    loadPublicMusicPlaylists();
   </script>
 </body>
 </html>
