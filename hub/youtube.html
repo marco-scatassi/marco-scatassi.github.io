@@ -25,7 +25,7 @@ h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spaci
 .detail-panel{margin-top:28px}.detail-title{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:17px}.video-list{display:grid;gap:10px}
 .video-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:15px;align-items:center;padding:10px;border:1px solid rgba(145,164,186,.15);border-radius:8px;background:rgba(8,11,20,.45)}
 .video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#202b3b}.video-name{margin:0;font-size:14px;line-height:1.45;overflow-wrap:anywhere}.video-sub{margin:6px 0 0;color:var(--muted);font:10px var(--mono)}
-.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(145,164,186,.3);border-radius:8px;line-height:1.6}.load-more{margin-top:15px}.small-note{color:var(--muted);font-size:11px;line-height:1.6}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(145,164,186,.3);border-radius:8px;line-height:1.6}.load-more{margin-top:15px}.small-note{color:var(--muted);font-size:11px;line-height:1.6}.diagnostic-result{white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:600px){header{padding:13px 18px;align-items:flex-start}.brand{font-size:12px;padding-top:11px}.nav-link{padding:8px 10px;font-size:10px}main{margin-top:30px}.panel{padding:15px}.video-row{grid-template-columns:112px minmax(0,1fr);gap:10px}.video-name{font-size:12px}}
 
 :root{color-scheme:light;--cyan:#00aeca;--pink:#172638;--yellow:#167443;--bg:#f5f8fc;--surface:#fff;--text:#172638;--muted:#718096;--line:#e5eaf0;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--sans:system-ui,sans-serif}
@@ -61,7 +61,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><p class="small-note">Sono mostrate le playlist restituite dall'account collegato. La creazione e la modifica delle playlist saranno aggiunte in una fase successiva.</p></section>
-<section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><span class="count" id="video-count"></span></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
+<section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
 <p id="message" role="status" aria-live="polite"></p>
 </main>
 <script>
@@ -74,6 +74,7 @@ const grid=document.getElementById("playlist-grid"),videoList=document.getElemen
 let accessToken=null,selectedPlaylistId=null,nextVideoPageToken=null,loadedVideoCount=0;
 const requestedVideoTokens=new Set(),loadedVideoIds=new Set();
 const syncButton=document.getElementById("sync-button"),syncStatus=document.getElementById("sync-status");
+const diagnosePlaylistButton=document.getElementById("diagnose-playlist-button"),diagnosticResult=document.getElementById("diagnostic-result");
 let videoRequestInProgress=false;
 const playlistHead=document.getElementById("playlist-head"),playlistPanel=document.getElementById("playlist-panel"),detailSection=document.getElementById("detail-section");
 function setMessage(text,type=""){message.textContent=text;message.className=type}
@@ -110,6 +111,31 @@ loadMoreButton.hidden=true;
 }finally{videoRequestInProgress=false;loadMoreButton.disabled=false;loadMoreButton.textContent="CARICA ALTRI VIDEO";}
 }
 loadMoreButton.addEventListener("click",async()=>{if(videoRequestInProgress||!nextVideoPageToken)return;try{await loadVideoPage(true)}catch(error){setMessage(error.message,"error")}});
+diagnosePlaylistButton.addEventListener("click",async()=>{
+  if(!selectedPlaylistId)return;
+  diagnosePlaylistButton.disabled=true;
+  diagnosePlaylistButton.textContent="VERIFICA IN CORSO…";
+  diagnosticResult.textContent="Confronto dei dati diretti di YouTube con l'archivio Supabase…";
+  try{
+    const result=await workerGet("/api/youtube/diagnostics/playlist?playlistId="+encodeURIComponent(selectedPlaylistId));
+    const youtubeCount=Number.isInteger(result.youtube?.count)
+      ? (result.youtube.truncated?"almeno "+result.youtube.count:result.youtube.count)
+      : "non disponibile";
+    const archiveCount=Number.isInteger(result.supabase?.count)?result.supabase.count:"non disponibile";
+    const youtubeTitles=(result.youtube?.sampleTitles||[]).join(" | ")||"nessun titolo restituito";
+    const archiveTitles=(result.supabase?.sampleTitles||[]).join(" | ")||"nessun record archiviato";
+    diagnosticResult.textContent=
+      "YouTube: "+youtubeCount+" elementi"+(result.youtube?.truncated?" (limite diagnostico di 1.000 elementi raggiunto)":"")+
+      "\nTitoli YouTube: "+youtubeTitles+
+      "\nSupabase: "+archiveCount+" record"+
+      "\nTitoli Supabase: "+archiveTitles;
+  }catch(error){
+    diagnosticResult.textContent="Diagnostica non riuscita: "+error.message;
+  }finally{
+    diagnosePlaylistButton.disabled=false;
+    diagnosePlaylistButton.textContent="VERIFICA PLAYLIST";
+  }
+});
 logoutButton.addEventListener("click",async()=>{logoutButton.disabled=true;try{const{error}=await supabaseClient.auth.signOut();if(error)throw error;window.location.replace("./index.html")}catch(error){setMessage("Errore durante l'uscita: "+error.message,"error");logoutButton.disabled=false}});
 async function refreshSyncStatus(){if(!syncStatus)return;try{const result=await workerGet("/api/youtube/sync/status");const sync=result.sync;if(!sync){syncStatus.textContent="Nessuna sincronizzazione ancora effettuata.";}else{const stamp=sync.completed_at||sync.started_at;syncStatus.textContent="Ultima sincronizzazione: "+(stamp?new Date(stamp).toLocaleString("it-IT"):"non disponibile")+" · "+sync.status+(sync.error?" · "+sync.error:"");}}catch(error){syncStatus.textContent="Stato sincronizzazione non disponibile: "+error.message;}}
 syncButton.addEventListener("click",async()=>{syncButton.disabled=true;syncButton.textContent="SINCRONIZZAZIONE…";setMessage("Sincronizzazione con YouTube in corso…");try{const response=await fetch(WORKER_URL+"/api/youtube/sync",{method:"POST",headers:authHeaders()});const raw=await response.text();let data={};try{data=raw?JSON.parse(raw):{};}catch{}if(!response.ok)throw new Error(data.error||"HTTP "+response.status);await loadPlaylists();await refreshSyncStatus();setMessage("Sincronizzazione "+data.status+": "+data.playlistsSynced+" playlist e "+data.itemsSynced+" brani elaborati.",data.status==="success"?"success":"error");}catch(error){setMessage("Sincronizzazione non completata: "+error.message,"error");await refreshSyncStatus();}finally{syncButton.disabled=false;syncButton.textContent="AGGIORNA DA YOUTUBE";}});
