@@ -57,6 +57,41 @@
       background:var(--pink); color:white; border-radius:50%;
     }
     @keyframes spin { to { transform:rotate(360deg) } }
+
+    .playlist-cover {
+      position:relative; aspect-ratio:16/9; overflow:hidden;
+      display:grid; place-items:center;
+      background:linear-gradient(125deg,#dff8fc,#fce7f3);
+    }
+    .playlist-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+    .playlist-cover-fallback i { color:#087e99; font-size:3rem; }
+    .playlist-toggle {
+      display:block; width:100%; text-align:left; cursor:pointer;
+      background:rgba(255,255,255,.9); border:0;
+    }
+    .playlist-toggle:focus-visible,.playlist-track-link:focus-visible {
+      outline:3px solid var(--cyan); outline-offset:3px;
+    }
+    .playlist-details { border-top:1px solid #e2e8f0; background:rgba(248,250,252,.9); }
+    .playlist-details[hidden] { display:none!important; }
+    .playlist-track {
+      display:flex; align-items:center; gap:12px; padding:10px 0;
+      border-bottom:1px solid #e2e8f0;
+    }
+    .playlist-track:last-child { border-bottom:0; }
+    .playlist-track-thumb {
+      width:64px; height:44px; flex:0 0 64px; object-fit:cover;
+      border-radius:8px; background:#e2e8f0;
+    }
+    .playlist-track-link { color:inherit; text-decoration:none; }
+    .playlist-track-link:hover .playlist-track-title { color:#078da7; }
+    .playlist-track-title { font-weight:750; color:#17243a; }
+    .playlist-track-meta { font-size:12px; color:#64748b; margin-top:3px; }
+    .playlist-youtube-link {
+      display:inline-flex; align-items:center; gap:8px; margin-top:16px;
+      color:#087e99; font-size:13px; font-weight:800;
+    }
+    .playlist-youtube-link:hover { color:#e83e91; }
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -164,35 +199,164 @@
     }, {threshold:.12});
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    async function loadPublicPlaylistTracks(playlist, status, trackList) {
+      status.textContent = 'Caricamento dei brani…';
+      trackList.replaceChildren();
+      const query = new URLSearchParams({ playlistId: playlist.youtube_playlist_id });
+      const response = await fetch('https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/music/playlist-items?' + query.toString(), {
+        headers: { Accept: 'application/json' }
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Elenco dei brani non disponibile.');
+      const tracks = Array.isArray(result.items) ? result.items : [];
+      if (!tracks.length) {
+        status.textContent = 'Nessun brano disponibile per questa playlist.';
+        return;
+      }
+      tracks.forEach((track, index) => {
+        const row = document.createElement('div');
+        row.className = 'playlist-track';
+        if (track.thumbnail_url && /^https:\\/\\//i.test(track.thumbnail_url)) {
+          const image = document.createElement('img');
+          image.className = 'playlist-track-thumb';
+          image.src = track.thumbnail_url;
+          image.alt = '';
+          image.loading = 'lazy';
+          row.appendChild(image);
+        }
+        const copy = document.createElement('div');
+        copy.className = 'min-w-0 flex-1';
+        const title = document.createElement('div');
+        title.className = 'playlist-track-title';
+        title.textContent = track.title || 'Video senza titolo';
+        const artist = track.artist || track.channel_title || '';
+        const meta = document.createElement('div');
+        meta.className = 'playlist-track-meta';
+        meta.textContent = (Number.isInteger(track.position) ? track.position + 1 : index + 1) + (artist ? ' · ' + artist : '');
+        copy.append(title, meta);
+        if (typeof track.video_id === 'string' && /^[A-Za-z0-9_-]{6,20}$/.test(track.video_id)) {
+          const link = document.createElement('a');
+          link.className = 'playlist-track-link min-w-0 flex-1';
+          link.href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(track.video_id) + '&list=' + encodeURIComponent(playlist.youtube_playlist_id);
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.appendChild(copy);
+          row.appendChild(link);
+        } else {
+          row.appendChild(copy);
+          const unavailable = document.createElement('span');
+          unavailable.className = 'text-xs text-slate-400';
+          unavailable.textContent = 'Non disponibile';
+          row.appendChild(unavailable);
+        }
+        trackList.appendChild(row);
+      });
+      status.textContent = tracks.length + ' brani nella playlist.';
+    }
+
     async function loadPublicMusicPlaylists() {
-      const section=document.getElementById('public-playlists-section');
-      const list=document.getElementById('public-playlists-list');
-      const status=document.getElementById('public-playlists-status');
+      const section = document.getElementById('public-playlists-section');
+      const list = document.getElementById('public-playlists-list');
+      const status = document.getElementById('public-playlists-status');
       try {
-        const response=await fetch('https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/music/playlists',{headers:{Accept:'application/json'}});
-        const result=await response.json();
-        if(!response.ok)throw new Error(result.error||'Catalogo musicale non disponibile.');
-        const items=Array.isArray(result.items)?result.items:[];
-        if(!items.length)return;
-        items.forEach(item=>{
-          if(typeof item.youtube_playlist_id!=='string'||!/^[A-Za-z0-9_-]{10,80}$/.test(item.youtube_playlist_id))return;
-          const card=document.createElement('article');
-          card.className='rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
-          const player=document.createElement('iframe');
-          player.className='w-full aspect-video bg-slate-950';
-          player.src='https://www.youtube-nocookie.com/embed/videoseries?list='+encodeURIComponent(item.youtube_playlist_id);
-          player.title='Playlist YouTube: '+(item.title||'Playlist musicale');
-          player.loading='lazy';player.referrerPolicy='strict-origin-when-cross-origin';
-          player.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-          player.allowFullscreen=true;card.appendChild(player);
-          const copy=document.createElement('div');copy.className='p-5';
-          const title=document.createElement('h3');title.className='font-extrabold text-lg text-slate-900';title.textContent=item.title||'Playlist musicale';
-          const meta=document.createElement('p');meta.className='text-xs text-slate-500 mt-2';meta.textContent=Number.isInteger(item.item_count)?item.item_count+' brani/video':'Playlist YouTube';
-          copy.append(title,meta);card.appendChild(copy);list.appendChild(card);
+        const response = await fetch('https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/music/playlists', {
+          headers: { Accept: 'application/json' }
         });
-        if(list.childElementCount){section.hidden=false;section.classList.add('reveal','visible')}
-      } catch(error) {
-        status.textContent='Le playlist musicali non sono momentaneamente disponibili.';
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Catalogo musicale non disponibile.');
+        const items = Array.isArray(result.items) ? result.items : [];
+        if (!items.length) return;
+
+        items.forEach(item => {
+          if (typeof item.youtube_playlist_id !== 'string' || !/^[A-Za-z0-9_-]{10,80}$/.test(item.youtube_playlist_id)) return;
+
+          const card = document.createElement('article');
+          card.className = 'rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
+
+          const toggle = document.createElement('button');
+          toggle.type = 'button';
+          toggle.className = 'playlist-toggle';
+          toggle.setAttribute('aria-expanded', 'false');
+
+          const cover = document.createElement('div');
+          cover.className = 'playlist-cover';
+          if (typeof item.thumbnail_url === 'string' && /^https:\\/\\//i.test(item.thumbnail_url)) {
+            const image = document.createElement('img');
+            image.src = item.thumbnail_url;
+            image.alt = 'Copertina della playlist ' + (item.title || '');
+            image.loading = 'lazy';
+            image.onerror = () => {
+              image.remove();
+              cover.classList.add('playlist-cover-fallback');
+              const fallbackIcon = document.createElement('i');
+              fallbackIcon.className = 'fa-solid fa-music';
+              cover.appendChild(fallbackIcon);
+            };
+            cover.appendChild(image);
+          } else {
+            cover.classList.add('playlist-cover-fallback');
+            const fallbackIcon = document.createElement('i');
+            fallbackIcon.className = 'fa-solid fa-music';
+            cover.appendChild(fallbackIcon);
+          }
+
+          const copy = document.createElement('div');
+          copy.className = 'p-5';
+          const title = document.createElement('h3');
+          title.className = 'font-extrabold text-lg text-slate-900';
+          title.textContent = item.title || 'Playlist musicale';
+          const meta = document.createElement('p');
+          meta.className = 'text-xs text-slate-500 mt-2';
+          meta.textContent = Number.isInteger(item.item_count) ? item.item_count + ' brani/video' : 'Playlist YouTube';
+          const hint = document.createElement('p');
+          hint.className = 'text-xs font-bold text-cyan-700 mt-4';
+          hint.textContent = 'VISUALIZZA I BRANI  ↓';
+          copy.append(title, meta, hint);
+          toggle.append(cover, copy);
+          card.appendChild(toggle);
+
+          const details = document.createElement('div');
+          details.className = 'playlist-details p-5';
+          details.hidden = true;
+          const detailStatus = document.createElement('p');
+          detailStatus.className = 'text-xs text-slate-500 mb-3';
+          detailStatus.textContent = 'Apri per caricare i brani della playlist.';
+          const trackList = document.createElement('div');
+          const youtubeLink = document.createElement('a');
+          youtubeLink.className = 'playlist-youtube-link';
+          youtubeLink.href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
+          youtubeLink.target = '_blank';
+          youtubeLink.rel = 'noopener noreferrer';
+          youtubeLink.textContent = 'Apri la playlist su YouTube ';
+          const externalIcon = document.createElement('i');
+          externalIcon.className = 'fa-solid fa-arrow-up-right-from-square';
+          youtubeLink.appendChild(externalIcon);
+          details.append(detailStatus, trackList, youtubeLink);
+          card.appendChild(details);
+
+          toggle.addEventListener('click', async () => {
+            const opening = details.hidden;
+            details.hidden = !opening;
+            toggle.setAttribute('aria-expanded', String(opening));
+            hint.textContent = opening ? 'NASCONDI I BRANI  ↑' : 'VISUALIZZA I BRANI  ↓';
+            if (opening && details.dataset.loaded !== 'true') {
+              try {
+                await loadPublicPlaylistTracks(item, detailStatus, trackList);
+                details.dataset.loaded = 'true';
+              } catch (error) {
+                detailStatus.textContent = 'Non è stato possibile caricare i brani. Riprova tra poco.';
+              }
+            }
+          });
+          list.appendChild(card);
+        });
+
+        if (list.childElementCount) {
+          section.hidden = false;
+          section.classList.add('reveal', 'visible');
+        }
+      } catch (error) {
+        status.textContent = 'Le playlist musicali non sono momentaneamente disponibili.';
       }
     }
     loadPublicMusicPlaylists();
