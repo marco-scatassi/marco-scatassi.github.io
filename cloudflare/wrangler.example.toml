@@ -1,0 +1,10 @@
+# Esempio: rinominare in wrangler.toml solo se si sceglie di gestire
+# il deploy tramite Wrangler. Non contiene credenziali né ID reali.
+
+name = "personal-hub-api"
+main = "worker.js"
+compatibility_date = "2026-11-08"
+
+[[kv_namespaces]]
+binding = "HUB_KV"
+id = "INSERIRE_ID_NAMESPACE_KV"
