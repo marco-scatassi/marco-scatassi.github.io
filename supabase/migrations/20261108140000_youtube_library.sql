@@ -15,7 +15,8 @@ create table if not exists public.youtube_playlists (
   last_synced_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint youtube_playlists_user_youtube_id_key unique (user_id, youtube_playlist_id)
+  constraint youtube_playlists_user_youtube_id_key unique (user_id, youtube_playlist_id),
+  constraint youtube_playlists_user_id_id_key unique (user_id, id)
 );
 
 create table if not exists public.youtube_playlist_items (
@@ -80,9 +81,10 @@ create table if not exists public.music_genres (
   constraint music_genres_parent_fk
     foreign key (user_id, parent_genre_id)
     references public.music_genres (user_id, id)
-    on delete set null,
+    on delete cascade,
   constraint music_genres_user_normalized_name_key
-    unique (user_id, normalized_name)
+    unique (user_id, normalized_name),
+  constraint music_genres_user_id_id_key unique (user_id, id)
 );
 
 create index if not exists youtube_playlists_user_updated_idx
