@@ -216,7 +216,7 @@
       tracks.forEach((track, index) => {
         const row = document.createElement('div');
         row.className = 'playlist-track';
-        if (track.thumbnail_url && /^https:\\/\\//i.test(track.thumbnail_url)) {
+        if (track.thumbnail_url && /^https:\/\//i.test(track.thumbnail_url)) {
           const image = document.createElement('img');
           image.className = 'playlist-track-thumb';
           image.src = track.thumbnail_url;
@@ -280,7 +280,7 @@
 
           const cover = document.createElement('div');
           cover.className = 'playlist-cover';
-          if (typeof item.thumbnail_url === 'string' && /^https:\\/\\//i.test(item.thumbnail_url)) {
+          if (typeof item.thumbnail_url === 'string' && /^https:\/\//i.test(item.thumbnail_url)) {
             const image = document.createElement('img');
             image.src = item.thumbnail_url;
             image.alt = 'Copertina della playlist ' + (item.title || '');
