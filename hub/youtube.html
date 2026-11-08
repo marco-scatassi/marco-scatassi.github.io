@@ -80,6 +80,7 @@ const playlistHead=document.getElementById("playlist-head"),playlistPanel=docume
 function setMessage(text,type=""){message.textContent=text;message.className=type}
 function authHeaders(){return{Authorization:`Bearer ${accessToken}`}}
 async function workerGet(path){const response=await fetch(`${WORKER_URL}${path}`,{method:"GET",headers:authHeaders()});const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
+async function workerPost(path,body=null){const headers=authHeaders();if(body!==null)headers["Content-Type"]="application/json";const response=await fetch(`${WORKER_URL}${path}`,{method:"POST",headers,body:body===null?undefined:JSON.stringify(body)});const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
 function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standard?.url||t.high?.url||t.medium?.url||t.default?.url||""}
 function renderPlaylists(playlists){grid.replaceChildren();if(!playlists.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non risultano playlist nell’account YouTube collegato.";grid.appendChild(empty);playlistCount.textContent="0 PLAYLIST";return}
 playlistCount.textContent=`${playlists.length} PLAYLIST`;playlists.forEach(playlist=>{const card=document.createElement("button");card.type="button";card.className="playlist-card";card.setAttribute("aria-pressed","false");const thumb=playlist.thumbnail_url||"";if(thumb){const img=document.createElement("img");img.className="playlist-thumb";img.src=thumb;img.alt="";img.loading="lazy";card.appendChild(img)}else{const ph=document.createElement("span");ph.className="thumb-placeholder";ph.textContent="▶";card.appendChild(ph)}
@@ -138,7 +139,44 @@ diagnosePlaylistButton.addEventListener("click",async()=>{
 });
 logoutButton.addEventListener("click",async()=>{logoutButton.disabled=true;try{const{error}=await supabaseClient.auth.signOut();if(error)throw error;window.location.replace("./index.html")}catch(error){setMessage("Errore durante l'uscita: "+error.message,"error");logoutButton.disabled=false}});
 async function refreshSyncStatus(){if(!syncStatus)return;try{const result=await workerGet("/api/youtube/sync/status");const sync=result.sync;if(!sync){syncStatus.textContent="Nessuna sincronizzazione ancora effettuata.";}else{const stamp=sync.completed_at||sync.started_at;syncStatus.textContent="Ultima sincronizzazione: "+(stamp?new Date(stamp).toLocaleString("it-IT"):"non disponibile")+" · "+sync.status+(sync.error?" · "+sync.error:"");}}catch(error){syncStatus.textContent="Stato sincronizzazione non disponibile: "+error.message;}}
-syncButton.addEventListener("click",async()=>{syncButton.disabled=true;syncButton.textContent="SINCRONIZZAZIONE…";setMessage("Sincronizzazione con YouTube in corso…");try{const response=await fetch(WORKER_URL+"/api/youtube/sync",{method:"POST",headers:authHeaders()});const raw=await response.text();let data={};try{data=raw?JSON.parse(raw):{};}catch{}if(!response.ok)throw new Error(data.error||"HTTP "+response.status);await loadPlaylists();await refreshSyncStatus();setMessage("Sincronizzazione "+data.status+": "+data.playlistsSynced+" playlist e "+data.itemsSynced+" brani elaborati.",data.status==="success"?"success":"error");}catch(error){setMessage("Sincronizzazione non completata: "+error.message,"error");await refreshSyncStatus();}finally{syncButton.disabled=false;syncButton.textContent="AGGIORNA DA YOUTUBE";}});
+syncButton.addEventListener("click",async()=>{
+  syncButton.disabled=true;
+  syncButton.textContent="SINCRONIZZAZIONE…";
+  setMessage("Aggiornamento elenco playlist da YouTube…");
+  if(syncStatus)syncStatus.textContent="Preparazione sincronizzazione…";
+  let itemsSynced=0,completedPlaylists=0,playlistListTruncated=false;
+  const errors=[];
+  try{
+    const start=await workerPost("/api/youtube/sync");
+    playlistListTruncated=start.playlistListTruncated===true;
+    await loadPlaylists();
+    const library=await workerGet("/api/youtube/library/playlists");
+    const playlists=Array.isArray(library.items)?library.items:[];
+    for(let i=0;i<playlists.length;i++){
+      const playlist=playlists[i],label=playlist.title||"Playlist senza titolo";
+      if(syncStatus)syncStatus.textContent="Sincronizzazione "+(i+1)+" di "+playlists.length+": "+label;
+      setMessage("Sincronizzazione "+(i+1)+" di "+playlists.length+": "+label);
+      try{
+        const result=await workerPost("/api/youtube/sync/playlist?playlistId="+encodeURIComponent(playlist.id));
+        itemsSynced+=Number.isSafeInteger(result.itemsSynced)?result.itemsSynced:0;
+        completedPlaylists++;
+        if(result.truncated)errors.push(label+": raggiunto il limite di pagine; alcuni elementi potrebbero mancare.");
+      }catch(error){errors.push(label+": "+error.message);}
+    }
+    const final=await workerPost("/api/youtube/sync/complete",{playlistsSynced:playlists.length,itemsSynced,errors,playlistListTruncated});
+    await loadPlaylists();
+    await refreshSyncStatus();
+    const detail=errors.length?" con "+errors.length+" problemi":"";
+    setMessage("Sincronizzazione "+final.status+": "+completedPlaylists+" playlist elaborate, "+itemsSynced+" brani archiviati"+detail+".",final.status==="success"?"success":"error");
+    if(syncStatus&&errors.length)syncStatus.textContent=errors.slice(0,5).join(" · ");
+  }catch(error){
+    setMessage("Sincronizzazione non completata: "+error.message,"error");
+    await refreshSyncStatus();
+  }finally{
+    syncButton.disabled=false;
+    syncButton.textContent="AGGIORNA DA YOUTUBE";
+  }
+});
 async function initialize(){try{const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;const response=await fetch(`${WORKER_URL}/api/me`,{method:"GET",headers:authHeaders()});const raw=await response.text();let auth;try{auth=JSON.parse(raw)}catch{throw new Error("Risposta di autorizzazione non valida.")}if(!response.ok||!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");const status=await workerGet("/api/youtube/status");if(!status.connected){const empty=document.createElement("div");empty.className="empty";empty.textContent="YouTube non è collegato. Torna alla dashboard e completa il collegamento dell’account.";grid.replaceChildren(empty);playlistCount.textContent="NON COLLEGATO";setMessage("Collega prima YouTube dalla dashboard.","error");return}await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare le playlist.";grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
 initialize();
 </script></body></html>
