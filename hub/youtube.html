@@ -10,8 +10,8 @@
 header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:17px max(24px,calc((100% - 1180px)/2));background:rgba(8,11,20,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .brand{color:var(--text);font-weight:700;letter-spacing:1.2px;text-transform:uppercase}.brand span{color:var(--pink)}.header-actions{display:flex;gap:10px;flex-wrap:wrap}
 .nav-link,.action{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border-radius:6px;cursor:pointer;text-decoration:none;font:500 11px var(--mono);letter-spacing:.4px;text-transform:uppercase;transition:.2s}
-.nav-link{color:var(--text);border:1px solid rgba(145,164,186,.35);background:transparent}.action{color:#061018;background:var(--cyan);border:1px solid var(--cyan);font-weight:700}
-.nav-link:hover,.action:hover{transform:translateY(-2px);box-shadow:0 0 18px rgba(0,229,255,.2)}button:disabled{opacity:.55;cursor:wait;transform:none}
+.nav-link{color:#172638;border:1px solid #ccd5df;background:#fff}.action{color:#fff;background:#172638;border:1px solid #172638;font-weight:700}
+.nav-link:hover,.action:hover{background:#f5f8fc;box-shadow:0 3px 12px #17263818;transform:none}.action:hover{background:#263b52;color:#fff}button:disabled{opacity:.55;cursor:wait;transform:none}
 main{width:min(1180px,calc(100% - 36px));margin:42px auto 80px}.eyebrow{color:var(--cyan);font:11px var(--mono);letter-spacing:1.8px;text-transform:uppercase}
 h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spacing:-1.5px}h1 span{color:var(--pink)}.intro{margin:0;color:var(--muted);line-height:1.7;max-width:720px}
 .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:34px 0 15px}h2{margin:0;font-size:19px;text-transform:uppercase;letter-spacing:.6px}.count{color:var(--muted);font:11px var(--mono)}
@@ -26,6 +26,7 @@ h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spaci
 .video-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:15px;align-items:center;padding:10px;border:1px solid rgba(145,164,186,.15);border-radius:8px;background:rgba(8,11,20,.45)}
 .video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#202b3b}.video-name{margin:0;font-size:14px;line-height:1.45;overflow-wrap:anywhere}.video-sub{margin:6px 0 0;color:var(--muted);font:10px var(--mono)}
 .empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(145,164,186,.3);border-radius:8px;line-height:1.6}.load-more{margin-top:15px}.small-note{color:var(--muted);font-size:11px;line-height:1.6}.diagnostic-result{white-space:pre-wrap;overflow-wrap:anywhere}
+.search-tools{display:grid;gap:10px;margin:0 0 18px}.search-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.search-input{flex:1 1 260px;min-width:0;min-height:42px;padding:10px 13px;border:1px solid #ccd5df;border-radius:9px;background:#fff;color:#172638;font:14px system-ui,sans-serif;outline:none}.search-input:focus{border-color:#00aeca;box-shadow:0 0 0 3px #00aeca20}.search-results{display:grid;gap:0;margin-top:4px;border-top:1px solid #e5eaf0}.search-result{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;width:100%;padding:10px 0;text-align:left;color:#172638;background:transparent;border:0;border-bottom:1px solid #e5eaf0;border-radius:0;cursor:pointer}.search-result:hover{background:#f5f8fc}.search-result img{width:64px;aspect-ratio:16/9;object-fit:cover;border-radius:6px}.search-result strong{display:block;font-size:13px}.search-result small{display:block;margin-top:4px;color:#718096;font-size:11px}.search-feedback{margin:0;color:#718096;font-size:12px}.search-more{justify-self:start}
 @media(max-width:600px){header{padding:13px 18px;align-items:flex-start}.brand{font-size:12px;padding-top:11px}.nav-link{padding:8px 10px;font-size:10px}main{margin-top:30px}.panel{padding:15px}.video-row{grid-template-columns:112px minmax(0,1fr);gap:10px}.video-name{font-size:12px}}
 
 :root{color-scheme:light;--cyan:#00aeca;--pink:#172638;--yellow:#167443;--bg:#f5f8fc;--surface:#fff;--text:#172638;--muted:#718096;--line:#e5eaf0;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--sans:system-ui,sans-serif}
@@ -60,8 +61,8 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><p class="small-note">Sono mostrate le playlist restituite dall'account collegato. La creazione e la modifica delle playlist saranno aggiunte in una fase successiva.</p></section>
-<section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><p class="small-note">Sono mostrate le playlist restituite dall'account collegato. La creazione e la modifica delle playlist saranno aggiunte in una fase successiva.</p></section>
+<section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div class="search-tools"><label class="eyebrow" for="playlist-search">CERCA IN QUESTA PLAYLIST</label><div class="search-row"><input class="search-input" id="playlist-search" type="search" placeholder="Filtra per titolo, artista, album o genere…" autocomplete="off"></div><p class="search-feedback" id="playlist-search-feedback" role="status" aria-live="polite"></p></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
 <p id="message" role="status" aria-live="polite"></p>
 </main>
 <script>
@@ -71,10 +72,12 @@ const WORKER_URL="https://personal-hub-api.marco-scatassi-99.workers.dev";
 const AUTH_STORAGE_KEY="personal-hub-auth";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storage:window.localStorage,storageKey:AUTH_STORAGE_KEY,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const grid=document.getElementById("playlist-grid"),videoList=document.getElementById("video-list"),message=document.getElementById("message"),playlistCount=document.getElementById("playlist-count"),videoCount=document.getElementById("video-count"),loadMoreButton=document.getElementById("load-more"),logoutButton=document.getElementById("logout-button");
-let accessToken=null,selectedPlaylistId=null,nextVideoPageToken=null,loadedVideoCount=0;
+let accessToken=null,selectedPlaylistId=null,nextVideoPageToken=null,loadedVideoCount=0,allPlaylists=[],playlistById=new Map(),globalSearchOffset=0,globalSearchQuery="",globalSearchBusy=false;
 const requestedVideoTokens=new Set(),loadedVideoIds=new Set();
 const syncButton=document.getElementById("sync-button"),syncStatus=document.getElementById("sync-status");
 const diagnosePlaylistButton=document.getElementById("diagnose-playlist-button"),diagnosticResult=document.getElementById("diagnostic-result");
+const globalSearchInput=document.getElementById("global-search"),globalSearchClear=document.getElementById("global-search-clear"),globalSearchFeedback=document.getElementById("global-search-feedback"),globalSearchResults=document.getElementById("global-search-results"),globalSearchMore=document.getElementById("global-search-more");
+const playlistSearchInput=document.getElementById("playlist-search"),playlistSearchFeedback=document.getElementById("playlist-search-feedback");
 let videoRequestInProgress=false;
 const playlistHead=document.getElementById("playlist-head"),playlistPanel=document.getElementById("playlist-panel"),detailSection=document.getElementById("detail-section");
 function setMessage(text,type=""){message.textContent=text;message.className=type}
@@ -85,9 +88,9 @@ function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standa
 function renderPlaylists(playlists){grid.replaceChildren();if(!playlists.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non risultano playlist nell’account YouTube collegato.";grid.appendChild(empty);playlistCount.textContent="0 PLAYLIST";return}
 playlistCount.textContent=`${playlists.length} PLAYLIST`;playlists.forEach(playlist=>{const card=document.createElement("button");card.type="button";card.className="playlist-card";card.setAttribute("aria-pressed","false");const thumb=playlist.thumbnail_url||"";if(thumb){const img=document.createElement("img");img.className="playlist-thumb";img.src=thumb;img.alt="";img.loading="lazy";card.appendChild(img)}else{const ph=document.createElement("span");ph.className="thumb-placeholder";ph.textContent="▶";card.appendChild(ph)}
 const copy=document.createElement("span");copy.className="playlist-copy";const title=document.createElement("span");title.className="playlist-title";title.textContent=playlist.title||"Playlist senza titolo";const meta=document.createElement("span");meta.className="playlist-meta";const count=playlist.item_count;meta.textContent=Number.isInteger(count)?`${count} VIDEO`:"NUMERO VIDEO NON DISPONIBILE";copy.append(title,meta);card.appendChild(copy);card.addEventListener("click",()=>selectPlaylist(playlist.id,title.textContent,card));grid.appendChild(card)})}
-async function loadPlaylists(){playlistCount.textContent="CARICAMENTO…";const result=await workerGet("/api/youtube/library/playlists");const all=Array.isArray(result.items)?result.items:[];renderPlaylists(all);if(all.length)setMessage("Archivio caricato da Supabase. Seleziona una playlist.","success");else setMessage("Archivio vuoto. Usa Aggiorna da YouTube per importare le playlist.")}
-async function selectPlaylist(id,title,card){selectedPlaylistId=id;nextVideoPageToken=null;loadedVideoCount=0;requestedVideoTokens.clear();loadedVideoIds.clear();grid.querySelectorAll(".playlist-card").forEach(item=>item.setAttribute("aria-pressed",String(item===card)));playlistHead.hidden=true;playlistPanel.hidden=true;detailSection.hidden=false;document.getElementById("details-heading").textContent=title;videoCount.textContent="";videoList.className="empty";videoList.textContent="Caricamento dei video…";loadMoreButton.hidden=true;setMessage("");await loadVideoPage(false).catch(error=>{videoList.className="empty";videoList.textContent=error.message;setMessage("Impossibile caricare i video della playlist.","error")})}
-document.getElementById("back-to-playlists").addEventListener("click",()=>{detailSection.hidden=true;playlistHead.hidden=false;playlistPanel.hidden=false;selectedPlaylistId=null;nextVideoPageToken=null;loadMoreButton.hidden=true;setMessage("")});
+async function loadPlaylists(){playlistCount.textContent="CARICAMENTO…";const result=await workerGet("/api/youtube/library/playlists");allPlaylists=Array.isArray(result.items)?result.items:[];playlistById=new Map(allPlaylists.map(item=>[item.id,item]));renderPlaylists(allPlaylists);if(allPlaylists.length)setMessage("Archivio caricato da Supabase. Seleziona una playlist.","success");else setMessage("Archivio vuoto. Usa Aggiorna da YouTube per importare le playlist.")}
+async function selectPlaylist(id,title,card){selectedPlaylistId=id;playlistSearchInput.value="";playlistSearchFeedback.textContent="";nextVideoPageToken=null;loadedVideoCount=0;requestedVideoTokens.clear();loadedVideoIds.clear();grid.querySelectorAll(".playlist-card").forEach(item=>item.setAttribute("aria-pressed",String(item===card)));playlistHead.hidden=true;playlistPanel.hidden=true;detailSection.hidden=false;document.getElementById("details-heading").textContent=title;videoCount.textContent="";videoList.className="empty";videoList.textContent="Caricamento dei video…";loadMoreButton.hidden=true;setMessage("");await loadVideoPage(false).catch(error=>{videoList.className="empty";videoList.textContent=error.message;setMessage("Impossibile caricare i video della playlist.","error")})}
+document.getElementById("back-to-playlists").addEventListener("click",()=>{detailSection.hidden=true;globalSearchInput.value="";playlistHead.hidden=false;playlistPanel.hidden=false;selectedPlaylistId=null;nextVideoPageToken=null;loadMoreButton.hidden=true;setMessage("")});
 async function loadVideoPage(append){
 if(!selectedPlaylistId||videoRequestInProgress)return;
 const tokenForRequest=nextVideoPageToken;
@@ -99,9 +102,9 @@ const result=await workerGet(`/api/youtube/library/playlist-items?playlistId=${e
 if(!selectedPlaylistId)return;
 const items=Array.isArray(result.items)?result.items:[],returnedToken=null;
 if(returnedToken&&(requestedVideoTokens.has(returnedToken)||returnedToken===tokenForRequest)){nextVideoPageToken=null;loadMoreButton.hidden=true;throw new Error("YouTube ha restituito un token già utilizzato. Paginazione interrotta.");}
-nextVideoPageToken=returnedToken;if(!append)videoList.replaceChildren();let added=0;
+nextVideoPageToken=returnedToken;if(!append){videoList.replaceChildren();playlistSearchInput.value="";playlistSearchFeedback.textContent="";}let added=0;
 items.forEach(video=>{const videoId=video.video_id||video.youtube_playlist_item_id;if(videoId&&loadedVideoIds.has(videoId))return;if(videoId)loadedVideoIds.add(videoId);
-const row=document.createElement("article");row.className="video-row";const thumb=video.thumbnail_url||"";
+const row=document.createElement("article");row.className="video-row";row.dataset.search=[video.title,video.artist,video.album,video.channel_title,...(video.genre||[]),...(video.subgenre||[]),video.release_year].filter(Boolean).join(" ").toLocaleLowerCase("it");const thumb=video.thumbnail_url||"";
 if(thumb){const img=document.createElement("img");img.className="video-thumb";img.src=thumb;img.alt="";img.loading="lazy";row.appendChild(img)}else{const ph=document.createElement("div");ph.className="thumb-placeholder";ph.textContent="▶";row.appendChild(ph)}
 const copy=document.createElement("div"),title=document.createElement("h3");title.className="video-name";title.textContent=video.title||"Video senza titolo";
 const sub=document.createElement("p");sub.className="video-sub";const metadata=[video.artist,video.album,Array.isArray(video.genre)?video.genre.join(", "):"",Array.isArray(video.subgenre)?video.subgenre.join(", "):"",video.release_year].filter(Boolean).join(" · ");sub.textContent=[Number.isInteger(video.position)?`ELEMENTO ${video.position+1}`:"VIDEO IN PLAYLIST",metadata,video.metadata_source==="manual"?"METADATI MANUALI":"METADATI IMPORTATI"].filter(Boolean).join(" · ");copy.append(title,sub);row.appendChild(copy);videoList.appendChild(row);added++;});
@@ -112,6 +115,41 @@ loadMoreButton.hidden=true;
 }finally{videoRequestInProgress=false;loadMoreButton.disabled=false;loadMoreButton.textContent="CARICA ALTRI VIDEO";}
 }
 loadMoreButton.addEventListener("click",async()=>{if(videoRequestInProgress||!nextVideoPageToken)return;try{await loadVideoPage(true)}catch(error){setMessage(error.message,"error")}});
+playlistSearchInput.addEventListener("input",()=>{const q=playlistSearchInput.value.trim().toLocaleLowerCase("it");let shown=0;videoList.querySelectorAll(".video-row").forEach(row=>{const match=!q||row.dataset.search.includes(q);row.hidden=!match;if(match)shown++});playlistSearchFeedback.textContent=q?shown+" brani corrispondono tra quelli caricati in questa playlist.":"";});
+function renderGlobalSearchItems(items,append=false){
+  if(!append)globalSearchResults.replaceChildren();
+  items.forEach(item=>{
+    const button=document.createElement("button");button.type="button";button.className="search-result";
+    if(item.thumbnail_url){const img=document.createElement("img");img.src=item.thumbnail_url;img.alt="";img.loading="lazy";button.appendChild(img)}
+    const copy=document.createElement("span"),title=document.createElement("strong"),meta=document.createElement("small");
+    title.textContent=item.title||"Brano senza titolo";
+    meta.textContent=[item.artist,item.album,item.playlist_title].filter(Boolean).join(" · ")||"Playlist non disponibile";
+    copy.append(title,meta);button.appendChild(copy);
+    button.addEventListener("click",()=>{const playlist=playlistById.get(item.playlist_id);if(!playlist){globalSearchFeedback.textContent="La playlist di questo brano non è presente nell’elenco corrente.";return;}selectPlaylist(playlist.id,playlist.title,null).then(()=>{globalSearchInput.value="";globalSearchResults.replaceChildren();globalSearchFeedback.textContent="Playlist aperta: "+playlist.title;globalSearchInput.blur();});});
+    globalSearchResults.appendChild(button);
+  });
+}
+async function runGlobalSearch(append=false){
+  const q=globalSearchInput.value.trim();
+  if(q.length<2){globalSearchResults.replaceChildren();globalSearchMore.hidden=true;globalSearchFeedback.textContent="Inserisci almeno 2 caratteri per cercare in tutte le playlist.";return;}
+  if(globalSearchBusy)return;
+  globalSearchBusy=true;globalSearchQuery=q;globalSearchFeedback.textContent="Ricerca nell’archivio…";globalSearchMore.disabled=true;
+  if(!append)globalSearchOffset=0;
+  try{
+    const result=await workerGet("/api/youtube/library/search?q="+encodeURIComponent(q)+"&offset="+globalSearchOffset+"&limit=50");
+    const items=Array.isArray(result.items)?result.items:[];
+    renderGlobalSearchItems(items,append);globalSearchOffset+=items.length;
+    globalSearchFeedback.textContent=(Number.isInteger(result.count)?result.count+" risultati totali. ":"")+("Visualizzati "+globalSearchOffset+" risultati.");
+    globalSearchMore.hidden=!result.hasMore||items.length===0;
+  }catch(error){globalSearchFeedback.textContent="Ricerca non riuscita: "+error.message;globalSearchMore.hidden=true;}
+  finally{globalSearchBusy=false;globalSearchMore.disabled=false;}
+}
+let globalSearchTimer=null;
+globalSearchInput.addEventListener("input",()=>{clearTimeout(globalSearchTimer);globalSearchTimer=setTimeout(()=>runGlobalSearch(false),300)});
+globalSearchInput.addEventListener("keydown",event=>{if(event.key==="Enter"){clearTimeout(globalSearchTimer);runGlobalSearch(false)}});
+globalSearchMore.addEventListener("click",()=>runGlobalSearch(true));
+globalSearchClear.addEventListener("click",()=>{clearTimeout(globalSearchTimer);globalSearchInput.value="";globalSearchResults.replaceChildren();globalSearchMore.hidden=true;globalSearchFeedback.textContent="Inserisci almeno 2 caratteri per cercare in tutte le playlist.";globalSearchInput.focus()});
+
 diagnosePlaylistButton.addEventListener("click",async()=>{
   if(!selectedPlaylistId)return;
   diagnosePlaylistButton.disabled=true;
