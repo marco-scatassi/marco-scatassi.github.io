@@ -100,7 +100,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><section class="panel" style="margin:20px 0;padding:20px;background:#fff">
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div></section><div class="section-head"><h2>Crea Playlist</h2><span class="count">PLAYLIST STUDIO</span></div><section class="panel" style="margin:0 0 24px;padding:20px;background:#fff">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Nuove playlist</h2></div></div>
   <p class="small-note">Crea proposte a partire dai metadati della raccolta Favorite songs.</p>
   <button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button>
@@ -112,13 +112,13 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
     <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option></select>
     <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
   </div>
-  <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-lastfm" type="button">Classifica brani con Last.fm</button><span class="small-note">Recupera generi e mood dai tag della community Last.fm.</span></div>\n  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
+  <div class="search-row" style="margin:12px 0;flex-wrap:wrap"><button class="nav-link" id="studio-lastfm" type="button">Sync incrementale Last.fm</button><button class="nav-link" id="studio-lastfm-full" type="button">Full sync Last.fm</button><span class="small-note">L’incrementale salta i brani già interrogati; il full sync riprova anche quelli senza risultati.</span></div>\n  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
   <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-authorize" type="button">Autorizza gestione playlist YouTube</button><span class="small-note" id="studio-auth-status">Verifica permessi…</span></div>
   <div class="search-row" style="margin:12px 0"><label for="studio-privacy">Privacy</label><select id="studio-privacy" class="search-input"><option value="private">Privata (consigliata)</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
   <p class="search-feedback" id="studio-status" role="status" aria-live="polite"></p>
   <div id="studio-track-list" class="video-list"></div>
   <div class="search-row" style="margin-top:16px"><button class="nav-link" id="studio-rebuild" type="button">Aggiorna proposta</button><button class="action" id="studio-create" type="button" disabled>Crea playlist su YouTube</button></div>
-</section></section>
+</section>
 <section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div class="search-tools"><label class="eyebrow" for="playlist-search">CERCA IN QUESTA PLAYLIST</label><div class="search-row"><input class="search-input" id="playlist-search" type="search" placeholder="Filtra per titolo, artista, album o genere…" autocomplete="off"></div><p class="search-feedback" id="playlist-search-feedback" role="status" aria-live="polite"></p></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
 <p id="message" role="status" aria-live="polite"></p>
 </main>
@@ -379,26 +379,31 @@ async function openStudio(){
     studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
   }catch(error){studioStatus.textContent=error.message}
 }
-document.getElementById("studio-lastfm").addEventListener("click",async()=>{
+async function runLastFmSync(mode){
   if(!studioSource||!studioLibrary.length)return;
-  const pending=studioLibrary.filter(t=>t.metadata_source!=="manual"&&t.metadata_source!=="lastfm");
-  if(!pending.length){studioStatus.textContent="Tutti i brani risultano già classificati o modificati manualmente.";return}
-  const button=document.getElementById("studio-lastfm");button.disabled=true;
-  let done=0,enriched=0,noTags=0,errors=[];
+  const full=mode==="full";
+  const pending=studioLibrary.filter(t=>t.metadata_source!=="manual"&&(full||(!t.lastfm_lookup_at&&t.metadata_source!=="lastfm")));
+  if(!pending.length){studioStatus.textContent=full?"Nessun brano da riprovare (i brani manuali sono esclusi).":"Nessun nuovo brano da interrogare: tutti i tentativi precedenti vengono saltati.";return}
+  const buttons=[document.getElementById("studio-lastfm"),document.getElementById("studio-lastfm-full")];
+  buttons.forEach(button=>button.disabled=true);
+  let requested=0,lookedUp=0,enriched=0,noTags=0,skipped=0,notFound=0,errors=[];
   try{
     for(let i=0;i<pending.length;i+=10){
       const batch=pending.slice(i,i+10);
-      studioStatus.textContent="Last.fm: elaborazione "+Math.min(i+batch.length,pending.length)+" di "+pending.length+"…";
-      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id)});
-      done+=result.processed||0;enriched+=result.enriched||0;noTags+=result.noTags||0;
+      studioStatus.textContent=(full?"Full sync":"Sync incrementale")+": invio "+Math.min(i+batch.length,pending.length)+" di "+pending.length+"…";
+      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode});
+      requested+=result.requested||0;lookedUp+=result.lookedUp||0;enriched+=result.enriched||0;
+      noTags+=result.noUsefulTags||0;skipped+=result.skippedTagged||0;notFound+=result.notFound||0;
       if(result.errors?.length)errors.push(...result.errors);
     }
     const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
     studioLibrary=refreshed.items||[];studioSelection=[];studioRenderValues();
-    studioStatus.textContent="Last.fm completato: "+done+" brani analizzati, "+enriched+" classificati, "+noTags+" senza tag utili."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+    studioStatus.textContent=(full?"Full sync":"Sync incrementale")+" completato: "+requested+" richiesti, "+lookedUp+" ricerche concluse, "+enriched+" classificati, "+noTags+" senza tag utili, "+notFound+" non trovati, "+skipped+" già interrogati saltati."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
   }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
-  finally{button.disabled=false}
-});
+  finally{buttons.forEach(button=>button.disabled=false)}
+}
+document.getElementById("studio-lastfm").addEventListener("click",()=>runLastFmSync("incremental"));
+document.getElementById("studio-lastfm-full").addEventListener("click",()=>runLastFmSync("full"));
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
