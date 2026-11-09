@@ -506,18 +506,20 @@ document.getElementById("studio-authorize").addEventListener("click",async()=>{
   catch(error){studioStatus.textContent="Autorizzazione non avviata: "+error.message;button.disabled=false}
 });
 async function openStudio(){
-  studio.hidden=false;studioStatus.textContent="Caricamento Favorite songs…";
+  studio.hidden=false;studioStatus.textContent="Caricamento Favorite songs dall’archivio…";
   try{
     const playlists=await workerGet("/api/youtube/library/playlists");
-    const connection=await workerGet("/api/youtube/status");
-    document.getElementById("studio-auth-status").textContent=connection.canManagePlaylists?"Permesso di gestione attivo.":"Serve una nuova autorizzazione Google per creare playlist.";
     studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="favorite songs");
-    if(!studioSource)throw new Error("La raccolta Favorite songs non risulta nell'archivio Hub.");
+    if(!studioSource)throw new Error("La raccolta Favorite songs non risulta nell'archivio Supabase. Premi Aggiorna da YouTube per importarla.");
     const result=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
     studioLibrary=result.items||[];
-    if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani importati.");
+    if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani archiviati. Premi Aggiorna da YouTube per aggiornarla.");
     studioSelection=[];studioRenderValues();
     studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
+    try{
+      const connection=await workerGet("/api/youtube/status");
+      document.getElementById("studio-auth-status").textContent=connection.canManagePlaylists?"Permesso di gestione attivo.":"Serve una nuova autorizzazione Google per creare playlist.";
+    }catch(error){document.getElementById("studio-auth-status").textContent="Permessi YouTube da verificare al momento della creazione."}
   }catch(error){studioStatus.textContent=error.message}
 }
 async function runLastFmSync(mode){
