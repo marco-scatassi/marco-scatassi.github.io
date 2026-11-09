@@ -100,7 +100,20 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><p class="small-note">Sono mostrate le playlist restituite dall'account collegato. La creazione e la modifica delle playlist saranno aggiunte in una fase successiva.</p></section>
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><div class="search-row" style="margin:0 0 16px"><button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button><span class="small-note">Crea playlist YouTube partendo dai metadati di Favorite songs.</span></div>
+<section class="panel" id="playlist-studio" hidden style="margin:0 0 24px">
+  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
+  <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, togliere o riordinare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
+  <div class="search-row" style="margin:14px 0">
+    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="subgenre">Sottogenere</option></select>
+    <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
+  </div>
+  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
+  <div class="search-row" style="margin:12px 0"><label for="studio-privacy">Privacy</label><select id="studio-privacy" class="search-input"><option value="private">Privata (consigliata)</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
+  <p class="search-feedback" id="studio-status" role="status" aria-live="polite"></p>
+  <div id="studio-track-list" class="video-list"></div>
+  <div class="search-row" style="margin-top:16px"><button class="nav-link" id="studio-rebuild" type="button">Aggiorna proposta</button><button class="action" id="studio-create" type="button" disabled>Crea playlist su YouTube</button></div>
+</section></section>
 <section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div class="search-tools"><label class="eyebrow" for="playlist-search">CERCA IN QUESTA PLAYLIST</label><div class="search-row"><input class="search-input" id="playlist-search" type="search" placeholder="Filtra per titolo, artista, album o genere…" autocomplete="off"></div><p class="search-feedback" id="playlist-search-feedback" role="status" aria-live="polite"></p></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
 <p id="message" role="status" aria-live="polite"></p>
 </main>
@@ -291,6 +304,95 @@ syncButton.addEventListener("click",async()=>{
     syncButton.disabled=false;
     syncButton.textContent="AGGIORNA DA YOUTUBE";
   }
+});
+
+const studio=document.getElementById("playlist-studio");
+const studioGroup=document.getElementById("studio-group"),studioValue=document.getElementById("studio-value");
+const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
+const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
+let studioSource=null,studioLibrary=[],studioSelection=[];
+const studioTagNames={mood:"Mood",genre:"Genere",subgenre:"Sottogenere"};
+const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(t=>Array.isArray(t[field])?t[field]:[]).map(v=>String(v).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"it"));
+function studioRenderValues(){
+  const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
+  const first=document.createElement("option");first.value="";first.textContent=values.length?"Scegli un valore":"Nessun tag assegnato";studioValue.append(first);
+  values.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;studioValue.append(o)});
+  if(values.includes(old))studioValue.value=old;
+  studioRenderTracks();
+}
+function studioRenderTracks(){
+  const field=studioGroup.value,value=studioValue.value;
+  const matches=studioLibrary.filter(t=>value&&(Array.isArray(t[field])?t[field]:[]).includes(value));
+  if(!studioSelection.length)studioSelection=matches.map(t=>t.id);
+  studioSelection=studioSelection.filter(id=>matches.some(t=>t.id===id));
+  studioTracks.replaceChildren();
+  if(!value){studioStatus.textContent="Seleziona un valore già presente nei metadati.";studioCreate.disabled=true;return}
+  matches.filter(t=>studioSelection.includes(t.id)).forEach((track,index)=>{
+    const row=document.createElement("article");row.className="video-row";row.style.gridTemplateColumns="minmax(0,1fr)";
+    const title=document.createElement("h3");title.className="video-name";title.textContent=track.title||"Brano senza titolo";
+    const meta=document.createElement("p");meta.className="video-sub";meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
+    const tagEdit=document.createElement("div");tagEdit.className="search-row";
+    const mood=document.createElement("input");mood.className="search-input";mood.placeholder="Mood separati da virgola";mood.value=(track.mood||[]).join(", ");
+    const genre=document.createElement("input");genre.className="search-input";genre.placeholder="Generi separati da virgola";genre.value=(track.genre||[]).join(", ");
+    const save=document.createElement("button");save.type="button";save.className="nav-link";save.textContent="Salva tag";
+    save.addEventListener("click",async()=>{save.disabled=true;try{
+      const parse=s=>[...new Set(s.split(",").map(x=>x.trim()).filter(Boolean))];
+      const saved=await fetch(WORKER_URL+"/api/youtube/library/item-metadata",{method:"PATCH",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({itemId:track.id,mood:parse(mood.value),genre:parse(genre.value),subgenre:track.subgenre||[]})});
+      const data=await saved.json();if(!saved.ok)throw new Error(data.error||"Salvataggio non riuscito");
+      track.mood=data.item.mood||[];track.genre=data.item.genre||[];studioStatus.textContent="Metadati aggiornati per: "+track.title+". Aggiorna la proposta per ricalcolare i gruppi.";
+    }catch(error){studioStatus.textContent=error.message}finally{save.disabled=false}});
+    tagEdit.append(mood,genre,save);
+    const actions=document.createElement("div");actions.className="search-row";
+    const up=document.createElement("button");up.type="button";up.className="nav-link";up.textContent="↑";up.disabled=index===0;
+    up.addEventListener("click",()=>{const at=studioSelection.indexOf(track.id);[studioSelection[at-1],studioSelection[at]]=[studioSelection[at],studioSelection[at-1]];studioRenderTracks()});
+    const down=document.createElement("button");down.type="button";down.className="nav-link";down.textContent="↓";down.disabled=index===studioSelection.length-1;
+    down.addEventListener("click",()=>{const at=studioSelection.indexOf(track.id);[studioSelection[at+1],studioSelection[at]]=[studioSelection[at],studioSelection[at+1]];studioRenderTracks()});
+    const remove=document.createElement("button");remove.type="button";remove.className="nav-link";remove.textContent="Rimuovi";
+    remove.addEventListener("click",()=>{studioSelection=studioSelection.filter(id=>id!==track.id);studioRenderTracks()});
+    actions.append(up,down,remove);row.append(title,meta,tagEdit,actions);studioTracks.append(row);
+  });
+  studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";
+  studioCreate.disabled=studioSelection.length===0;
+}
+async function openStudio(){
+  studio.hidden=false;studioStatus.textContent="Caricamento Favorite songs…";
+  try{
+    const playlists=await workerGet("/api/youtube/library/playlists");
+    studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="favorite songs");
+    if(!studioSource)throw new Error("La raccolta Favorite songs non risulta nell'archivio Hub.");
+    const result=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
+    studioLibrary=result.items||[];
+    if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani importati.");
+    studioSelection=[];studioRenderValues();
+    studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
+  }catch(error){studioStatus.textContent=error.message}
+}
+document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
+document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
+studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
+studioValue.addEventListener("change",()=>{studioSelection=[];const v=studioValue.value;studioTitle.value=v?v.charAt(0).toLocaleUpperCase("it")+v.slice(1):"";studioRenderTracks()});
+document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
+studioCreate.addEventListener("click",async()=>{
+  if(!studioSource||!studioSelection.length)return;
+  const title=studioTitle.value.trim();if(!title){studioStatus.textContent="Inserisci il nome della playlist.";return}
+  const count=studioSelection.length;
+  if(!window.confirm('Confermi la creazione della playlist "'+title+'" su YouTube con '+count+' brani? La playlist sarà creata con privacy '+document.getElementById("studio-privacy").selectedOptions[0].textContent+'.'))return;
+  studioCreate.disabled=true;studioCreate.textContent="CREAZIONE…";studioStatus.textContent="Creazione playlist su YouTube…";
+  try{
+    const created=await workerPost("/api/youtube/library/playlists/create",{title,sourcePlaylistId:studioSource.id,itemIds:studioSelection,privacyStatus:document.getElementById("studio-privacy").value});
+    if(created.partial)throw new Error(created.error||"Creazione parziale.");
+    const playlist=created.playlist;let added=0;
+    for(let i=0;i<created.itemIds.length;i+=12){
+      const batch=created.itemIds.slice(i,i+12);
+      studioStatus.textContent="Aggiunta brani "+Math.min(i+batch.length,count)+" di "+count+"…";
+      const result=await workerPost("/api/youtube/library/playlists/add-items",{playlistId:playlist.id,sourcePlaylistId:studioSource.id,itemIds:batch});
+      added+=result.added||0;
+      if(!result.done)throw new Error("Playlist creata, ma inserimento interrotto dopo "+added+" brani. "+(result.error||"Riapri la procedura per completare."));
+    }
+    studioStatus.textContent='Playlist "'+playlist.title+'" creata su YouTube con '+added+' brani.';
+    await loadPlaylists();
+  }catch(error){studioStatus.textContent="Operazione non completata: "+error.message}
+  finally{studioCreate.disabled=false;studioCreate.textContent="Crea playlist su YouTube"}
 });
 async function initialize(){try{const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;const response=await fetch(`${WORKER_URL}/api/me`,{method:"GET",headers:authHeaders()});const raw=await response.text();let auth;try{auth=JSON.parse(raw)}catch{throw new Error("Risposta di autorizzazione non valida.")}if(!response.ok||!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");const status=await workerGet("/api/youtube/status");if(!status.connected){const empty=document.createElement("div");empty.className="empty";empty.textContent="YouTube non è collegato. Torna alla dashboard e completa il collegamento dell’account.";grid.replaceChildren(empty);playlistCount.textContent="NON COLLEGATO";setMessage("Collega prima YouTube dalla dashboard.","error");return}await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare le playlist.";grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
 initialize();
