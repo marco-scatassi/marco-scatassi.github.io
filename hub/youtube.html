@@ -109,7 +109,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
   <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, togliere o riordinare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
   <div class="search-row" style="margin:14px 0">
-    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="youtube_tags">Tag YouTube (parole chiave del canale)</option></select>
+    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option></select>
     <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
   </div>
   <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-lastfm" type="button">Classifica brani con Last.fm</button><span class="small-note">Recupera generi e mood dai tag della community Last.fm.</span></div>\n  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
@@ -197,10 +197,10 @@ const items=Array.isArray(result.items)?result.items:[],returnedToken=null;
 if(returnedToken&&(requestedVideoTokens.has(returnedToken)||returnedToken===tokenForRequest)){nextVideoPageToken=null;loadMoreButton.hidden=true;throw new Error("YouTube ha restituito un token già utilizzato. Paginazione interrotta.");}
 nextVideoPageToken=returnedToken;if(!append){videoList.replaceChildren();playlistSearchInput.value="";playlistSearchFeedback.textContent="";}let added=0;
 items.forEach(video=>{const videoId=video.video_id||video.youtube_playlist_item_id;if(videoId&&loadedVideoIds.has(videoId))return;if(videoId)loadedVideoIds.add(videoId);
-const row=document.createElement("article");row.className="video-row";row.dataset.search=[video.title,video.artist,video.album,video.channel_title,...(video.genre||[]),...(video.subgenre||[]),video.release_year].filter(Boolean).join(" ").toLocaleLowerCase("it");const thumb=video.thumbnail_url||"";
+const row=document.createElement("article");row.className="video-row";row.dataset.search=[video.title,video.artist,video.album,video.channel_title,...(video.genre||[]),,video.release_year].filter(Boolean).join(" ").toLocaleLowerCase("it");const thumb=video.thumbnail_url||"";
 if(thumb){const img=document.createElement("img");img.className="video-thumb";img.src=thumb;img.alt="";img.loading="lazy";row.appendChild(img)}else{const ph=document.createElement("div");ph.className="thumb-placeholder";ph.textContent="▶";row.appendChild(ph)}
 const copy=document.createElement("div"),title=document.createElement("h3");title.className="video-name";title.textContent=video.title||"Video senza titolo";
-const sub=document.createElement("p");sub.className="video-sub";const metadata=[video.artist,video.album,Array.isArray(video.genre)?video.genre.join(", "):"",Array.isArray(video.subgenre)?video.subgenre.join(", "):"",video.release_year].filter(Boolean).join(" · ");sub.textContent=[Number.isInteger(video.position)?`ELEMENTO ${video.position+1}`:"VIDEO IN PLAYLIST",metadata,video.metadata_source==="manual"?"METADATI MANUALI":"METADATI IMPORTATI"].filter(Boolean).join(" · ");copy.append(title,sub);row.appendChild(copy);videoList.appendChild(row);added++;});
+const sub=document.createElement("p");sub.className="video-sub";const metadata=[video.artist,video.album,Array.isArray(video.genre)?video.genre.join(", "):"",video.release_year].filter(Boolean).join(" · ");sub.textContent=[Number.isInteger(video.position)?`ELEMENTO ${video.position+1}`:"VIDEO IN PLAYLIST",metadata,video.metadata_source==="manual"?"METADATI MANUALI":"METADATI IMPORTATI"].filter(Boolean).join(" · ");copy.append(title,sub);row.appendChild(copy);videoList.appendChild(row);added++;});
 if(!append&&added===0){videoList.className="empty";videoList.textContent="Questa playlist non contiene video, oppure YouTube non ne ha restituiti."}else{videoList.className="video-list"}
 loadedVideoCount+=added;videoCount.textContent=`${loadedVideoCount} VIDEO CARICATI`;
 if(append&&items.length>0&&added===0&&nextVideoPageToken){nextVideoPageToken=null;loadMoreButton.hidden=true;throw new Error("La pagina contiene soltanto video già caricati. Paginazione interrotta per evitare un loop.");}
@@ -316,7 +316,7 @@ const studioGroup=document.getElementById("studio-group"),studioValue=document.g
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSource=null,studioLibrary=[],studioSelection=[];
-const studioTagNames={mood:"Mood",genre:"Genere",youtube_tags:"Tag YouTube"};
+const studioTagNames={mood:"Mood",genre:"Genere"};
 const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(t=>Array.isArray(t[field])?t[field]:[]).map(v=>String(v).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"it"));
 function studioRenderValues(){
   const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
