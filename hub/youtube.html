@@ -325,16 +325,16 @@ async function selectPlaylist(id,title,card){selectedPlaylistId=id;playlistSearc
 document.getElementById("back-to-playlists").addEventListener("click",()=>{detailSection.hidden=true;globalSearchInput.value="";playlistHead.hidden=false;playlistPanel.hidden=false;selectedPlaylistId=null;nextVideoPageToken=null;loadMoreButton.hidden=true;setMessage("")});
 async function loadVideoPage(append){
 if(!selectedPlaylistId||videoRequestInProgress)return;
-const tokenForRequest=nextVideoPageToken;
-if(append){loadMoreButton.hidden=true;return;}
+const playlistIdForRequest=selectedPlaylistId;
+const offsetForRequest=append?loadedVideoCount:0;
 videoRequestInProgress=true;
-if(append){requestedVideoTokens.add(tokenForRequest);loadMoreButton.disabled=true;loadMoreButton.textContent="CARICAMENTO…";}
+if(append){loadMoreButton.disabled=true;loadMoreButton.textContent="CARICAMENTO…";}
 try{
-const result=await workerGet(`/api/youtube/library/playlist-items?playlistId=${encodeURIComponent(selectedPlaylistId)}`);
-if(!selectedPlaylistId)return;
-const items=Array.isArray(result.items)?result.items:[],returnedToken=null;
-if(returnedToken&&(requestedVideoTokens.has(returnedToken)||returnedToken===tokenForRequest)){nextVideoPageToken=null;loadMoreButton.hidden=true;throw new Error("YouTube ha restituito un token già utilizzato. Paginazione interrotta.");}
-nextVideoPageToken=returnedToken;if(!append){videoList.replaceChildren();playlistSearchInput.value="";playlistSearchFeedback.textContent="";}let added=0;
+const result=await workerGet(`/api/youtube/library/playlist-items?playlistId=${encodeURIComponent(playlistIdForRequest)}&offset=${offsetForRequest}&limit=500`);
+if(selectedPlaylistId!==playlistIdForRequest)return;
+const items=Array.isArray(result.items)?result.items:[];
+nextVideoPageToken=result.hasMore?String(offsetForRequest+items.length):null;
+if(!append){videoList.replaceChildren();playlistSearchInput.value="";playlistSearchFeedback.textContent="";}let added=0;
 items.forEach(video=>{const videoId=video.video_id||video.youtube_playlist_item_id;if(videoId&&loadedVideoIds.has(videoId))return;if(videoId)loadedVideoIds.add(videoId);
 const row=document.createElement("article");row.className="video-row";row.dataset.search=[video.title,video.artist,video.album,video.channel_title,...(video.genre||[]),,video.release_year].filter(Boolean).join(" ").toLocaleLowerCase("it");const thumb=video.thumbnail_url||"";
 if(thumb){const img=document.createElement("img");img.className="video-thumb";img.src=thumb;img.alt="";img.loading="lazy";row.appendChild(img)}else{const ph=document.createElement("div");ph.className="thumb-placeholder";ph.textContent="▶";row.appendChild(ph)}
@@ -343,7 +343,7 @@ const sub=document.createElement("p");sub.className="video-sub";const metadata=[
 if(!append&&added===0){videoList.className="empty";videoList.textContent="Questa playlist non contiene video, oppure YouTube non ne ha restituiti."}else{videoList.className="video-list"}
 loadedVideoCount+=added;videoCount.textContent=`${loadedVideoCount} VIDEO CARICATI`;
 if(append&&items.length>0&&added===0&&nextVideoPageToken){nextVideoPageToken=null;loadMoreButton.hidden=true;throw new Error("La pagina contiene soltanto video già caricati. Paginazione interrotta per evitare un loop.");}
-loadMoreButton.hidden=true;
+loadMoreButton.hidden=!nextVideoPageToken;
 }finally{videoRequestInProgress=false;loadMoreButton.disabled=false;loadMoreButton.textContent="CARICA ALTRI VIDEO";}
 }
 loadMoreButton.addEventListener("click",async()=>{if(videoRequestInProgress||!nextVideoPageToken)return;try{await loadVideoPage(true)}catch(error){setMessage(error.message,"error")}});
@@ -516,10 +516,7 @@ async function openStudio(){
     if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani archiviati. Premi Aggiorna da YouTube per aggiornarla.");
     studioSelection=[];studioRenderValues();
     studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
-    try{
-      const connection=await workerGet("/api/youtube/status");
-      document.getElementById("studio-auth-status").textContent=connection.canManagePlaylists?"Permesso di gestione attivo.":"Serve una nuova autorizzazione Google per creare playlist.";
-    }catch(error){document.getElementById("studio-auth-status").textContent="Permessi YouTube da verificare al momento della creazione."}
+    document.getElementById("studio-auth-status").textContent="Archivio caricato da Supabase. I permessi YouTube saranno verificati solo quando crei o modifichi una playlist.";
   }catch(error){studioStatus.textContent=error.message}
 }
 async function runLastFmSync(mode){
@@ -527,7 +524,7 @@ async function runLastFmSync(mode){
   const full=mode==="full";
   const pending=studioLibrary.filter(t=>t.metadata_source!=="manual"&&(full||(!t.lastfm_lookup_at&&t.metadata_source!=="lastfm")));
   if(!pending.length){studioStatus.textContent=full?"Nessun brano da riprovare (i brani manuali sono esclusi).":"Nessun nuovo brano da interrogare: tutti i tentativi precedenti vengono saltati.";return}
-  const buttons=[document.getElementById("studio-lastfm"),document.getElementById("studio-lastfm-full")];
+  const buttons=[document.getElementById("studio-lastfm"),document.getElementById("studio-lastfm-full")].filter(Boolean);
   buttons.forEach(button=>button.disabled=true);
   let requested=0,lookedUp=0,enriched=0,noTags=0,skipped=0,notFound=0,errors=[];
   try{
