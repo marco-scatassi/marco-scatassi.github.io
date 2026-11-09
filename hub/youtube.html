@@ -100,7 +100,22 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div></section><div class="section-head"><h2>Crea Playlist</h2><span class="count">PLAYLIST STUDIO</span></div><section class="panel" style="margin:0 0 24px;padding:20px;background:#fff">
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div></section>
+<div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
+<section class="panel" id="edit-playlist-panel" style="margin:0 0 24px;padding:20px;background:#fff">
+  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi.</p>
+  <div class="search-row"><label for="edit-playlist-select">Playlist</label><select id="edit-playlist-select" class="search-input"><option value="">Seleziona una playlist…</option></select></div>
+  <div id="edit-playlist-form" hidden>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-description">Descrizione</label><textarea id="edit-playlist-description" class="search-input" maxlength="5000" rows="3"></textarea></div>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-privacy">Privacy</label><select id="edit-playlist-privacy" class="search-input"><option value="private">Privata</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
+    <div class="search-row" style="margin-top:12px"><input id="edit-track-search" class="search-input" type="search" placeholder="Cerca tra i brani della playlist…"><button class="nav-link" id="edit-select-all" type="button">Seleziona tutti</button><button class="nav-link" id="edit-clear-all" type="button">Deseleziona tutti</button></div>
+    <div id="edit-playlist-tracks" class="video-list"></div>
+    <p class="search-feedback" id="edit-playlist-status" role="status" aria-live="polite"></p>
+    <button class="action" id="edit-playlist-save" type="button">Salva modifiche su YouTube</button>
+  </div>
+</section>
+<div class="section-head"><h2>Crea Playlist</h2><span class="count">PLAYLIST STUDIO</span></div><section class="panel" style="margin:0 0 24px;padding:20px;background:#fff">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Nuove playlist</h2></div></div>
   <p class="small-note">Crea proposte a partire dai metadati della raccolta Favorite songs.</p>
   <button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button>
@@ -181,7 +196,73 @@ function renderPlaylists(playlists){
     textWrap.append(strong,help);label.append(checkbox,textWrap);entry.appendChild(label);grid.appendChild(entry);
   });
 }
-async function loadPlaylists(){playlistCount.textContent="CARICAMENTO…";const result=await workerGet("/api/youtube/library/playlists");allPlaylists=Array.isArray(result.items)?result.items:[];playlistById=new Map(allPlaylists.map(item=>[item.id,item]));renderPlaylists(allPlaylists);if(allPlaylists.length)setMessage("Archivio caricato da Supabase. Seleziona una playlist.","success");else setMessage("Archivio vuoto. Usa Aggiorna da YouTube per importare le playlist.")}
+
+let editPlaylistItems=[],editSelectedIds=[],editBusy=false;
+const editSelect=document.getElementById("edit-playlist-select"),editForm=document.getElementById("edit-playlist-form"),editTracks=document.getElementById("edit-playlist-tracks"),editStatus=document.getElementById("edit-playlist-status");
+function renderEditTracks(){
+  editTracks.replaceChildren();
+  const q=document.getElementById("edit-track-search").value.trim().toLocaleLowerCase("it");
+  editPlaylistItems.forEach((track,index)=>{
+    const row=document.createElement("article");row.className="video-row";
+    const copy=document.createElement("div"),title=document.createElement("h3");title.className="video-name";title.textContent=track.title||"Brano senza titolo";
+    const meta=document.createElement("p");meta.className="video-sub";meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
+    copy.append(title,meta);
+    const controls=document.createElement("div");controls.className="search-row";
+    const check=document.createElement("input");check.type="checkbox";check.checked=editSelectedIds.includes(track.id);check.setAttribute("aria-label","Mantieni "+track.title);
+    check.addEventListener("change",()=>{if(check.checked){if(!editSelectedIds.includes(track.id))editSelectedIds.push(track.id)}else editSelectedIds=editSelectedIds.filter(id=>id!==track.id);editStatus.textContent=editSelectedIds.length+" brani inclusi."});
+    const up=document.createElement("button");up.type="button";up.className="nav-link";up.textContent="↑";up.disabled=index===0;
+    up.addEventListener("click",()=>{[editPlaylistItems[index-1],editPlaylistItems[index]]=[editPlaylistItems[index],editPlaylistItems[index-1]];renderEditTracks()});
+    const down=document.createElement("button");down.type="button";down.className="nav-link";down.textContent="↓";down.disabled=index===editPlaylistItems.length-1;
+    down.addEventListener("click",()=>{[editPlaylistItems[index+1],editPlaylistItems[index]]=[editPlaylistItems[index],editPlaylistItems[index+1]];renderEditTracks()});
+    controls.append(check,up,down);row.append(copy,controls);
+    row.hidden=!!q&&!([track.title,track.artist,track.album].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q));
+    editTracks.append(row);
+  });
+  editStatus.textContent=editSelectedIds.length+" brani inclusi su "+editPlaylistItems.length+".";
+}
+async function loadEditPlaylist(id){
+  editForm.hidden=true;if(!id)return;
+  const playlist=allPlaylists.find(p=>p.id===id);if(!playlist)return;
+  editStatus.textContent="Caricamento playlist…";
+  try{
+    const result=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(id));
+    editPlaylistItems=result.items||[];editSelectedIds=editPlaylistItems.map(t=>t.id);
+    document.getElementById("edit-playlist-title").value=playlist.title||"";
+    document.getElementById("edit-playlist-description").value=playlist.description||"";
+    document.getElementById("edit-playlist-privacy").value=playlist.privacy_status||"private";
+    document.getElementById("edit-track-search").value="";
+    editForm.hidden=false;renderEditTracks();
+  }catch(error){editStatus.textContent="Impossibile caricare la playlist: "+error.message}
+}
+function populateEditPlaylists(){
+  const selected=editSelect.value;editSelect.replaceChildren();
+  const first=document.createElement("option");first.value="";first.textContent="Seleziona una playlist…";editSelect.append(first);
+  allPlaylists.forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
+  if(allPlaylists.some(p=>p.id===selected))editSelect.value=selected;
+}
+editSelect.addEventListener("change",()=>loadEditPlaylist(editSelect.value));
+document.getElementById("edit-track-search").addEventListener("input",renderEditTracks);
+document.getElementById("edit-select-all").addEventListener("click",()=>{editSelectedIds=editPlaylistItems.map(t=>t.id);renderEditTracks()});
+document.getElementById("edit-clear-all").addEventListener("click",()=>{editSelectedIds=[];renderEditTracks()});
+document.getElementById("edit-playlist-save").addEventListener("click",async()=>{
+  const id=editSelect.value;if(!id||editBusy)return;
+  if(!window.confirm("Confermi le modifiche alla playlist YouTube? I brani non selezionati verranno rimossi."))return;
+  editBusy=true;const button=document.getElementById("edit-playlist-save");button.disabled=true;button.textContent="SALVATAGGIO…";
+  try{
+    const result=await workerPost("/api/youtube/library/playlists/update",{
+      playlistId:id,sourcePlaylistId:id,itemIds:editPlaylistItems.filter(t=>editSelectedIds.includes(t.id)).map(t=>t.id),
+      title:document.getElementById("edit-playlist-title").value,
+      description:document.getElementById("edit-playlist-description").value,
+      privacyStatus:document.getElementById("edit-playlist-privacy").value
+    });
+    const p=allPlaylists.find(x=>x.id===id);if(p){p.title=result.playlist.title;p.description=result.playlist.description;p.privacy_status=result.playlist.privacy_status;p.item_count=result.playlist.item_count}
+    populateEditPlaylists();editSelect.value=id;await loadPlaylists();editSelect.value=id;await loadEditPlaylist(id);
+    editStatus.textContent="Playlist aggiornata: "+result.added+" aggiunti, "+result.removed+" rimossi.";
+    setMessage("Playlist aggiornata su YouTube e nell'archivio Hub.","success");
+  }catch(error){editStatus.textContent="Salvataggio non completato: "+error.message;setMessage(error.message,"error")}
+  finally{editBusy=false;button.disabled=false;button.textContent="Salva modifiche su YouTube"}
+});
+async function loadPlaylists(){playlistCount.textContent="CARICAMENTO…";const result=await workerGet("/api/youtube/library/playlists");allPlaylists=Array.isArray(result.items)?result.items:[];playlistById=new Map(allPlaylists.map(item=>[item.id,item]));renderPlaylists(allPlaylists);populateEditPlaylists();if(allPlaylists.length)setMessage("Archivio caricato da Supabase. Seleziona una playlist.","success");else setMessage("Archivio vuoto. Usa Aggiorna da YouTube per importare le playlist.")}
 async function selectPlaylist(id,title,card){selectedPlaylistId=id;playlistSearchInput.value="";playlistSearchFeedback.textContent="";nextVideoPageToken=null;loadedVideoCount=0;requestedVideoTokens.clear();loadedVideoIds.clear();grid.querySelectorAll(".playlist-card").forEach(item=>item.setAttribute("aria-pressed",String(item===card)));playlistHead.hidden=true;playlistPanel.hidden=true;detailSection.hidden=false;document.getElementById("details-heading").textContent=title;videoCount.textContent="";videoList.className="empty";videoList.textContent="Caricamento dei video…";loadMoreButton.hidden=true;setMessage("");await loadVideoPage(false).catch(error=>{videoList.className="empty";videoList.textContent=error.message;setMessage("Impossibile caricare i video della playlist.","error")})}
 document.getElementById("back-to-playlists").addEventListener("click",()=>{detailSection.hidden=true;globalSearchInput.value="";playlistHead.hidden=false;playlistPanel.hidden=false;selectedPlaylistId=null;nextVideoPageToken=null;loadMoreButton.hidden=true;setMessage("")});
 async function loadVideoPage(append){
