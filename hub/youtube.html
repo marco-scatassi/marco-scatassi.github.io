@@ -131,6 +131,18 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
     <button class="action" id="edit-playlist-save" type="button">Salva modifiche su YouTube</button>
   </div>
 </section>
+<div class="section-head"><h2>Importa mapping</h2><span class="count">BACKUP METADATI</span></div>
+<section class="panel" id="mapping-panel" style="margin:0 0 24px;padding:20px;background:#fff;color:#172638">
+  <p class="small-note">Esporta un archivio JSON con una sola voce per canzone e tutti i metadati disponibili. Puoi poi importare quel file per aggiornare in blocco le canzoni già presenti nel tuo archivio Supabase.</p>
+  <div class="search-row" style="margin:14px 0;flex-wrap:wrap">
+    <button class="action" id="mapping-export" type="button">Scarica mapping JSON</button>
+    <label for="mapping-file">Importa un mapping JSON</label>
+    <input id="mapping-file" class="search-input" type="file" accept=".json,application/json">
+    <button class="action" id="mapping-import" type="button" disabled>Importa metadati</button>
+  </div>
+  <p class="search-feedback" id="mapping-status" role="status" aria-live="polite">Il file deve essere un JSON esportato da Personal Hub (formato v1).</p>
+  <div id="mapping-preview" class="small-note"></div>
+</section>
 <div class="section-head"><h2>Crea Playlist</h2><span class="count">PLAYLIST STUDIO</span></div><section class="panel" style="margin:0 0 24px;padding:20px;background:#fff">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Nuove playlist</h2></div></div>
   <p class="small-note">Crea proposte a partire dai metadati della raccolta Favorite songs.</p>
@@ -276,6 +288,54 @@ function populateEditPlaylists(){
   allPlaylists.forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
   if(allPlaylists.some(p=>p.id===selected))editSelect.value=selected;
 }
+const mappingFile=document.getElementById("mapping-file"),mappingExport=document.getElementById("mapping-export"),mappingImport=document.getElementById("mapping-import"),mappingStatus=document.getElementById("mapping-status"),mappingPreview=document.getElementById("mapping-preview");
+let mappingPayload=null;
+mappingExport.addEventListener("click",async()=>{
+  mappingExport.disabled=true;mappingStatus.textContent="Preparazione export da Supabase…";
+  try{
+    const data=await workerGet("/api/youtube/library/mapping/export");
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob),link=document.createElement("a");
+    link.href=url;link.download="personal-hub-mapping-"+new Date().toISOString().slice(0,10)+".json";
+    document.body.append(link);link.click();link.remove();URL.revokeObjectURL(url);
+    mappingStatus.textContent="Esportate "+(data.songs||[]).length+" canzoni uniche."+(data.truncated?" Attenzione: archivio molto grande, export limitato.":"");
+  }catch(error){mappingStatus.textContent="Export non riuscito: "+error.message}
+  finally{mappingExport.disabled=false}
+});
+mappingFile.addEventListener("change",async()=>{
+  mappingPayload=null;mappingImport.disabled=true;mappingPreview.textContent="";
+  const file=mappingFile.files?.[0];if(!file){mappingStatus.textContent="Nessun file selezionato.";return}
+  if(file.size>10*1024*1024){mappingStatus.textContent="File troppo grande (massimo 10 MB).";mappingFile.value="";return}
+  try{
+    const parsed=JSON.parse(await file.text());
+    if(parsed?.schema!=="personal-hub.music-mapping"||parsed?.version!==1||!Array.isArray(parsed.songs))throw new Error("Formato non riconosciuto. Seleziona un JSON esportato da Personal Hub.");
+    const songs=parsed.songs.filter(song=>song&&typeof song.video_id==="string"&&song.video_id.trim());
+    if(!songs.length)throw new Error("Il file non contiene canzoni con video_id valido.");
+    mappingPayload={...parsed,songs};
+    mappingPreview.textContent=songs.length+" canzoni pronte. Verranno aggiornate tutte le occorrenze già presenti in Supabase; le canzoni non presenti saranno segnalate.";
+    mappingStatus.textContent="File valido: "+file.name;
+    mappingImport.disabled=false;
+  }catch(error){mappingStatus.textContent="Impossibile leggere il mapping: "+error.message}
+});
+mappingImport.addEventListener("click",async()=>{
+  if(!mappingPayload)return;
+  if(!confirm("Importare i metadati di "+mappingPayload.songs.length+" canzoni? I metadati esistenti verranno sovrascritti."))return;
+  mappingImport.disabled=true;mappingFile.disabled=true;mappingStatus.textContent="Importazione in corso…";
+  let imported=0,rows=0,missing=0,errors=[];
+  try{
+    for(let i=0;i<mappingPayload.songs.length;i+=25){
+      const batch=mappingPayload.songs.slice(i,i+25);
+      const result=await workerPost("/api/youtube/library/mapping/import",{schema:mappingPayload.schema,version:mappingPayload.version,songs:batch});
+      imported+=result.importedSongs||0;rows+=result.updatedRows||0;missing+=(result.missingVideoIds||[]).length;
+      if(result.errors?.length)errors.push(...result.errors);
+      mappingStatus.textContent="Importazione: "+Math.min(i+batch.length,mappingPayload.songs.length)+" / "+mappingPayload.songs.length+" canzoni…";
+    }
+    mappingStatus.textContent="Importazione completata: "+imported+" canzoni aggiornate su "+rows+" occorrenze. Non trovate: "+missing+". Errori: "+errors.length+".";
+    mappingPreview.textContent=errors.slice(0,5).join(" · ");
+    mappingPayload=null;mappingFile.value="";
+  }catch(error){mappingStatus.textContent="Importazione interrotta: "+error.message+" (puoi riprovare: l'operazione aggiorna i metadati, non crea duplicati)."}
+  finally{mappingImport.disabled=!mappingPayload;mappingFile.disabled=false}
+});
 editSelect.addEventListener("change",()=>loadEditPlaylist(editSelect.value));
 document.getElementById("edit-track-search").addEventListener("input",renderEditTracks);
 let editSearchTimer=null,editSearchResults=document.getElementById("edit-add-track-results");
