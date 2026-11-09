@@ -154,8 +154,33 @@ let videoRequestInProgress=false;
 const playlistHead=document.getElementById("playlist-head"),playlistPanel=document.getElementById("playlist-panel"),detailSection=document.getElementById("detail-section");
 function setMessage(text,type=""){message.textContent=text;message.className=type}
 function authHeaders(){return{Authorization:`Bearer ${accessToken}`}}
-async function workerGet(path){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);let response;try{response=await fetch(`${WORKER_URL}${path}`,{method:"GET",headers:authHeaders(),signal:controller.signal})}catch(error){if(error.name==="AbortError")throw new Error("Timeout: il servizio non ha risposto entro 15 secondi ("+path+").");throw error}finally{clearTimeout(timeout)}const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
-async function workerPost(path,body=null){const headers=authHeaders();if(body!==null)headers["Content-Type"]="application/json";const response=await fetch(`${WORKER_URL}${path}`,{method:"POST",headers,body:body===null?undefined:JSON.stringify(body)});const raw=await response.text();let data;try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio YouTube.")}if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);return data}
+async function refreshAccessToken(){
+  const {data,error}=await supabaseClient.auth.refreshSession();
+  if(error||!data.session?.access_token)throw new Error("Sessione Supabase scaduta: accedi di nuovo dalla dashboard. "+(error?.message||""));
+  accessToken=data.session.access_token;
+  return accessToken;
+}
+async function workerRequest(path,method="GET",body=null){
+  const makeRequest=async()=>{
+    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);
+    const headers=authHeaders();if(body!==null)headers["Content-Type"]="application/json";
+    try{
+      return await fetch(`${WORKER_URL}${path}`,{method,headers,body:body===null?undefined:JSON.stringify(body),signal:controller.signal});
+    }catch(error){if(error.name==="AbortError")throw new Error("Timeout: il servizio non ha risposto entro 20 secondi ("+path+").");throw error}
+    finally{clearTimeout(timeout)}
+  };
+  let response=await makeRequest();
+  if(response.status===401){
+    await refreshAccessToken();
+    response=await makeRequest();
+  }
+  const raw=await response.text();let data;
+  try{data=raw?JSON.parse(raw):{}}catch{throw new Error("Risposta non valida dal servizio Personal Hub.")}
+  if(!response.ok)throw new Error(data.error||`Richiesta non riuscita (HTTP ${response.status}).`);
+  return data;
+}
+async function workerGet(path){return workerRequest(path,"GET")}
+async function workerPost(path,body=null){return workerRequest(path,"POST",body)}
 function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standard?.url||t.high?.url||t.medium?.url||t.default?.url||""}
 function renderPlaylists(playlists){
   grid.replaceChildren();
@@ -521,6 +546,6 @@ studioCreate.addEventListener("click",async()=>{
   }catch(error){studioStatus.textContent="Operazione non completata: "+error.message}
   finally{studioCreate.disabled=false;studioCreate.textContent="Crea playlist su YouTube"}
 });
-async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const response=await fetch(`${WORKER_URL}/api/me`,{method:"GET",headers:authHeaders()});const raw=await response.text();let auth;try{auth=JSON.parse(raw)}catch{throw new Error("Risposta di autorizzazione non valida.")}if(!response.ok||!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
+async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const auth=await workerGet("/api/me");if(!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
 initialize();
 </script></body></html>
