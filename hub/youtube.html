@@ -257,11 +257,12 @@ syncButton.addEventListener("click",async()=>{
   syncButton.textContent="SINCRONIZZAZIONE…";
   setMessage("Aggiornamento elenco playlist da YouTube…");
   if(syncStatus)syncStatus.textContent="Preparazione sincronizzazione…";
-  let itemsSynced=0,completedPlaylists=0,playlistListTruncated=false;
+  let itemsSynced=0,completedPlaylists=0,playlistListTruncated=false,playlistsMarkedUnavailable=0;
   const errors=[];
   try{
     const start=await workerPost("/api/youtube/sync");
     playlistListTruncated=start.playlistListTruncated===true;
+    playlistsMarkedUnavailable=Number.isSafeInteger(start.playlistsMarkedUnavailable)?start.playlistsMarkedUnavailable:0;
     await loadPlaylists();
     const library=await workerGet("/api/youtube/library/playlists");
     const playlists=Array.isArray(library.items)?library.items:[];
@@ -280,7 +281,8 @@ syncButton.addEventListener("click",async()=>{
     await loadPlaylists();
     await refreshSyncStatus();
     const detail=errors.length?" con "+errors.length+" problemi":"";
-    setMessage("Sincronizzazione "+final.status+": "+completedPlaylists+" playlist elaborate, "+itemsSynced+" brani archiviati"+detail+".",final.status==="success"?"success":"error");
+    const archivedDetail=playlistsMarkedUnavailable?", "+playlistsMarkedUnavailable+" playlist non più presenti archiviate": "";
+    setMessage("Sincronizzazione "+final.status+": "+completedPlaylists+" playlist elaborate, "+itemsSynced+" brani archiviati"+archivedDetail+detail+".",final.status==="success"?"success":"error");
     if(syncStatus&&errors.length)syncStatus.textContent=errors.slice(0,5).join(" · ");
   }catch(error){
     setMessage("Sincronizzazione non completata: "+error.message,"error");
