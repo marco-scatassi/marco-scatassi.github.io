@@ -348,6 +348,14 @@
           copy.append(title, meta, hint);
           toggle.append(cover, copy);
           card.appendChild(toggle);
+          const youtubeLink = document.createElement('a');
+          youtubeLink.className = 'playlist-youtube-link';
+          youtubeLink.href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
+          youtubeLink.target = '_blank';
+          youtubeLink.rel = 'noopener noreferrer';
+          youtubeLink.textContent = 'Apri la playlist su YouTube ↗';
+          youtubeLink.style.margin = '0 20px 16px';
+          card.appendChild(youtubeLink);
 
           const details = document.createElement('div');
           details.className = 'playlist-details p-5';
@@ -366,16 +374,7 @@
           const trackList = document.createElement('div');
           trackList.className = 'playlist-track-list';
           searchInput.addEventListener('input', () => filterPublicPlaylistTracks(searchInput, detailStatus, trackList));
-          const youtubeLink = document.createElement('a');
-          youtubeLink.className = 'playlist-youtube-link';
-          youtubeLink.href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
-          youtubeLink.target = '_blank';
-          youtubeLink.rel = 'noopener noreferrer';
-          youtubeLink.textContent = 'Apri la playlist su YouTube ';
-          const externalIcon = document.createElement('i');
-          externalIcon.className = 'fa-solid fa-arrow-up-right-from-square';
-          youtubeLink.appendChild(externalIcon);
-          details.append(detailStatus, searchInput, trackList, youtubeLink);
+          details.append(detailStatus, searchInput, trackList);
           card.appendChild(details);
 
           toggle.addEventListener('click', async () => {
