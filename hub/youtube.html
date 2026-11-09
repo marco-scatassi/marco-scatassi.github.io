@@ -109,10 +109,10 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
   <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, togliere o riordinare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
   <div class="search-row" style="margin:14px 0">
-    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="subgenre">Sottogenere</option><option value="youtube_tags">Tag YouTube (parole chiave del canale)</option></select>
+    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="youtube_tags">Tag YouTube (parole chiave del canale)</option></select>
     <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
   </div>
-  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
+  <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-lastfm" type="button">Classifica brani con Last.fm</button><span class="small-note">Recupera generi e mood dai tag della community Last.fm.</span></div>\n  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
   <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-authorize" type="button">Autorizza gestione playlist YouTube</button><span class="small-note" id="studio-auth-status">Verifica permessi…</span></div>
   <div class="search-row" style="margin:12px 0"><label for="studio-privacy">Privacy</label><select id="studio-privacy" class="search-input"><option value="private">Privata (consigliata)</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
   <p class="search-feedback" id="studio-status" role="status" aria-live="polite"></p>
@@ -316,7 +316,7 @@ const studioGroup=document.getElementById("studio-group"),studioValue=document.g
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSource=null,studioLibrary=[],studioSelection=[];
-const studioTagNames={mood:"Mood",genre:"Genere",subgenre:"Sottogenere",youtube_tags:"Tag YouTube"};
+const studioTagNames={mood:"Mood",genre:"Genere",youtube_tags:"Tag YouTube"};
 const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(t=>Array.isArray(t[field])?t[field]:[]).map(v=>String(v).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"it"));
 function studioRenderValues(){
   const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
@@ -342,7 +342,7 @@ function studioRenderTracks(){
     const save=document.createElement("button");save.type="button";save.className="nav-link";save.textContent="Salva tag";
     save.addEventListener("click",async()=>{save.disabled=true;try{
       const parse=s=>[...new Set(s.split(",").map(x=>x.trim()).filter(Boolean))];
-      const saved=await fetch(WORKER_URL+"/api/youtube/library/item-metadata",{method:"PATCH",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({itemId:track.id,mood:parse(mood.value),genre:parse(genre.value),subgenre:track.subgenre||[]})});
+      const saved=await fetch(WORKER_URL+"/api/youtube/library/item-metadata",{method:"PATCH",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({itemId:track.id,mood:parse(mood.value),genre:parse(genre.value)})});
       const data=await saved.json();if(!saved.ok)throw new Error(data.error||"Salvataggio non riuscito");
       track.mood=data.item.mood||[];track.genre=data.item.genre||[];studioStatus.textContent="Metadati aggiornati per: "+track.title+". Aggiorna la proposta per ricalcolare i gruppi.";
     }catch(error){studioStatus.textContent=error.message}finally{save.disabled=false}});
@@ -379,6 +379,26 @@ async function openStudio(){
     studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
   }catch(error){studioStatus.textContent=error.message}
 }
+document.getElementById("studio-lastfm").addEventListener("click",async()=>{
+  if(!studioSource||!studioLibrary.length)return;
+  const pending=studioLibrary.filter(t=>t.metadata_source!=="manual"&&t.metadata_source!=="lastfm");
+  if(!pending.length){studioStatus.textContent="Tutti i brani risultano già classificati o modificati manualmente.";return}
+  const button=document.getElementById("studio-lastfm");button.disabled=true;
+  let done=0,enriched=0,noTags=0,errors=[];
+  try{
+    for(let i=0;i<pending.length;i+=10){
+      const batch=pending.slice(i,i+10);
+      studioStatus.textContent="Last.fm: elaborazione "+Math.min(i+batch.length,pending.length)+" di "+pending.length+"…";
+      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id)});
+      done+=result.processed||0;enriched+=result.enriched||0;noTags+=result.noTags||0;
+      if(result.errors?.length)errors.push(...result.errors);
+    }
+    const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
+    studioLibrary=refreshed.items||[];studioSelection=[];studioRenderValues();
+    studioStatus.textContent="Last.fm completato: "+done+" brani analizzati, "+enriched+" classificati, "+noTags+" senza tag utili."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+  }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
+  finally{button.disabled=false}
+});
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
