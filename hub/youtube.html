@@ -328,7 +328,7 @@ function studioRenderTracks(){
   studioSelection=studioSelection.filter(id=>matches.some(t=>t.id===id));
   studioTracks.replaceChildren();
   if(!value){studioStatus.textContent="Seleziona un valore già presente nei metadati.";studioCreate.disabled=true;return}
-  matches.filter(t=>studioSelection.includes(t.id)).forEach((track,index)=>{
+  studioSelection.map(id=>matches.find(t=>t.id===id)).filter(Boolean).forEach((track,index)=>{
     const row=document.createElement("article");row.className="video-row";row.style.gridTemplateColumns="minmax(0,1fr)";
     const title=document.createElement("h3");title.className="video-name";title.textContent=track.title||"Brano senza titolo";
     const meta=document.createElement("p");meta.className="video-sub";meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
@@ -379,7 +379,7 @@ document.getElementById("open-playlist-studio").addEventListener("click",openStu
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
 studioValue.addEventListener("change",()=>{studioSelection=[];const v=studioValue.value;studioTitle.value=v?v.charAt(0).toLocaleUpperCase("it")+v.slice(1):"";studioRenderTracks()});
-document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
+document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
 studioCreate.addEventListener("click",async()=>{
   if(!studioSource||!studioSelection.length)return;
   const title=studioTitle.value.trim();if(!title){studioStatus.textContent="Inserisci il nome della playlist.";return}
