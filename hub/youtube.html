@@ -94,7 +94,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 
 </style></head>
 <body>
-<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
+<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
@@ -112,7 +112,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
     <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option></select>
     <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
   </div>
-  <div class="search-row" style="margin:12px 0;flex-wrap:wrap"><button class="nav-link" id="studio-lastfm" type="button">Sync incrementale Last.fm</button><button class="nav-link" id="studio-lastfm-full" type="button">Full sync Last.fm</button><span class="small-note">L’incrementale salta i brani già interrogati; il full sync riprova anche quelli senza risultati.</span></div>\n  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
+  <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
   <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-authorize" type="button">Autorizza gestione playlist YouTube</button><span class="small-note" id="studio-auth-status">Verifica permessi…</span></div>
   <div class="search-row" style="margin:12px 0"><label for="studio-privacy">Privacy</label><select id="studio-privacy" class="search-input"><option value="private">Privata (consigliata)</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
   <p class="search-feedback" id="studio-status" role="status" aria-live="polite"></p>
@@ -327,18 +327,23 @@ function studioRenderValues(){
 }
 function studioRenderTracks(){
   const field=studioGroup.value,value=studioValue.value;
-  const matches=studioLibrary.filter(t=>value&&(Array.isArray(t[field])?t[field]:[]).includes(value));
-  if(!studioSelection.length)studioSelection=matches.map(t=>t.id);
+  const matches=studioLibrary.filter(t=>!value||(Array.isArray(t[field])?t[field]:[]).includes(value));
   studioSelection=studioSelection.filter(id=>matches.some(t=>t.id===id));
   studioTracks.replaceChildren();
-  if(!value){studioStatus.textContent="Seleziona un valore già presente nei metadati.";studioCreate.disabled=true;return}
-  studioSelection.map(id=>matches.find(t=>t.id===id)).filter(Boolean).forEach((track,index)=>{
+  const toolbar=document.createElement("div");toolbar.className="search-row";
+  const search=document.createElement("input");search.className="search-input";search.placeholder="Cerca un brano per titolo o artista…";search.type="search";
+  const selectAll=document.createElement("button");selectAll.type="button";selectAll.className="nav-link";selectAll.textContent="Seleziona tutti";
+  selectAll.addEventListener("click",()=>{matches.forEach(t=>{if(!studioSelection.includes(t.id))studioSelection.push(t.id)});studioRenderTracks()});
+  const clearAll=document.createElement("button");clearAll.type="button";clearAll.className="nav-link";clearAll.textContent="Deseleziona tutti";
+  clearAll.addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});toolbar.append(search,selectAll,clearAll);studioTracks.append(toolbar);
+  const rows=document.createElement("div");rows.className="video-list";studioTracks.append(rows);
+  matches.forEach((track,index)=>{
     const row=document.createElement("article");row.className="video-row";row.style.gridTemplateColumns="minmax(0,1fr)";
     const title=document.createElement("h3");title.className="video-name";title.textContent=track.title||"Brano senza titolo";
     const meta=document.createElement("p");meta.className="video-sub";meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
     const tagEdit=document.createElement("div");tagEdit.className="search-row";
-    const mood=document.createElement("input");mood.className="search-input";mood.placeholder="Mood separati da virgola";mood.value=(track.mood||[]).join(", ");
-    const genre=document.createElement("input");genre.className="search-input";genre.placeholder="Generi separati da virgola";genre.value=(track.genre||[]).join(", ");
+    const mood=document.createElement("input");mood.className="search-input";mood.setAttribute("list","known-moods");mood.placeholder="Mood: scegli o scrivine uno nuovo";mood.value=(track.mood||[]).join(", ");
+    const genre=document.createElement("input");genre.className="search-input";genre.setAttribute("list","known-genres");genre.placeholder="Generi: scegli o scrivine uno nuovo";genre.value=(track.genre||[]).join(", ");
     const save=document.createElement("button");save.type="button";save.className="nav-link";save.textContent="Salva tag";
     save.addEventListener("click",async()=>{save.disabled=true;try{
       const parse=s=>[...new Set(s.split(",").map(x=>x.trim()).filter(Boolean))];
@@ -354,8 +359,10 @@ function studioRenderTracks(){
     down.addEventListener("click",()=>{const at=studioSelection.indexOf(track.id);[studioSelection[at+1],studioSelection[at]]=[studioSelection[at],studioSelection[at+1]];studioRenderTracks()});
     const remove=document.createElement("button");remove.type="button";remove.className="nav-link";remove.textContent="Rimuovi";
     remove.addEventListener("click",()=>{studioSelection=studioSelection.filter(id=>id!==track.id);studioRenderTracks()});
-    actions.append(up,down,remove);row.append(title,meta,tagEdit,actions);studioTracks.append(row);
+    const choose=document.createElement("input");choose.type="checkbox";choose.checked=studioSelection.includes(track.id);choose.setAttribute("aria-label","Seleziona "+(track.title||"brano"));choose.addEventListener("change",()=>{if(choose.checked){if(!studioSelection.includes(track.id))studioSelection.push(track.id)}else studioSelection=studioSelection.filter(id=>id!==track.id);studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";studioCreate.disabled=!studioSelection.length});
+    actions.append(choose,up,down,remove);row.append(title,meta,tagEdit,actions);rows.append(row);
   });
+  search.addEventListener("input",()=>{const q=search.value.trim().toLocaleLowerCase("it");rows.querySelectorAll(".video-row").forEach((row,i)=>{const t=matches[i];row.hidden=!!q&&!([t.title,t.artist,t.channel_title].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q))})});
   studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";
   studioCreate.disabled=studioSelection.length===0;
 }
@@ -408,6 +415,8 @@ document.getElementById("open-playlist-studio").addEventListener("click",openStu
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
 studioValue.addEventListener("change",()=>{studioSelection=[];const v=studioValue.value;studioTitle.value=v?v.charAt(0).toLocaleUpperCase("it")+v.slice(1):"";studioRenderTracks()});
+document.getElementById("header-lastfm").addEventListener("click",()=>{document.getElementById("playlist-studio").hidden=false;runLastFmSync("incremental")});
+document.getElementById("header-lastfm-full").addEventListener("click",()=>{document.getElementById("playlist-studio").hidden=false;runLastFmSync("full")});
 document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
 studioCreate.addEventListener("click",async()=>{
   if(!studioSource||!studioSelection.length)return;
