@@ -100,12 +100,16 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><div class="search-row" style="margin:0 0 16px"><button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button><span class="small-note">Crea playlist YouTube partendo dai metadati di Favorite songs.</span></div>
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Connessione a YouTube in corso…</div></div><section class="panel" style="margin:20px 0;padding:20px;background:#fff">
+  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Nuove playlist</h2></div></div>
+  <p class="small-note">Crea proposte a partire dai metadati della raccolta Favorite songs.</p>
+  <button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button>
+</section>
 <section class="panel" id="playlist-studio" hidden style="margin:0 0 24px">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
   <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, togliere o riordinare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
   <div class="search-row" style="margin:14px 0">
-    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="subgenre">Sottogenere</option></select>
+    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option><option value="subgenre">Sottogenere</option><option value="youtube_tags">Tag YouTube (parole chiave del canale)</option></select>
     <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
   </div>
   <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
@@ -312,7 +316,7 @@ const studioGroup=document.getElementById("studio-group"),studioValue=document.g
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSource=null,studioLibrary=[],studioSelection=[];
-const studioTagNames={mood:"Mood",genre:"Genere",subgenre:"Sottogenere"};
+const studioTagNames={mood:"Mood",genre:"Genere",subgenre:"Sottogenere",youtube_tags:"Tag YouTube"};
 const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(t=>Array.isArray(t[field])?t[field]:[]).map(v=>String(v).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"it"));
 function studioRenderValues(){
   const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
