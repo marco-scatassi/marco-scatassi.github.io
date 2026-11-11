@@ -105,7 +105,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 
 </style></head>
 <body>
-<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="nav-link" id="header-youtube-sync" type="button">Aggiorna tag YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
+<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="nav-link" id="header-youtube-sync" type="button">Aggiorna tag YouTube</button><button class="nav-link" id="header-freqblog-compare" type="button">Confronta tag (30)</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
@@ -116,6 +116,12 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="filter-chip-list" id="liked-filter-list"><div class="empty">Filtri non ancora caricati.</div></div>
 </section>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p><p class="small-note" id="youtube-tags-status" role="status" aria-live="polite">Tag YouTube: aggiornamento incrementale non ancora eseguito.</p>
+<section class="panel" id="tag-comparison-panel" style="margin:18px 0" aria-label="Confronto delle fonti di tag">
+  <div class="detail-title"><div><div class="eyebrow">// Tag quality check</div><h2>Confronto fonti musicali</h2></div><span class="count" id="freqblog-count">NON ESEGUITO</span></div>
+  <p class="small-note">Confronta Last.fm, tag pubblici YouTube e FreqBlog sugli stessi brani. Il test seleziona fino a 30 brani con dati già presenti nelle prime due fonti. FreqBlog viene salvato separatamente e non modifica i metadati manuali.</p>
+  <p class="search-feedback" id="freqblog-status" role="status" aria-live="polite">Configura FREQBLOG_API_KEY nel Worker e applica la migrazione dedicata prima del test.</p>
+  <div id="freqblog-results" class="video-list"></div>
+</section>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
 <div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
@@ -706,6 +712,60 @@ async function runYouTubeTagsSync(){
     button.disabled=false;
   }
 }
+
+function freqblogTagSummary(tags){
+  if(!Array.isArray(tags)||!tags.length)return "Nessun tag";
+  return tags.map(tag=>{
+    const value=tag.value===null||tag.value===undefined?"":" ("+tag.value+")";
+    return (tag.category||"tag")+": "+(tag.tag||"")+value+" ["+(tag.confidence||"n/d")+"/"+(tag.provenance||"n/d")+"]";
+  }).join(" · ");
+}
+function renderFreqBlogComparison(tracks){
+  const root=document.getElementById("freqblog-results");root.replaceChildren();
+  const rows=tracks.filter(t=>Array.isArray(t.freqblog_tags)&&t.freqblog_tags.length);
+  if(!rows.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Nessun risultato FreqBlog disponibile nel campione.";root.append(empty);return}
+  rows.forEach(track=>{
+    const row=document.createElement("article");row.className="video-row";row.style.gridTemplateColumns="minmax(0,1fr)";
+    const title=document.createElement("h3");title.className="video-name";title.textContent=(track.title||"Brano")+" — "+(track.artist||"Artista sconosciuto");
+    const lastfm=document.createElement("p");lastfm.className="small-note";lastfm.textContent="Last.fm: "+((track.lastfm_tags||[]).join(", ")||"Nessun tag");
+    const youtube=document.createElement("p");youtube.className="small-note";youtube.textContent="YouTube: "+((track.youtube_tags||[]).join(", ")||"Nessun tag");
+    const freq=document.createElement("p");freq.className="small-note";freq.textContent="FreqBlog: "+freqblogTagSummary(track.freqblog_tags);
+    row.append(title,lastfm,youtube,freq);root.append(row);
+  });
+}
+async function runFreqBlogComparison(){
+  const button=document.getElementById("header-freqblog-compare"),status=document.getElementById("freqblog-status"),count=document.getElementById("freqblog-count");
+  if(button.disabled)return;button.disabled=true;status.textContent="Caricamento dei brani con tag Last.fm e YouTube…";count.textContent="IN CORSO";
+  try{
+    const playlists=await workerGet("/api/youtube/library/playlists");
+    const source=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="favorite songs");
+    if(!source)throw new Error("Favorite songs non trovata nell'archivio.");
+    const all=[];let offset=0,more=true;
+    while(more){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+offset+"&limit=500");const rows=page.items||[];all.push(...rows);offset+=rows.length;more=page.hasMore===true&&rows.length>0;if(!rows.length)break}
+    const eligible=all.filter(t=>Array.isArray(t.lastfm_tags)&&t.lastfm_tags.length&&Array.isArray(t.youtube_tags)&&t.youtube_tags.length);
+    if(!eligible.length)throw new Error("Nessun brano ha contemporaneamente tag Last.fm e YouTube.");
+    const sample=[];
+    const step=eligible.length/Math.min(30,eligible.length);
+    for(let i=0;i<Math.min(30,eligible.length);i++){const item=eligible[Math.floor(i*step)];if(item&&!sample.some(x=>x.id===item.id))sample.push(item)}
+    const pending=sample.filter(t=>!t.freqblog_lookup_at);
+    let queried=0,tagged=0,notFound=0,empty=0,skipped=0;const errors=[];
+    for(let i=0;i<pending.length;i+=10){
+      const batch=pending.slice(i,i+10);status.textContent="FreqBlog: analisi "+Math.min(i+batch.length,pending.length)+" / "+pending.length+"…";
+      const result=await workerPost("/api/youtube/library/enrich-freqblog",{sourcePlaylistId:source.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
+      queried+=result.queried||0;tagged+=result.tagged||0;notFound+=result.notFound||0;empty+=result.empty||0;skipped+=result.skipped||0;
+      if(result.errors?.length)errors.push(...result.errors);
+    }
+    const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset=0&limit=500");
+    const byId=new Map((refreshed.items||[]).map(t=>[t.id,t]));
+    const latest=sample.map(t=>byId.get(t.id)||t);
+    renderFreqBlogComparison(latest);
+    count.textContent=latest.filter(t=>t.freqblog_tags?.length).length+" / "+latest.length+" TAGGATI";
+    status.textContent="Campione "+latest.length+" brani · "+queried+" interrogati · "+tagged+" con tag · "+notFound+" non trovati · "+empty+" senza tag · "+skipped+" già presenti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+  }catch(error){status.textContent="Confronto non completato: "+error.message;count.textContent="ERRORE"}
+  finally{button.disabled=false}
+}
+document.getElementById("header-freqblog-compare").addEventListener("click",runFreqBlogComparison);
+
 document.getElementById("header-youtube-sync").addEventListener("click",runYouTubeTagsSync);
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
