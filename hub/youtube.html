@@ -607,8 +607,8 @@ async function openStudio(){
     const playlists=await workerGet("/api/youtube/library/playlists");
     studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="favorite songs");
     if(!studioSource)throw new Error("La raccolta Favorite songs non risulta nell'archivio Supabase. Premi Aggiorna da YouTube per importarla.");
-    const result=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
-    studioLibrary=result.items||[];
+    studioLibrary=[];let offset=0,hasMore=true;
+    while(hasMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+offset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);offset+=rows.length;hasMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
     if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani archiviati. Premi Aggiorna da YouTube per aggiornarla.");
     studioSelection=[];studioRenderValues();
     studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
@@ -637,18 +637,17 @@ async function runUnifiedMetadataSync(){
       if(result.errors?.length)errors.push(...result.errors);
     }
     const freqPending=pending.filter(t=>!t.freqblog_lookup_at);
-    if(!lastfmLimited){
-      for(let i=0;i<freqPending.length;i+=30){
+    for(let i=0;i<freqPending.length;i+=30){
         const batch=freqPending.slice(i,i+30);
         status.textContent="FreqBlog: "+Math.min(i+batch.length,freqPending.length)+" / "+freqPending.length+"…";
         const result=await workerPost("/api/youtube/library/enrich-freqblog",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
         freqQueried+=result.queried||0;
         if(result.rateLimited){freqLimited=true;break}
         if(result.errors?.length)errors.push(...result.errors);
-      }
     }
-    const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
-    studioLibrary=refreshed.items||[];studioSelection=[];studioRenderValues();
+    studioLibrary=[];let refreshOffset=0,refreshMore=true;
+    while(refreshMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+refreshOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);refreshOffset+=rows.length;refreshMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
+    studioSelection=[];studioRenderValues();
     const warning=lastfmLimited?"Limite Last.fm raggiunto: i brani rimanenti sono stati saltati. ":freqLimited?"Limite FreqBlog raggiunto: i brani rimanenti sono stati saltati. ":"";
     status.textContent=warning+"Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
   }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
