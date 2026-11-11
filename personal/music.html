@@ -105,46 +105,44 @@
       color:#087e99; font-size:13px; font-weight:800;
     }
     .playlist-youtube-link:hover { color:#e83e91; }
-    .music-page-layout { display:grid; grid-template-columns:150px minmax(0,1fr); gap:34px; align-items:start; }
+    .music-page-layout { display:block; }
     .music-page-content { min-width:0; }
-    .music-index { position:sticky; top:112px; display:flex; flex-direction:column; align-items:center; gap:12px; padding:18px 12px; border:1px solid rgba(255,255,255,.92); border-radius:26px; box-shadow:0 14px 38px rgba(31,55,85,.1); }
-    .music-index-record { width:82px; height:82px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,rgba(0,174,202,.16),rgba(232,62,145,.16)); box-shadow:0 8px 22px rgba(31,55,85,.12); }
-    .music-index-record .music-disc { width:70px; box-shadow:0 5px 15px rgba(23,36,58,.2); }
-    .music-index-record .music-disc i { width:22px; height:22px; font-size:10px; }
-    .music-index-record:focus-visible { outline:3px solid var(--cyan); outline-offset:4px; }
-    .music-index-heading { color:#94a3b8; font-size:9px; font-weight:900; letter-spacing:.2em; }
-    .music-index-link { position:relative; width:100%; min-height:48px; display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:10px 12px; border-radius:14px; color:#64748b; font-size:12px; font-weight:850; text-decoration:none; transition:background .2s,color .2s,transform .2s; }
-    .music-index-link i { width:18px; text-align:center; font-size:15px; }
-    .music-index-link:hover { background:rgba(0,174,202,.08); color:#087e99; transform:translateX(2px); }
-    .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.14),rgba(232,62,145,.1)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.14); }
-    .music-index-link.is-active::before { content:""; position:absolute; left:3px; top:25%; bottom:25%; width:2px; border-radius:2px; background:linear-gradient(var(--cyan),var(--pink)); }
-    .music-index-caption { margin-top:8px; color:#94a3b8; font-size:8px; line-height:1.6; letter-spacing:.16em; text-align:center; }
-    .music-index-caption strong { color:#087e99; font-size:10px; letter-spacing:.12em; }
-    .neon-guitar-stage { position:relative; isolation:isolate; width:min(100%,360px); min-height:260px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border-radius:28px; background:radial-gradient(ellipse at center,rgba(0,174,202,.07),rgba(232,62,145,.035) 48%,transparent 72%); }
-    .neon-guitar { font-size:clamp(8rem,17vw,12rem); transform:rotate(-13deg); animation:neon-guitar-cycle 6s ease-in-out infinite; }
-    .neon-guitar-caption { color:#e83e91; font-size:10px; font-weight:900; letter-spacing:.35em; text-shadow:0 0 5px currentColor,0 0 14px currentColor; animation:neon-caption-cycle 6s ease-in-out infinite; }
+    .music-sections-layout { display:grid; grid-template-columns:112px minmax(0,1fr); gap:26px; align-items:start; }
+    .music-sections-content { min-width:0; }
+    .music-index { position:sticky; top:112px; min-height:370px; display:flex; flex-direction:column; align-items:stretch; gap:14px; padding:18px 8px; border:1px solid rgba(255,255,255,.92); border-radius:24px; box-shadow:0 12px 30px rgba(31,55,85,.08); }
+    .music-index-record { align-self:center; width:66px; height:66px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,rgba(0,174,202,.13),rgba(232,62,145,.13)); box-shadow:0 5px 15px rgba(31,55,85,.09); }
+    .music-index-record .music-disc { width:57px; box-shadow:0 3px 10px rgba(23,36,58,.16); }
+    .music-index-record .music-disc i { width:19px; height:19px; font-size:9px; }
+    .music-index-record:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
+    .music-index-heading { text-align:center; color:#94a3b8; font-size:8px; font-weight:900; letter-spacing:.18em; }
+    .music-index-link { position:relative; width:100%; min-height:58px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:9px 4px; border-radius:13px; color:#64748b; font-size:10px; font-weight:850; text-align:center; text-decoration:none; transition:background .2s,color .2s; }
+    .music-index-link i { font-size:16px; }
+    .music-index-link:hover { background:rgba(0,174,202,.07); color:#087e99; }
+    .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.12),rgba(232,62,145,.08)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.12); }
+    .music-index-link.is-active::before { content:""; position:absolute; left:3px; top:24%; bottom:24%; width:2px; border-radius:2px; background:linear-gradient(var(--cyan),var(--pink)); }
+    .music-index-caption { margin-top:auto; padding-top:18px; color:#94a3b8; font-size:7px; line-height:1.6; letter-spacing:.14em; text-align:center; }
+    .music-index-caption strong { color:#087e99; font-size:9px; letter-spacing:.1em; }
+    .neon-guitar-stage { position:relative; isolation:isolate; width:min(100%,340px); min-height:260px; display:flex; align-items:center; justify-content:center; }
+    .neon-guitar { width:190px; height:250px; overflow:visible; color:#0799ad; transform:rotate(28deg); animation:neon-guitar-cycle 9s ease-in-out infinite; }
     @keyframes neon-guitar-cycle {
-      0%,100% { color:#00aeca; filter:drop-shadow(0 0 3px #00aeca) drop-shadow(0 0 10px rgba(0,174,202,.8)) drop-shadow(0 0 24px rgba(0,174,202,.45)); }
-      33% { color:#e83e91; filter:drop-shadow(0 0 3px #e83e91) drop-shadow(0 0 10px rgba(232,62,145,.8)) drop-shadow(0 0 24px rgba(232,62,145,.45)); }
-      66% { color:#8b5cf6; filter:drop-shadow(0 0 3px #8b5cf6) drop-shadow(0 0 10px rgba(139,92,246,.8)) drop-shadow(0 0 24px rgba(139,92,246,.45)); }
+      0%,100% { color:#0799ad; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(0,174,202,.28)); }
+      33% { color:#cf4c8c; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(232,62,145,.25)); }
+      66% { color:#7860bd; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(139,92,246,.24)); }
     }
-    @keyframes neon-caption-cycle { 0%,100% { color:#00aeca; } 33% { color:#e83e91; } 66% { color:#8b5cf6; } }
     @media(max-width:760px) {
-      .music-page-layout { grid-template-columns:1fr; gap:22px; }
-      .music-index { position:sticky; top:82px; z-index:40; flex-direction:row; justify-content:center; flex-wrap:wrap; gap:8px; padding:9px 12px; border-radius:20px; }
-      .music-index-record { width:48px; height:48px; }
+      .music-sections-layout { grid-template-columns:1fr; gap:14px; }
+      .music-index { position:sticky; top:82px; z-index:40; min-height:0; flex-direction:row; align-items:center; justify-content:center; gap:8px; padding:8px 10px; border-radius:20px; }
+      .music-index-record { width:48px; height:48px; flex:0 0 48px; }
       .music-index-record .music-disc { width:40px; }
       .music-index-record .music-disc i { width:16px; height:16px; font-size:8px; }
       .music-index-heading,.music-index-caption { display:none; }
-      .music-index-link { width:auto; min-height:42px; padding:8px 12px; }
+      .music-index-link { width:auto; min-width:92px; min-height:44px; flex-direction:row; gap:7px; padding:7px 10px; font-size:10px; }
+      .music-index-link i { font-size:14px; }
       .neon-guitar-stage { min-height:190px; }
-      .neon-guitar { font-size:8rem; }
+      .neon-guitar { width:145px; height:190px; }
     }
-    @media(prefers-reduced-motion:reduce) {
-      .neon-guitar,.neon-guitar-caption { animation:none; }
-    }
-    @media(prefers-reduced-motion:reduce) { .music-index-signal i { animation:none; } }
-
+    @media(prefers-reduced-motion:reduce) { .neon-guitar { animation:none; } }
+    
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -166,22 +164,8 @@
 
   <main class="max-w-6xl mx-auto px-6 py-12 md:py-20">
     <div class="music-page-layout">
-          <nav class="music-index glass" aria-label="Esplora i contenuti musicali">
-      <a class="music-index-record" href="#music-intro" aria-label="Torna all'inizio della pagina" title="Torna all'inizio">
-        <span class="music-disc"><i class="fa-solid fa-music"></i></span>
-      </a>
-      <p class="music-index-heading">ESPLORA</p>
-      <a class="music-index-link is-active" href="#featured-video-section" data-section="featured-video-section">
-        <i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
-      </a>
-      <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
-        <i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
-      </a>
-      <span class="music-index-caption">NOW PLAYING<br><strong>MY MUSIC</strong></span>
-    </nav>
       <div class="music-page-content space-y-12">
-
-    <section id="music-intro" class="grid md:grid-cols-[1.15fr_.85fr] gap-8 md:gap-12 items-center scroll-mt-36">
+        <section id="music-intro" class="grid md:grid-cols-[1.15fr_.85fr] gap-8 md:gap-12 items-center scroll-mt-36">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
           Personal frequency / 001
@@ -200,15 +184,37 @@
       </div>
       <div class="reveal flex justify-center md:justify-end">
         <div class="neon-guitar-stage" role="img" aria-label="Chitarra elettrica stilizzata con luce neon cangiante">
-          <i class="fa-solid fa-guitar neon-guitar" aria-hidden="true"></i>
-          <span class="neon-guitar-caption">ACOUSTIC SOUL</span>
+          <svg class="neon-guitar" viewBox="0 0 220 340" role="img" aria-label="Chitarra stilizzata al neon" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M103 83 L116 69 L128 79 L117 94 L112 119" />
+              <path d="M115 93 L129 106 L143 92 L155 103 L141 119 L128 130" />
+              <path d="M116 118 L91 143 C73 151 56 170 55 194 C54 216 66 228 82 232 C92 235 99 231 106 226 C114 234 124 238 136 234 C159 227 169 204 162 184 C157 169 146 159 130 151 L128 130" />
+              <path d="M102 84 L112 72 L126 85 L116 97 M111 120 L128 137 M113 126 L94 147 L106 159 L127 137" />
+              <path d="M94 147 L106 159 M106 159 L128 137 M101 165 L123 143" />
+              <path d="M91 177 C102 169 117 169 128 178 C138 187 139 202 131 213 C122 224 105 225 94 216 C83 207 82 189 91 177Z" />
+              <circle cx="110" cy="198" r="8" />
+              <path d="M109 86 L110 188 M113 86 L113 188 M117 86 L117 188 M102 84 L96 77 M126 85 L133 78 M103 91 L96 97 M126 94 L134 101 M89 222 L80 244 M137 225 L145 245" />
+            </g>
+          </svg>
         </div>
       </div>
     </section>
-
-
-
-    <section id="featured-video-section" class="glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
+        <div class="music-sections-layout">
+          <nav class="music-index glass" aria-label="Esplora i contenuti musicali">
+      <a class="music-index-record" href="#music-intro" aria-label="Torna all'inizio della pagina" title="Torna all'inizio">
+        <span class="music-disc"><i class="fa-solid fa-music"></i></span>
+      </a>
+      <p class="music-index-heading">ESPLORA</p>
+      <a class="music-index-link is-active" href="#featured-video-section" data-section="featured-video-section">
+        <i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
+      </a>
+      <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
+        <i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
+      </a>
+      <span class="music-index-caption">NOW PLAYING<br><strong>MY MUSIC</strong></span>
+    </nav>
+          <div class="music-sections-content space-y-12">
+<section id="featured-video-section" class="glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 grid place-items-center">
           <i class="fa-solid fa-video text-lg"></i>
@@ -250,9 +256,10 @@
       <p class="text-sm text-slate-500 mt-2">La musica è un altro modo di raccontare storie.</p>
     </div>
   
+          </div>
+        </div>
       </div>
-    </div>
-  </main>
+    </div></main>
 
   <footer class="bg-slate-950 text-slate-400 py-9">
     <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
