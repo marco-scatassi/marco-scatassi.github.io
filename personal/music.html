@@ -105,48 +105,44 @@
       color:#087e99; font-size:13px; font-weight:800;
     }
     .playlist-youtube-link:hover { color:#e83e91; }
-    .music-index { position:sticky; top:88px; display:flex; align-items:center; gap:14px; margin-left:42px; width:calc(100% - 42px); min-height:62px; border-color:rgba(255,255,255,.92); box-shadow:0 12px 32px rgba(31,55,85,.1); }
-    .music-index-record { position:absolute; left:-42px; top:50%; transform:translateY(-50%); width:76px; height:76px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,rgba(0,174,202,.16),rgba(232,62,145,.16)); box-shadow:0 8px 22px rgba(31,55,85,.12); }
-    .music-index-record .music-disc { width:66px; box-shadow:0 5px 15px rgba(23,36,58,.2); }
+    .music-page-layout { display:grid; grid-template-columns:150px minmax(0,1fr); gap:34px; align-items:start; }
+    .music-page-content { min-width:0; }
+    .music-index { position:sticky; top:112px; display:flex; flex-direction:column; align-items:center; gap:12px; padding:18px 12px; border:1px solid rgba(255,255,255,.92); border-radius:26px; box-shadow:0 14px 38px rgba(31,55,85,.1); }
+    .music-index-record { width:82px; height:82px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,rgba(0,174,202,.16),rgba(232,62,145,.16)); box-shadow:0 8px 22px rgba(31,55,85,.12); }
+    .music-index-record .music-disc { width:70px; box-shadow:0 5px 15px rgba(23,36,58,.2); }
     .music-index-record .music-disc i { width:22px; height:22px; font-size:10px; }
     .music-index-record:focus-visible { outline:3px solid var(--cyan); outline-offset:4px; }
-    .music-index-divider { width:1px; height:38px; flex:0 0 1px; background:linear-gradient(transparent,#cbd5e1,transparent); }
-    .music-index-link { position:relative; min-height:44px; display:flex; align-items:center; justify-content:center; gap:9px; padding:8px 12px; border-radius:999px; color:#64748b; font-size:12px; font-weight:850; text-decoration:none; transition:background .2s,color .2s,transform .2s; white-space:nowrap; }
-    .music-index-link i { font-size:15px; }
-    .music-index-link:hover { background:rgba(0,174,202,.08); color:#087e99; transform:translateY(-1px); }
+    .music-index-heading { color:#94a3b8; font-size:9px; font-weight:900; letter-spacing:.2em; }
+    .music-index-link { position:relative; width:100%; min-height:48px; display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:10px 12px; border-radius:14px; color:#64748b; font-size:12px; font-weight:850; text-decoration:none; transition:background .2s,color .2s,transform .2s; }
+    .music-index-link i { width:18px; text-align:center; font-size:15px; }
+    .music-index-link:hover { background:rgba(0,174,202,.08); color:#087e99; transform:translateX(2px); }
     .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.14),rgba(232,62,145,.1)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.14); }
-    .music-index-link.is-active::after { content:""; position:absolute; bottom:3px; left:30%; right:30%; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--cyan),var(--pink)); }
-    .music-index-caption { padding:0 13px 0 5px; color:#94a3b8; font-size:8px; line-height:1.55; letter-spacing:.16em; text-align:right; white-space:nowrap; }
+    .music-index-link.is-active::before { content:""; position:absolute; left:3px; top:25%; bottom:25%; width:2px; border-radius:2px; background:linear-gradient(var(--cyan),var(--pink)); }
+    .music-index-caption { margin-top:8px; color:#94a3b8; font-size:8px; line-height:1.6; letter-spacing:.16em; text-align:center; }
     .music-index-caption strong { color:#087e99; font-size:10px; letter-spacing:.12em; }
-    .soundstage { position:relative; isolation:isolate; overflow:hidden; width:min(100%,360px); min-height:210px; padding:22px 22px 18px; border:1px solid rgba(255,255,255,.95); border-radius:28px; background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(226,248,251,.8) 55%,rgba(252,231,243,.75)); box-shadow:0 22px 55px rgba(31,55,85,.1); }
-    .soundstage::before,.soundstage::after { content:""; position:absolute; z-index:-1; border:1px solid rgba(0,174,202,.16); border-radius:50%; }
-    .soundstage::before { width:190px; height:190px; right:-70px; top:-90px; }
-    .soundstage::after { width:130px; height:130px; right:-40px; top:-60px; border-color:rgba(232,62,145,.2); }
-    .soundstage-top,.soundstage-bottom { display:flex; align-items:center; justify-content:space-between; color:#718096; font-size:9px; font-weight:900; letter-spacing:.14em; }
-    .soundstage-top span:first-child { display:flex; align-items:center; gap:8px; color:#087e99; }
-    .soundstage-live { display:flex; align-items:center; gap:6px; color:#e83e91; }
-    .soundstage-live i { width:6px; height:6px; border-radius:50%; background:#e83e91; box-shadow:0 0 0 4px rgba(232,62,145,.12); }
-    .soundstage-wave { height:100px; display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0; }
-    .soundstage-wave i { display:block; width:5px; height:var(--bar,24px); border-radius:5px; background:linear-gradient(180deg,var(--pink),var(--cyan)); transform-origin:center; animation:wave-pulse .9s ease-in-out infinite alternate; }
-    .soundstage-wave i:nth-child(5n+1) { --bar:22px; animation-delay:-.2s; }
-    .soundstage-wave i:nth-child(5n+2) { --bar:48px; animation-delay:-.6s; }
-    .soundstage-wave i:nth-child(5n+3) { --bar:72px; animation-delay:-.35s; }
-    .soundstage-wave i:nth-child(5n+4) { --bar:38px; animation-delay:-.75s; }
-    .soundstage-wave i:nth-child(5n) { --bar:58px; animation-delay:-.1s; }
-    @keyframes wave-pulse { from { transform:scaleY(.35); opacity:.55; } to { transform:scaleY(1); opacity:1; } }
-    .soundstage-orbit { position:absolute; right:25px; bottom:22px; width:30px; height:30px; border:1px solid rgba(232,62,145,.28); border-radius:50%; }
-    .soundstage-orbit span { position:absolute; top:2px; left:2px; width:5px; height:5px; border-radius:50%; background:var(--pink); }
-    @media(max-width:640px) {
-      .music-index { top:84px; margin-left:0; width:100%; min-height:58px; padding:6px 8px 6px 58px; gap:8px; }
-      .music-index-record { left:5px; width:48px; height:48px; }
-      .music-index-record .music-disc { width:42px; }
-      .music-index-record .music-disc i { width:17px; height:17px; font-size:8px; }
-      .music-index-link { flex-direction:column; gap:3px; min-height:46px; padding:5px 3px; font-size:10px; }
-      .music-index-link i { font-size:14px; }
-      .soundstage { min-height:185px; }
-      .soundstage-wave { height:82px; }
+    .neon-guitar-stage { position:relative; isolation:isolate; width:min(100%,360px); min-height:260px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border-radius:28px; background:radial-gradient(ellipse at center,rgba(0,174,202,.07),rgba(232,62,145,.035) 48%,transparent 72%); }
+    .neon-guitar { font-size:clamp(8rem,17vw,12rem); transform:rotate(-13deg); animation:neon-guitar-cycle 6s ease-in-out infinite; }
+    .neon-guitar-caption { color:#e83e91; font-size:10px; font-weight:900; letter-spacing:.35em; text-shadow:0 0 5px currentColor,0 0 14px currentColor; animation:neon-caption-cycle 6s ease-in-out infinite; }
+    @keyframes neon-guitar-cycle {
+      0%,100% { color:#00aeca; filter:drop-shadow(0 0 3px #00aeca) drop-shadow(0 0 10px rgba(0,174,202,.8)) drop-shadow(0 0 24px rgba(0,174,202,.45)); }
+      33% { color:#e83e91; filter:drop-shadow(0 0 3px #e83e91) drop-shadow(0 0 10px rgba(232,62,145,.8)) drop-shadow(0 0 24px rgba(232,62,145,.45)); }
+      66% { color:#8b5cf6; filter:drop-shadow(0 0 3px #8b5cf6) drop-shadow(0 0 10px rgba(139,92,246,.8)) drop-shadow(0 0 24px rgba(139,92,246,.45)); }
     }
-    @media(prefers-reduced-motion:reduce) { .soundstage-wave i { animation:none; } }
+    @keyframes neon-caption-cycle { 0%,100% { color:#00aeca; } 33% { color:#e83e91; } 66% { color:#8b5cf6; } }
+    @media(max-width:760px) {
+      .music-page-layout { grid-template-columns:1fr; gap:22px; }
+      .music-index { position:sticky; top:82px; z-index:40; flex-direction:row; justify-content:center; flex-wrap:wrap; gap:8px; padding:9px 12px; border-radius:20px; }
+      .music-index-record { width:48px; height:48px; }
+      .music-index-record .music-disc { width:40px; }
+      .music-index-record .music-disc i { width:16px; height:16px; font-size:8px; }
+      .music-index-heading,.music-index-caption { display:none; }
+      .music-index-link { width:auto; min-height:42px; padding:8px 12px; }
+      .neon-guitar-stage { min-height:190px; }
+      .neon-guitar { font-size:8rem; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .neon-guitar,.neon-guitar-caption { animation:none; }
+    }
     @media(prefers-reduced-motion:reduce) { .music-index-signal i { animation:none; } }
 
     @media(prefers-reduced-motion:reduce) {
@@ -168,7 +164,23 @@
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
+  <main class="max-w-6xl mx-auto px-6 py-12 md:py-20">
+    <div class="music-page-layout">
+          <nav class="music-index glass" aria-label="Esplora i contenuti musicali">
+      <a class="music-index-record" href="#music-intro" aria-label="Torna all'inizio della pagina" title="Torna all'inizio">
+        <span class="music-disc"><i class="fa-solid fa-music"></i></span>
+      </a>
+      <p class="music-index-heading">ESPLORA</p>
+      <a class="music-index-link is-active" href="#featured-video-section" data-section="featured-video-section">
+        <i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
+      </a>
+      <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
+        <i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
+      </a>
+      <span class="music-index-caption">NOW PLAYING<br><strong>MY MUSIC</strong></span>
+    </nav>
+      <div class="music-page-content space-y-12">
+
     <section id="music-intro" class="grid md:grid-cols-[1.15fr_.85fr] gap-8 md:gap-12 items-center scroll-mt-36">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
@@ -187,32 +199,14 @@
         </div>
       </div>
       <div class="reveal flex justify-center md:justify-end">
-        <div class="soundstage" aria-label="Visualizzazione grafica di un'onda sonora">
-          <div class="soundstage-top"><span><i class="fa-solid fa-wave-square"></i> SOUND SIGNAL</span><span class="soundstage-live"><i></i> LIVE</span></div>
-          <div class="soundstage-wave" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          </div>
-          <div class="soundstage-bottom"><span>ACOUSTIC SESSION</span><span>00:01 / ∞</span></div>
-          <div class="soundstage-orbit" aria-hidden="true"><span></span></div>
+        <div class="neon-guitar-stage" role="img" aria-label="Chitarra elettrica stilizzata con luce neon cangiante">
+          <i class="fa-solid fa-guitar neon-guitar" aria-hidden="true"></i>
+          <span class="neon-guitar-caption">ACOUSTIC SOUL</span>
         </div>
       </div>
     </section>
 
-    <nav class="music-index glass rounded-full p-2 sticky top-24 z-40" aria-label="Esplora i contenuti musicali">
-      <a class="music-index-record" href="#music-intro" aria-label="Torna all'inizio della pagina" title="Torna all'inizio">
-        <span class="music-disc"><i class="fa-solid fa-music"></i></span>
-      </a>
-      <div class="music-index-divider hidden sm:block"></div>
-      <div class="grid grid-cols-2 gap-1 flex-1 min-w-0">
-        <a class="music-index-link is-active" href="#featured-video-section" data-section="featured-video-section">
-          <i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
-        </a>
-        <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
-          <i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
-        </a>
-      </div>
-      <span class="music-index-caption hidden md:block">NOW PLAYING<br><strong>MY MUSIC</strong></span>
-    </nav>
+
 
     <section id="featured-video-section" class="glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
       <div class="flex items-center gap-3 mb-7">
@@ -254,6 +248,9 @@
     <div class="reveal text-center py-5">
       <p class="text-xs font-bold tracking-[.3em] text-slate-400 uppercase">End of transmission</p>
       <p class="text-sm text-slate-500 mt-2">La musica è un altro modo di raccontare storie.</p>
+    </div>
+  
+      </div>
     </div>
   </main>
 
