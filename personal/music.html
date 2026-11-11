@@ -105,6 +105,28 @@
       color:#087e99; font-size:13px; font-weight:800;
     }
     .playlist-youtube-link:hover { color:#e83e91; }
+    .music-index { border-color:rgba(255,255,255,.9); box-shadow:0 12px 35px rgba(31,55,85,.08); }
+    .music-index-signal { height:25px; display:flex; align-items:center; gap:3px; padding:0 8px; border-radius:9px; background:linear-gradient(135deg,rgba(0,174,202,.12),rgba(232,62,145,.12)); }
+    .music-index-signal i { display:block; width:3px; border-radius:5px; background:linear-gradient(var(--cyan),var(--pink)); animation:signal 1s ease-in-out infinite alternate; }
+    .music-index-signal i:nth-child(1),.music-index-signal i:nth-child(4) { height:7px; }
+    .music-index-signal i:nth-child(2) { height:16px; animation-delay:.2s; }
+    .music-index-signal i:nth-child(3) { height:11px; animation-delay:.4s; }
+    @keyframes signal { to { transform:scaleY(.55); opacity:.65 } }
+    .music-index-link { position:relative; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 10px; border-radius:12px; color:#64748b; font-size:12px; font-weight:800; text-decoration:none; transition:background .2s,color .2s,transform .2s; }
+    .music-index-link:hover { background:rgba(0,174,202,.08); color:#087e99; transform:translateY(-1px); }
+    .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.13),rgba(232,62,145,.09)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.12); }
+    .music-index-link.is-active::after { content:""; position:absolute; bottom:3px; left:25%; right:25%; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--cyan),var(--pink)); }
+    .music-index-number { color:#94a3b8; font-size:9px; letter-spacing:.08em; }
+    .music-index-link.is-active .music-index-number { color:var(--pink); }
+    @media(max-width:520px) {
+      .music-index { top:84px; }
+      .music-index-link { flex-direction:column; gap:3px; padding:7px 3px; font-size:10px; }
+      .music-index-number { display:none; }
+      .music-index-link i { font-size:14px; }
+      .music-index-label { padding:0 8px 2px; }
+    }
+    @media(prefers-reduced-motion:reduce) { .music-index-signal i { animation:none; } }
+
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -125,7 +147,7 @@
   </header>
 
   <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
-    <section class="grid md:grid-cols-[1.3fr_.7fr] gap-10 items-center">
+    <section id="music-intro" class="grid md:grid-cols-[1.3fr_.7fr] gap-10 items-center scroll-mt-36">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
           Personal frequency / 001
@@ -147,16 +169,28 @@
       </div>
     </section>
 
-    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10" hidden aria-labelledby="public-playlists-heading">
-      <div class="flex items-center gap-3 mb-7">
-        <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 grid place-items-center"><i class="fa-solid fa-headphones text-lg"></i></div>
-        <div><p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Personal collection</p><h2 id="public-playlists-heading" class="text-2xl font-black">Le mie playlist</h2></div>
+    <nav class="music-index glass rounded-2xl p-2 md:p-3 sticky top-24 z-40" aria-label="Esplora i contenuti musicali">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <div class="music-index-label px-3 flex items-center gap-2 shrink-0">
+          <span class="music-index-signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span><span class="block text-[9px] font-black tracking-[.22em] text-slate-400 uppercase">Tune in</span><span class="block text-xs font-black text-slate-800">Esplora</span></span>
+        </div>
+        <div class="hidden sm:block w-px h-8 bg-slate-200"></div>
+        <div class="grid grid-cols-3 gap-1 flex-1" role="list">
+          <a class="music-index-link is-active" href="#music-intro" data-section="music-intro">
+            <span class="music-index-number">01</span><i class="fa-solid fa-wave-square" aria-hidden="true"></i><span>La mia musica</span>
+          </a>
+          <a class="music-index-link" href="#featured-video-section" data-section="featured-video-section">
+            <span class="music-index-number">02</span><i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
+          </a>
+          <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
+            <span class="music-index-number">03</span><i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
+          </a>
+        </div>
       </div>
-      <div id="public-playlists-list" class="grid md:grid-cols-2 gap-6"></div>
-      <p id="public-playlists-status" class="text-xs text-slate-500 mt-5" role="status" aria-live="polite"></p>
-    </section>
+    </nav>
 
-    <section class="glass rounded-[2rem] p-7 md:p-10 reveal">
+    <section id="featured-video-section" class="glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 grid place-items-center">
           <i class="fa-solid fa-video text-lg"></i>
@@ -181,6 +215,16 @@
           <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
         </a>
       </div>
+    </section>
+
+
+    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10 scroll-mt-36" hidden aria-labelledby="public-playlists-heading">
+      <div class="flex items-center gap-3 mb-7">
+        <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 grid place-items-center"><i class="fa-solid fa-headphones text-lg"></i></div>
+        <div><p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Personal collection</p><h2 id="public-playlists-heading" class="text-2xl font-black">Le mie playlist</h2></div>
+      </div>
+      <div id="public-playlists-list" class="grid md:grid-cols-2 gap-6"></div>
+      <p id="public-playlists-status" class="text-xs text-slate-500 mt-5" role="status" aria-live="polite"></p>
     </section>
 
     <div class="reveal text-center py-5">
@@ -397,11 +441,37 @@
         if (list.childElementCount) {
           section.hidden = false;
           section.classList.add('reveal', 'visible');
+          const playlistLink = document.querySelector('[data-playlists-link]');
+          if (playlistLink) playlistLink.hidden = false;
         }
       } catch (error) {
         status.textContent = 'Le playlist musicali non sono momentaneamente disponibili.';
       }
     }
+    const musicIndexLinks = Array.from(document.querySelectorAll('.music-index-link[data-section]'));
+    const musicSections = musicIndexLinks
+      .map(link => document.getElementById(link.dataset.section))
+      .filter(Boolean);
+    function setActiveMusicSection(id) {
+      musicIndexLinks.forEach(link => {
+        const active = link.dataset.section === id;
+        link.classList.toggle('is-active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }
+    musicIndexLinks.forEach(link => {
+      link.addEventListener('click', () => setActiveMusicSection(link.dataset.section));
+    });
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting)
+          .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveMusicSection(visible.target.id);
+      }, { rootMargin:'-22% 0px -58% 0px', threshold:[0,.15,.35,.6] });
+      musicSections.forEach(section => sectionObserver.observe(section));
+    }
+
     loadPublicMusicPlaylists();
   </script>
 </body>
