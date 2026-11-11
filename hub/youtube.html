@@ -755,8 +755,9 @@ async function runFreqBlogComparison(){
       queried+=result.queried||0;tagged+=result.tagged||0;notFound+=result.notFound||0;empty+=result.empty||0;skipped+=result.skipped||0;
       if(result.errors?.length)errors.push(...result.errors);
     }
-    const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset=0&limit=500");
-    const byId=new Map((refreshed.items||[]).map(t=>[t.id,t]));
+    const refreshedTracks=[];let refreshOffset=0,refreshMore=true;
+    while(refreshMore){const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+refreshOffset+"&limit=500");const rows=refreshed.items||[];refreshedTracks.push(...rows);refreshOffset+=rows.length;refreshMore=refreshed.hasMore===true&&rows.length>0;if(!rows.length)break}
+    const byId=new Map(refreshedTracks.map(t=>[t.id,t]));
     const latest=sample.map(t=>byId.get(t.id)||t);
     renderFreqBlogComparison(latest);
     count.textContent=latest.filter(t=>t.freqblog_tags?.length).length+" / "+latest.length+" TAGGATI";
