@@ -109,54 +109,17 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
-<div class="section-head"><h2>Filtri Video piaciuti</h2><span class="count" id="liked-filter-count">NON CARICATI</span></div>
-<section class="panel" id="liked-filter-panel" aria-label="Filtri della raccolta Video piaciuti">
-  <p class="small-note">Legge da YouTube Music i filtri disponibili nella raccolta dei brani piaciuti. È una verifica in sola lettura: non modifica playlist o preferenze.</p>
-  <div class="search-row"><button class="action" id="load-liked-filters" type="button">Leggi filtri da YouTube Music</button><span class="search-feedback" id="liked-filter-status" role="status" aria-live="polite">Premi il pulsante per interrogare YouTube Music.</span></div>
-  <div class="filter-chip-list" id="liked-filter-list"><div class="empty">Filtri non ancora caricati.</div></div>
-</section>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p><p class="small-note" id="metadata-sync-status" role="status" aria-live="polite">Generi e mood: sincronizzazione non ancora eseguita.</p>
 
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
-<div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
-<section class="panel" id="edit-playlist-panel" style="margin:0 0 24px;padding:20px;background:#fff">
-  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi.</p>
-  <div class="search-row"><label for="edit-playlist-select">Playlist</label><select id="edit-playlist-select" class="search-input"><option value="">Seleziona una playlist…</option></select></div>
-  <div id="edit-playlist-form" hidden>
-    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
-    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-description">Descrizione</label><textarea id="edit-playlist-description" class="search-input" maxlength="5000" rows="3"></textarea></div>
-    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-privacy">Privacy</label><select id="edit-playlist-privacy" class="search-input"><option value="private">Privata</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
-    <div class="search-row" style="margin-top:12px"><input id="edit-track-search" class="search-input" type="search" placeholder="Cerca tra i brani della playlist…"><button class="nav-link" id="edit-select-all" type="button">Seleziona tutti</button><button class="nav-link" id="edit-clear-all" type="button">Deseleziona tutti</button></div>
-    <div class="track-picker">
-      <label for="edit-add-track-search">Aggiungi brani dall’archivio</label>
-      <input id="edit-add-track-search" class="search-input" type="search" minlength="2" placeholder="Cerca titolo o artista…" autocomplete="off">
-      <div id="edit-add-track-results" class="track-picker-results" hidden></div>
-      <p class="small-note">Cerca nell’intero archivio Supabase e aggiungi i brani con il pulsante +.</p>
-    </div>
-    <div id="edit-playlist-tracks" class="track-check-grid"></div>
-    <p class="search-feedback" id="edit-playlist-status" role="status" aria-live="polite"></p>
-    <button class="action" id="edit-playlist-save" type="button">Salva modifiche su YouTube</button>
-  </div>
-</section>
-<div class="section-head"><h2>Importa mapping</h2><span class="count">BACKUP METADATI</span></div>
-<section class="panel" id="mapping-panel" style="margin:0 0 24px;padding:20px;background:#fff;color:#172638">
-  <p class="small-note">Esporta un archivio JSON con una sola voce per canzone e tutti i metadati disponibili. Puoi poi importare quel file per aggiornare in blocco le canzoni già presenti nel tuo archivio Supabase.</p>
-  <div class="search-row" style="margin:14px 0;flex-wrap:wrap">
-    <button class="action" id="mapping-export" type="button">Scarica mapping JSON</button>
-    <label for="mapping-file">Importa un mapping JSON</label>
-    <input id="mapping-file" class="search-input" type="file" accept=".json,application/json">
-    <button class="action" id="mapping-import" type="button" disabled>Importa metadati</button>
-  </div>
-  <p class="search-feedback" id="mapping-status" role="status" aria-live="polite">Il file deve essere un JSON esportato da Personal Hub (formato v1).</p>
-  <div id="mapping-preview" class="small-note"></div>
-</section>
-<div class="section-head"><h2>Crea Playlist</h2><span class="count">PLAYLIST STUDIO</span></div><section class="panel" style="margin:0 0 24px;padding:20px;background:#fff">
-  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Nuove playlist</h2></div></div>
-  <p class="small-note">Crea proposte a partire dai metadati della raccolta Favorite songs.</p>
-  <button class="action" id="open-playlist-studio" type="button">Suggerisci playlist</button>
-</section>
-<section class="panel" id="playlist-studio" hidden style="margin:0 0 24px">
+<section class="panel" id="playlist-tools" aria-label="Gestisci playlist" style="margin:28px 0 18px;padding:18px;background:#fff">
+<div class="detail-title"><div><div class="eyebrow">// Gestione</div><h2>Gestisci Playlist</h2></div></div><p class="small-note">Scegli lo strumento da utilizzare.</p>
+<div class="search-row" role="group" aria-label="Strumenti gestione playlist">
+<button class="action" id="open-playlist-studio" type="button" aria-pressed="false">Crea nuova playlist</button>
+<button class="nav-link" id="show-edit-playlist" type="button" aria-pressed="false">Modifica playlist</button>
+<button class="nav-link" id="show-mapping-tools" type="button" aria-pressed="false">Importa mapping</button></div></section>
+<div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
   <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, selezionare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
   <div class="search-row" style="margin:14px 0">
@@ -169,7 +132,37 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <p class="search-feedback" id="studio-status" role="status" aria-live="polite"></p>
   <div id="studio-track-list" class="video-list"></div>
   <div class="search-row" style="margin-top:16px"><button class="nav-link" id="studio-rebuild" type="button">Aggiorna proposta</button><button class="action" id="studio-create" type="button" disabled>Crea playlist su YouTube</button></div>
-</section>
+</section></div><div id="playlist-tool-edit" hidden><div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
+<section class="panel" id="edit-playlist-panel" style="margin:0 0 24px;padding:20px;background:#fff">
+  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi.</p>
+  <div class="search-row"><label for="edit-playlist-select">Playlist</label><select id="edit-playlist-select" class="search-input"><option value="">Seleziona una playlist…</option></select></div>
+  <div id="edit-playlist-form" hidden>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-description">Descrizione</label><textarea id="edit-playlist-description" class="search-input" maxlength="5000" rows="3"></textarea></div>
+    <div class="search-row" style="margin-top:12px"><label for="edit-playlist-privacy">Privacy</label><select id="edit-playlist-privacy" class="search-input"><option value="private">Privata</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
+    <div class="search-row" style="margin-top:12px"><input id="edit-track-search" class="search-input" type="search" placeholder="Filtra per titolo, artista o album…"><input id="edit-track-mood-filter" class="search-input" type="search" placeholder="Filtra per mood…"><input id="edit-track-genre-filter" class="search-input" type="search" placeholder="Filtra per genere…"><button class="nav-link" id="edit-select-all" type="button">Seleziona tutti</button><button class="nav-link" id="edit-clear-all" type="button">Deseleziona tutti</button></div>
+    <div class="track-picker">
+      <label for="edit-add-track-search">Aggiungi brani dall’archivio</label>
+      <div class="search-row"><input id="edit-add-track-search" class="search-input" type="search" placeholder="Cerca titolo, artista o album…" autocomplete="off"><input id="edit-add-track-mood-filter" class="search-input" type="search" placeholder="Mood da cercare…"><input id="edit-add-track-genre-filter" class="search-input" type="search" placeholder="Genere da cercare…"></div>
+      <div id="edit-add-track-results" class="track-picker-results" hidden></div>
+      <p class="small-note">Puoi combinare titolo, mood e genere per trovare brani nell’intero archivio Supabase.</p>
+    </div>
+    <div id="edit-playlist-tracks" class="track-check-grid"></div>
+    <p class="search-feedback" id="edit-playlist-status" role="status" aria-live="polite"></p>
+    <button class="action" id="edit-playlist-save" type="button">Salva modifiche su YouTube</button>
+  </div>
+</section></div><div id="playlist-tool-mapping" hidden><div class="section-head"><h2>Importa mapping</h2><span class="count">BACKUP METADATI</span></div>
+<section class="panel" id="mapping-panel" style="margin:0 0 24px;padding:20px;background:#fff;color:#172638">
+  <p class="small-note">Esporta un archivio JSON con una sola voce per canzone e tutti i metadati disponibili. Puoi poi importare quel file per aggiornare in blocco le canzoni già presenti nel tuo archivio Supabase.</p>
+  <div class="search-row" style="margin:14px 0;flex-wrap:wrap">
+    <button class="action" id="mapping-export" type="button">Scarica mapping JSON</button>
+    <label for="mapping-file">Importa un mapping JSON</label>
+    <input id="mapping-file" class="search-input" type="file" accept=".json,application/json">
+    <button class="action" id="mapping-import" type="button" disabled>Importa metadati</button>
+  </div>
+  <p class="search-feedback" id="mapping-status" role="status" aria-live="polite">Il file deve essere un JSON esportato da Personal Hub (formato v1).</p>
+  <div id="mapping-preview" class="small-note"></div>
+</section></div>
 <section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div class="search-tools"><label class="eyebrow" for="playlist-search">CERCA IN QUESTA PLAYLIST</label><div class="search-row"><input class="search-input" id="playlist-search" type="search" placeholder="Filtra per titolo, artista, album o genere…" autocomplete="off"></div><p class="search-feedback" id="playlist-search-feedback" role="status" aria-live="polite"></p></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
 <p id="message" role="status" aria-live="polite"></p>
 </main>
@@ -217,32 +210,6 @@ async function workerRequest(path,method="GET",body=null){
 }
 async function workerGet(path){return workerRequest(path,"GET")}
 async function workerPost(path,body=null){return workerRequest(path,"POST",body)}
-const likedFilterButton=document.getElementById("load-liked-filters");
-const likedFilterCount=document.getElementById("liked-filter-count");
-const likedFilterStatus=document.getElementById("liked-filter-status");
-const likedFilterList=document.getElementById("liked-filter-list");
-function renderLikedMusicFilters(result){
-  const filters=Array.isArray(result.filters)?result.filters:[];
-  likedFilterList.replaceChildren();
-  likedFilterCount.textContent=String(filters.length)+" FILTRI";
-  if(!filters.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="YouTube Music non ha restituito filtri riconoscibili per questa raccolta.";likedFilterList.appendChild(empty);return}
-  filters.forEach(filter=>{
-    const chip=document.createElement("span");chip.className="filter-chip";chip.setAttribute("aria-current",filter.selected===true?"true":"false");
-    const label=document.createElement("span");label.textContent=typeof filter.label==="string"?filter.label:"Filtro senza nome";chip.appendChild(label);
-    if(filter.selected===true){const state=document.createElement("small");state.textContent="attivo";chip.appendChild(state)}
-    likedFilterList.appendChild(chip);
-  });
-}
-likedFilterButton.addEventListener("click",async()=>{
-  likedFilterButton.disabled=true;likedFilterButton.textContent="LETTURA…";likedFilterStatus.textContent="Richiesta autenticata a YouTube Music in corso…";likedFilterCount.textContent="CARICAMENTO…";
-  try{
-    const result=await workerGet("/api/youtube/music/liked-filters");
-    renderLikedMusicFilters(result);
-    likedFilterStatus.textContent=result.authenticated===true&&result.readOnly===true?"Risposta autenticata · sola lettura · "+(result.chipCount||0)+" filtri rilevati":"Risposta ricevuta da YouTube Music.";
-  }catch(error){
-    likedFilterCount.textContent="ERRORE";likedFilterList.replaceChildren();const empty=document.createElement("div");empty.className="empty";empty.textContent=error.message;likedFilterList.appendChild(empty);likedFilterStatus.textContent="Impossibile leggere i filtri.";
-  }finally{likedFilterButton.disabled=false;likedFilterButton.textContent="Rileggi filtri da YouTube Music"}
-});
 function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standard?.url||t.high?.url||t.medium?.url||t.default?.url||""}
 function renderPlaylists(playlists){
   grid.replaceChildren();
@@ -297,7 +264,11 @@ function renderEditTracks(){
     const title=document.createElement("strong");title.textContent=track.title||"Brano senza titolo";
     const meta=document.createElement("small");meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
     copy.append(title,meta);entry.append(check,copy);
-    entry.hidden=!!q&&!([track.title,track.artist,track.album].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q));
+    const moods=Array.isArray(track.mood)?track.mood:[],genres=Array.isArray(track.genre)?track.genre:[];
+     const textMatch=!q||[track.title,track.artist,track.album].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q);
+     const moodMatch=!moodQuery||moods.some(value=>String(value).toLocaleLowerCase("it").includes(moodQuery));
+     const genreMatch=!genreQuery||genres.some(value=>String(value).toLocaleLowerCase("it").includes(genreQuery));
+     entry.hidden=!(textMatch&&moodMatch&&genreMatch);
     editTracks.append(entry);
   });
   editStatus.textContent=editSelectedIds.length+" brani inclusi su "+editPlaylistItems.length+".";
@@ -371,14 +342,19 @@ mappingImport.addEventListener("click",async()=>{
   finally{mappingImport.disabled=!mappingPayload;mappingFile.disabled=false}
 });
 editSelect.addEventListener("change",()=>loadEditPlaylist(editSelect.value));
-document.getElementById("edit-track-search").addEventListener("input",renderEditTracks);
+["edit-track-search","edit-track-mood-filter","edit-track-genre-filter"].forEach(id=>document.getElementById(id).addEventListener("input",renderEditTracks));
 let editSearchTimer=null,editSearchResults=document.getElementById("edit-add-track-results");
-document.getElementById("edit-add-track-search").addEventListener("input",()=>{
-  clearTimeout(editSearchTimer);const q=document.getElementById("edit-add-track-search").value.trim();
-  editSearchResults.hidden=true;editSearchResults.replaceChildren();if(q.length<2)return;
+function runEditArchiveSearch(){
+  clearTimeout(editSearchTimer);
+  const q=document.getElementById("edit-add-track-search").value.trim();
+  const mood=document.getElementById("edit-add-track-mood-filter").value.trim();
+  const genre=document.getElementById("edit-add-track-genre-filter").value.trim();
+  editSearchResults.hidden=true;editSearchResults.replaceChildren();
+  if((q.length>0&&q.length<2&&!mood&&!genre)||(!q&&!mood&&!genre))return;
   editSearchTimer=setTimeout(async()=>{
     try{
-      const result=await workerGet("/api/youtube/library/search?q="+encodeURIComponent(q)+"&limit=40");
+      const params=new URLSearchParams({limit:"40"});if(q.length>=2)params.set("q",q);if(mood)params.set("mood",mood);if(genre)params.set("genre",genre);
+      const result=await workerGet("/api/youtube/library/search?"+params.toString());
       const currentIds=new Set(editPlaylistItems.map(t=>t.id)),unique=new Map();(result.items||[]).forEach(t=>{if(!unique.has(t.id))unique.set(t.id,t)});
       editSearchResults.replaceChildren();
       [...unique.values()].forEach(track=>{
@@ -393,7 +369,8 @@ document.getElementById("edit-add-track-search").addEventListener("input",()=>{
       editSearchResults.hidden=false;
     }catch(error){editStatus.textContent="Ricerca brani non riuscita: "+error.message}
   },250);
-});
+}
+["edit-add-track-search","edit-add-track-mood-filter","edit-add-track-genre-filter"].forEach(id=>document.getElementById(id).addEventListener("input",runEditArchiveSearch));
 document.getElementById("edit-select-all").addEventListener("click",()=>{editSelectedIds=editPlaylistItems.map(t=>t.id);renderEditTracks()});
 document.getElementById("edit-clear-all").addEventListener("click",()=>{editSelectedIds=[];renderEditTracks()});
 document.getElementById("edit-playlist-save").addEventListener("click",async()=>{
@@ -596,12 +573,19 @@ function studioRenderTracks(){
   studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";
   studioCreate.disabled=studioSelection.length===0;
 }
+document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
+document.getElementById("show-edit-playlist").addEventListener("click",()=>{document.getElementById("playlist-tool-create").hidden=true;document.getElementById("playlist-tool-edit").hidden=false;document.getElementById("playlist-tool-mapping").hidden=true;studio.hidden=true;document.getElementById("open-playlist-studio").setAttribute("aria-pressed","false");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","true");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","false")});
+document.getElementById("show-mapping-tools").addEventListener("click",()=>{document.getElementById("playlist-tool-create").hidden=true;document.getElementById("playlist-tool-edit").hidden=true;document.getElementById("playlist-tool-mapping").hidden=false;studio.hidden=true;document.getElementById("open-playlist-studio").setAttribute("aria-pressed","false");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","false");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","true")});
+document.getElementById("close-playlist-studio").addEventListener("click",()=>{studio.hidden=true});
+document.getElementById("studio-group").addEventListener("change",studioRenderValues);document.getElementById("studio-value").addEventListener("change",studioRenderTracks);
 document.getElementById("studio-authorize").addEventListener("click",async()=>{
   const button=document.getElementById("studio-authorize");button.disabled=true;
   try{const result=await workerGet("/api/youtube/connect");if(!result.authorizationUrl)throw new Error("URL di autorizzazione non restituito.");window.location.assign(result.authorizationUrl)}
   catch(error){studioStatus.textContent="Autorizzazione non avviata: "+error.message;button.disabled=false}
 });
 async function openStudio(){
+  document.getElementById("playlist-tool-create").hidden=false;document.getElementById("playlist-tool-edit").hidden=true;document.getElementById("playlist-tool-mapping").hidden=true;
+  document.getElementById("open-playlist-studio").setAttribute("aria-pressed","true");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","false");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","false");
   studio.hidden=false;studioStatus.textContent="Caricamento Favorite songs dall’archivio…";
   try{
     const playlists=await workerGet("/api/youtube/library/playlists");
