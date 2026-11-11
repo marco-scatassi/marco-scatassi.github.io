@@ -638,77 +638,11 @@ async function runLastFmSync(mode){
   }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
   finally{buttons.forEach(button=>button.disabled=false)}
 }
-async function runYouTubeTagsSync(){
-  const button=document.getElementById("header-youtube-sync");
-  const status=document.getElementById("youtube-tags-status");
-  if(button.disabled)return;
-  button.disabled=true;
-  status.textContent="Tag YouTube: caricamento della raccolta Favorite songs…";
-  try{
-    const playlists=await workerGet("/api/youtube/library/playlists");
-    const source=(Array.isArray(playlists.items)?playlists.items:[]).find(playlist=>(playlist.title||"").trim().toLocaleLowerCase("en")==="favorite songs");
-    if(!source)throw new Error("La raccolta Favorite songs non risulta nell'archivio Supabase. Prima sincronizza la raccolta da YouTube.");
-    const tracks=[];
-    let offset=0,hasMore=true;
-    while(hasMore){
-      const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+offset+"&limit=500");
-      const rows=Array.isArray(page.items)?page.items:[];
-      tracks.push(...rows);
-      offset+=rows.length;
-      hasMore=page.hasMore===true&&rows.length>0;
-      status.textContent="Tag YouTube: letti "+tracks.length+" brani dall'archivio…";
-      if(!rows.length)break;
-    }
-    const pending=tracks.filter(track=>track.video_id&&!track.youtube_tags_lookup_at);
-    if(!pending.length){
-      status.textContent="Tag YouTube: tutti i "+tracks.length+" brani con video ID hanno già un tentativo registrato. Nessun dato modificato.";
-      return;
-    }
-    let requested=0,processed=0,withTags=0,withoutTags=0,skipped=0,updatedRows=0,invalid=0;
-    const errors=[];
-    for(let i=0;i<pending.length;i+=30){
-      const batch=pending.slice(i,i+30);
-      status.textContent="Tag YouTube: elaborazione "+Math.min(i+batch.length,pending.length)+" / "+pending.length+"…";
-      const result=await workerPost("/api/youtube/library/enrich-youtube-tags",{
-        sourcePlaylistId:source.id,itemIds:batch.map(track=>track.id),mode:"incremental"
-      });
-      requested+=result.requested||0;
-      processed+=result.processed||0;
-      withTags+=result.withTags||0;
-      withoutTags+=result.withoutTags||0;
-      skipped+=result.skippedPreviously||0;
-      updatedRows+=result.updatedRows||0;
-      invalid+=result.invalidVideoIds||0;
-      if(Array.isArray(result.errors))errors.push(...result.errors);
-    }
-    if(studioSource?.id===source.id){
-      const refreshedTracks=[];
-      let refreshOffset=0,refreshMore=true;
-      while(refreshMore){
-        const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+refreshOffset+"&limit=500");
-        const rows=Array.isArray(page.items)?page.items:[];
-        refreshedTracks.push(...rows);
-        refreshOffset+=rows.length;
-        refreshMore=page.hasMore===true&&rows.length>0;
-        if(!rows.length)break;
-      }
-      studioLibrary=refreshedTracks;
-      if(!studio.hidden)studioRenderValues();
-    }
-    const summary="Tag YouTube aggiornati: "+requested+" richiesti, "+processed+" elaborati, "+withTags+" con tag pubblici, "+withoutTags+" senza tag pubblici, "+skipped+" già interrogati saltati, "+invalid+" ID video non validi, "+updatedRows+" righe archivio aggiornate.";
-    status.textContent=summary+(errors.length?" Errori ("+errors.length+"): "+errors.slice(0,3).join(" · "):"");
-  }catch(error){
-    status.textContent="Aggiornamento tag YouTube interrotto: "+error.message;
-  }finally{
-    button.disabled=false;
-  }
-}
-
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
 studioValue.addEventListener("change",()=>{studioSelection=[];const v=studioValue.value;studioTitle.value=v?v.charAt(0).toLocaleUpperCase("it")+v.slice(1):"";studioRenderTracks()});
-document.getElementById("header-metadata-sync").addEventListener("click",()=>{document.getElementById("playlist-studio").hidden=false;runUnifiedMetadataSync()});
+document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
 document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
 studioCreate.addEventListener("click",async()=>{
   if(!studioSource||!studioSelection.length)return;
