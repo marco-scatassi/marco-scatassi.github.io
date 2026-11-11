@@ -122,13 +122,6 @@
     .music-index-link.is-active::before { content:""; position:absolute; left:3px; top:24%; bottom:24%; width:2px; border-radius:2px; background:linear-gradient(var(--cyan),var(--pink)); }
     .music-index-caption { margin-top:auto; padding-top:18px; color:#94a3b8; font-size:7px; line-height:1.6; letter-spacing:.14em; text-align:center; }
     .music-index-caption strong { color:#087e99; font-size:9px; letter-spacing:.1em; }
-    .neon-guitar-stage { position:relative; isolation:isolate; width:min(100%,340px); min-height:260px; display:flex; align-items:center; justify-content:center; }
-    .neon-guitar { width:190px; height:250px; overflow:visible; color:#0799ad; transform:rotate(28deg); animation:neon-guitar-cycle 9s ease-in-out infinite; }
-    @keyframes neon-guitar-cycle {
-      0%,100% { color:#0799ad; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(0,174,202,.28)); }
-      33% { color:#cf4c8c; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(232,62,145,.25)); }
-      66% { color:#7860bd; filter:drop-shadow(0 0 1px currentColor) drop-shadow(0 0 3px rgba(139,92,246,.24)); }
-    }
     @media(max-width:760px) {
       .music-sections-layout { grid-template-columns:1fr; gap:14px; }
       .music-index { position:sticky; top:82px; z-index:40; min-height:0; flex-direction:row; align-items:center; justify-content:center; gap:8px; padding:8px 10px; border-radius:20px; }
@@ -138,10 +131,7 @@
       .music-index-heading,.music-index-caption { display:none; }
       .music-index-link { width:auto; min-width:92px; min-height:44px; flex-direction:row; gap:7px; padding:7px 10px; font-size:10px; }
       .music-index-link i { font-size:14px; }
-      .neon-guitar-stage { min-height:190px; }
-      .neon-guitar { width:145px; height:190px; }
     }
-    @media(prefers-reduced-motion:reduce) { .neon-guitar { animation:none; } }
     
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
@@ -165,13 +155,13 @@
   <main class="max-w-6xl mx-auto px-6 py-12 md:py-20">
     <div class="music-page-layout">
       <div class="music-page-content space-y-12">
-        <section id="music-intro" class="grid md:grid-cols-[1.15fr_.85fr] gap-8 md:gap-12 items-center scroll-mt-36">
+        <section id="music-intro" class="scroll-mt-36">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
           Personal frequency / 001
         </p>
-        <h1 class="text-5xl md:text-6xl font-black tracking-tight leading-tight">
-          Chitarra <span class="gradient-text">&</span><br>Canzoni
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight whitespace-nowrap">
+          Chitarra <span class="gradient-text">&</span> Canzoni
         </h1>
         <p class="text-slate-600 text-lg mt-6 max-w-xl leading-relaxed">
           Suonare la chitarra acustica è il mio modo per disconnettermi e condividere momenti autentici.
@@ -180,22 +170,6 @@
           <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold">ACOUSTIC</span>
           <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-800 text-xs font-bold">LIVE MOMENTS</span>
           <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">CREATIVITY</span>
-        </div>
-      </div>
-      <div class="reveal flex justify-center md:justify-end">
-        <div class="neon-guitar-stage" role="img" aria-label="Chitarra elettrica stilizzata con luce neon cangiante">
-          <svg class="neon-guitar" viewBox="0 0 220 340" role="img" aria-label="Chitarra stilizzata al neon" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M103 83 L116 69 L128 79 L117 94 L112 119" />
-              <path d="M115 93 L129 106 L143 92 L155 103 L141 119 L128 130" />
-              <path d="M116 118 L91 143 C73 151 56 170 55 194 C54 216 66 228 82 232 C92 235 99 231 106 226 C114 234 124 238 136 234 C159 227 169 204 162 184 C157 169 146 159 130 151 L128 130" />
-              <path d="M102 84 L112 72 L126 85 L116 97 M111 120 L128 137 M113 126 L94 147 L106 159 L127 137" />
-              <path d="M94 147 L106 159 M106 159 L128 137 M101 165 L123 143" />
-              <path d="M91 177 C102 169 117 169 128 178 C138 187 139 202 131 213 C122 224 105 225 94 216 C83 207 82 189 91 177Z" />
-              <circle cx="110" cy="198" r="8" />
-              <path d="M109 86 L110 188 M113 86 L113 188 M117 86 L117 188 M102 84 L96 77 M126 85 L133 78 M103 91 L96 97 M126 94 L134 101 M89 222 L80 244 M137 225 L145 245" />
-            </g>
-          </svg>
         </div>
       </div>
     </section>
@@ -242,7 +216,7 @@
     </section>
 
 
-    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10 scroll-mt-36" hidden aria-labelledby="public-playlists-heading">
+    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10 scroll-mt-28" hidden aria-labelledby="public-playlists-heading">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 grid place-items-center"><i class="fa-solid fa-headphones text-lg"></i></div>
         <div><p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Personal collection</p><h2 id="public-playlists-heading" class="text-2xl font-black">Le mie playlist</h2></div>
@@ -489,14 +463,22 @@
       });
     }
     musicIndexLinks.forEach(link => {
-      link.addEventListener('click', () => setActiveMusicSection(link.dataset.section));
+      link.addEventListener('click', event => {
+        const target = document.getElementById(link.dataset.section);
+        if (!target) return;
+        event.preventDefault();
+        setActiveMusicSection(target.id);
+        const top = target.getBoundingClientRect().top + window.scrollY - 112;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      });
     });
     if ('IntersectionObserver' in window) {
       const sectionObserver = new IntersectionObserver(entries => {
-        const visible = entries.filter(entry => entry.isIntersecting)
-          .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a,b) => Math.abs(a.boundingClientRect.top - 112) - Math.abs(b.boundingClientRect.top - 112))[0];
         if (visible) setActiveMusicSection(visible.target.id);
-      }, { rootMargin:'-22% 0px -58% 0px', threshold:[0,.15,.35,.6] });
+      }, { rootMargin:'-112px 0px -58% 0px', threshold:[0,.05,.15,.3] });
       musicSections.forEach(section => sectionObserver.observe(section));
     }
 
