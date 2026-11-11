@@ -28,7 +28,7 @@ h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spaci
 .playlist-publication strong{display:block;font-size:12px}
 .playlist-publication small{display:block;margin-top:4px;color:#718096;font-size:11px;line-height:1.45}
 
-.detail-panel{margin-top:28px}.detail-title{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:17px}.video-list{display:grid;gap:10px}
+#playlist-head{margin:0 0 15px}.detail-panel{margin-top:28px}.detail-title{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:17px}.video-list{display:grid;gap:10px}
 .video-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:15px;align-items:center;padding:10px;border:1px solid rgba(145,164,186,.15);border-radius:8px;background:rgba(8,11,20,.45)}
 .video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#202b3b}.video-name{margin:0;font-size:14px;line-height:1.45;overflow-wrap:anywhere}.video-sub{margin:6px 0 0;color:var(--muted);font:10px var(--mono)}
 .empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(145,164,186,.3);border-radius:8px;line-height:1.6}.load-more{margin-top:15px}.small-note{color:var(--muted);font-size:11px;line-height:1.6}.diagnostic-result{white-space:pre-wrap;overflow-wrap:anywhere}
@@ -111,8 +111,8 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p><p class="small-note" id="metadata-sync-status" role="status" aria-live="polite">Generi e mood: sincronizzazione non ancora eseguita.</p>
 
-<div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
+
+<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
 <section class="panel" id="playlist-tools" aria-label="Gestisci playlist" style="margin:28px 0 18px;padding:18px;background:#fff">
 <div class="detail-title"><div><div class="eyebrow">// Gestione</div><h2>Gestisci Playlist</h2></div></div><p class="small-note">Scegli lo strumento da utilizzare.</p>
 <div class="search-row" role="group" aria-label="Strumenti gestione playlist">
@@ -140,11 +140,11 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
     <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
     <div class="search-row" style="margin-top:12px"><label for="edit-playlist-description">Descrizione</label><textarea id="edit-playlist-description" class="search-input" maxlength="5000" rows="3"></textarea></div>
     <div class="search-row" style="margin-top:12px"><label for="edit-playlist-privacy">Privacy</label><select id="edit-playlist-privacy" class="search-input"><option value="private">Privata</option><option value="unlisted">Non in elenco</option><option value="public">Pubblica</option></select></div>
-    <div class="search-row" style="margin-top:12px"><input id="edit-track-search" class="search-input" type="search" placeholder="Filtra per titolo, artista o album…"><input id="edit-track-mood-filter" class="search-input" type="search" placeholder="Filtra per mood…"><input id="edit-track-genre-filter" class="search-input" type="search" placeholder="Filtra per genere…"><button class="nav-link" id="edit-select-all" type="button">Seleziona tutti</button><button class="nav-link" id="edit-clear-all" type="button">Deseleziona tutti</button></div>
+    <div class="search-row" style="margin-top:12px"><input id="edit-track-title-filter" class="search-input" type="search" list="edit-title-options" placeholder="Titolo…" autocomplete="off"><input id="edit-track-artist-filter" class="search-input" type="search" list="edit-artist-options" placeholder="Artista…" autocomplete="off"><input id="edit-track-album-filter" class="search-input" type="search" list="edit-album-options" placeholder="Album…" autocomplete="off"><input id="edit-track-mood-filter" class="search-input" type="search" list="edit-mood-options" placeholder="Mood…" autocomplete="off"><input id="edit-track-genre-filter" class="search-input" type="search" list="edit-genre-options" placeholder="Genere…" autocomplete="off"><button class="nav-link" id="edit-select-all" type="button">Seleziona tutti</button><button class="nav-link" id="edit-clear-all" type="button">Deseleziona tutti</button></div>
     <div class="track-picker">
       <label for="edit-add-track-search">Aggiungi brani dall’archivio</label>
-      <div class="search-row"><input id="edit-add-track-search" class="search-input" type="search" placeholder="Cerca titolo, artista o album…" autocomplete="off"><input id="edit-add-track-mood-filter" class="search-input" type="search" placeholder="Mood da cercare…"><input id="edit-add-track-genre-filter" class="search-input" type="search" placeholder="Genere da cercare…"></div>
-      <div id="edit-add-track-results" class="track-picker-results" hidden></div>
+      <div class="search-row"><input id="edit-add-track-title-filter" class="search-input" type="search" list="edit-title-options" placeholder="Titolo…" autocomplete="off"><input id="edit-add-track-artist-filter" class="search-input" type="search" list="edit-artist-options" placeholder="Artista…" autocomplete="off"><input id="edit-add-track-album-filter" class="search-input" type="search" list="edit-album-options" placeholder="Album…" autocomplete="off"><input id="edit-add-track-mood-filter" class="search-input" type="search" list="edit-mood-options" placeholder="Mood…" autocomplete="off"><input id="edit-add-track-genre-filter" class="search-input" type="search" list="edit-genre-options" placeholder="Genere…" autocomplete="off"></div>
+      <datalist id="edit-title-options"></datalist><datalist id="edit-artist-options"></datalist><datalist id="edit-album-options"></datalist><datalist id="edit-mood-options"></datalist><datalist id="edit-genre-options"></datalist><div id="edit-add-track-results" class="track-picker-results" hidden></div>
       <p class="small-note">Puoi combinare titolo, mood e genere per trovare brani nell’intero archivio Supabase.</p>
     </div>
     <div id="edit-playlist-tracks" class="track-check-grid"></div>
@@ -253,9 +253,25 @@ function renderPlaylists(playlists){
 
 let editPlaylistItems=[],editSelectedIds=[],editBusy=false;
 const editSelect=document.getElementById("edit-playlist-select"),editForm=document.getElementById("edit-playlist-form"),editTracks=document.getElementById("edit-playlist-tracks"),editStatus=document.getElementById("edit-playlist-status");
+const editFacetFields=["title","artist","album","mood","genre"];
+const editFacetLists={title:"edit-title-options",artist:"edit-artist-options",album:"edit-album-options",mood:"edit-mood-options",genre:"edit-genre-options"};
+function updateEditFacetOptions(tracks){
+  const values={title:new Set(),artist:new Set(),album:new Set(),mood:new Set(),genre:new Set()};
+  tracks.forEach(track=>{
+    ["title","artist","album"].forEach(field=>{if(track[field])values[field].add(String(track[field]).trim())});
+    ["mood","genre"].forEach(field=>(Array.isArray(track[field])?track[field]:[]).forEach(value=>{if(value)values[field].add(String(value).trim())}));
+  });
+  editFacetFields.forEach(field=>{
+    const list=document.getElementById(editFacetLists[field]),merged=new Set([...Array.from(list.querySelectorAll("option")).map(option=>option.value),...values[field]]);
+    list.replaceChildren(...[...merged].sort((a,b)=>a.localeCompare(b,"it")).slice(0,500).map(value=>{const option=document.createElement("option");option.value=value;return option}));
+  });
+}
+function readEditFilters(prefix){
+  return Object.fromEntries(editFacetFields.map(field=>[field,document.getElementById(prefix+field+"-filter").value.trim().toLocaleLowerCase("it")]));
+}
 function renderEditTracks(){
   editTracks.replaceChildren();
-  const q=document.getElementById("edit-track-search").value.trim().toLocaleLowerCase("it");
+  const filters=readEditFilters("edit-track-");
   editPlaylistItems.forEach(track=>{
     const entry=document.createElement("label");entry.className="track-check-item";
     const check=document.createElement("input");check.type="checkbox";check.checked=editSelectedIds.includes(track.id);check.setAttribute("aria-label","Mantieni "+track.title);
@@ -264,15 +280,15 @@ function renderEditTracks(){
     const title=document.createElement("strong");title.textContent=track.title||"Brano senza titolo";
     const meta=document.createElement("small");meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
     copy.append(title,meta);entry.append(check,copy);
-    const moods=Array.isArray(track.mood)?track.mood:[],genres=Array.isArray(track.genre)?track.genre:[];
-     const textMatch=!q||[track.title,track.artist,track.album].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q);
-     const moodMatch=!moodQuery||moods.some(value=>String(value).toLocaleLowerCase("it").includes(moodQuery));
-     const genreMatch=!genreQuery||genres.some(value=>String(value).toLocaleLowerCase("it").includes(genreQuery));
-     entry.hidden=!(textMatch&&moodMatch&&genreMatch);
-    editTracks.append(entry);
+    const matches=editFacetFields.every(field=>{
+      const value=track[field],values=Array.isArray(value)?value:[value];
+      return !filters[field]||values.some(item=>String(item||"").toLocaleLowerCase("it").includes(filters[field]));
+    });
+    entry.hidden=!matches;editTracks.append(entry);
   });
   editStatus.textContent=editSelectedIds.length+" brani inclusi su "+editPlaylistItems.length+".";
 }
+
 async function loadEditPlaylist(id){
   editForm.hidden=true;if(!id)return;
   const playlist=allPlaylists.find(p=>p.id===id);if(!playlist)return;
@@ -342,19 +358,19 @@ mappingImport.addEventListener("click",async()=>{
   finally{mappingImport.disabled=!mappingPayload;mappingFile.disabled=false}
 });
 editSelect.addEventListener("change",()=>loadEditPlaylist(editSelect.value));
-["edit-track-search","edit-track-mood-filter","edit-track-genre-filter"].forEach(id=>document.getElementById(id).addEventListener("input",renderEditTracks));
+editFacetFields.forEach(field=>document.getElementById("edit-track-"+field+"-filter").addEventListener("input",renderEditTracks));
 let editSearchTimer=null,editSearchResults=document.getElementById("edit-add-track-results");
 function runEditArchiveSearch(){
   clearTimeout(editSearchTimer);
-  const q=document.getElementById("edit-add-track-search").value.trim();
-  const mood=document.getElementById("edit-add-track-mood-filter").value.trim();
-  const genre=document.getElementById("edit-add-track-genre-filter").value.trim();
+  const filters=readEditFilters("edit-add-track-");
   editSearchResults.hidden=true;editSearchResults.replaceChildren();
-  if((q.length>0&&q.length<2&&!mood&&!genre)||(!q&&!mood&&!genre))return;
+  if(!editFacetFields.some(field=>filters[field]))return;
   editSearchTimer=setTimeout(async()=>{
     try{
-      const params=new URLSearchParams({limit:"40"});if(q.length>=2)params.set("q",q);if(mood)params.set("mood",mood);if(genre)params.set("genre",genre);
+      const params=new URLSearchParams({limit:"40"});
+      editFacetFields.forEach(field=>{if(filters[field])params.set(field,document.getElementById("edit-add-track-"+field+"-filter").value.trim())});
       const result=await workerGet("/api/youtube/library/search?"+params.toString());
+      updateEditFacetOptions(result.items||[]);
       const currentIds=new Set(editPlaylistItems.map(t=>t.id)),unique=new Map();(result.items||[]).forEach(t=>{if(!unique.has(t.id))unique.set(t.id,t)});
       editSearchResults.replaceChildren();
       [...unique.values()].forEach(track=>{
@@ -370,7 +386,7 @@ function runEditArchiveSearch(){
     }catch(error){editStatus.textContent="Ricerca brani non riuscita: "+error.message}
   },250);
 }
-["edit-add-track-search","edit-add-track-mood-filter","edit-add-track-genre-filter"].forEach(id=>document.getElementById(id).addEventListener("input",runEditArchiveSearch));
+editFacetFields.forEach(field=>document.getElementById("edit-add-track-"+field+"-filter").addEventListener("input",runEditArchiveSearch));
 document.getElementById("edit-select-all").addEventListener("click",()=>{editSelectedIds=editPlaylistItems.map(t=>t.id);renderEditTracks()});
 document.getElementById("edit-clear-all").addEventListener("click",()=>{editSelectedIds=[];renderEditTracks()});
 document.getElementById("edit-playlist-save").addEventListener("click",async()=>{
