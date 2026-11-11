@@ -105,7 +105,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 
 </style></head>
 <body>
-<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
+<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="nav-link" id="header-youtube-test" type="button">Test tag YouTube (25)</button><button class="nav-link" id="header-youtube-full" type="button">Sync tag YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
@@ -635,6 +635,52 @@ async function runLastFmSync(mode){
   }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
   finally{buttons.forEach(button=>button.disabled=false)}
 }
+async function runYouTubeTagsSync(mode){
+  const full=mode==="full";
+  const buttons=[document.getElementById("header-youtube-test"),document.getElementById("header-youtube-full")];
+  buttons.forEach(button=>button.disabled=true);
+  studio.hidden=false;
+  try{
+    if(!studioSource)await openStudio();
+    if(!studioSource)throw new Error("La raccolta Favorite songs non è disponibile.");
+    const allTracks=[];
+    let offset=0,hasMore=true;
+    while(hasMore){
+      const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+offset+"&limit=500");
+      const rows=Array.isArray(page.items)?page.items:[];
+      allTracks.push(...rows);offset+=rows.length;hasMore=page.hasMore===true&&rows.length>0;
+      if(!rows.length)break;
+    }
+    studioLibrary=allTracks;
+    const pending=allTracks.filter(track=>track.video_id&&(full||!track.youtube_tags_lookup_at));
+    const selected=full?pending:pending.slice(0,25);
+    if(!selected.length){
+      studioStatus.textContent=full?"Nessun brano da interrogare.":"Nessun brano senza un tentativo YouTube precedente.";
+      return;
+    }
+    let requested=0,processed=0,withTags=0,withoutTags=0,skipped=0,updatedRows=0,invalid=0;
+    const errors=[];
+    for(let i=0;i<selected.length;i+=30){
+      const batch=selected.slice(i,i+30);
+      studioStatus.textContent=(full?"Sync YouTube":"Test YouTube")+": elaborazione "+Math.min(i+batch.length,selected.length)+" di "+selected.length+"…";
+      const result=await workerPost("/api/youtube/library/enrich-youtube-tags",{
+        sourcePlaylistId:studioSource.id,itemIds:batch.map(track=>track.id),mode:full?"full":"incremental"
+      });
+      requested+=result.requested||0;processed+=result.processed||0;
+      withTags+=result.withTags||0;withoutTags+=result.withoutTags||0;
+      skipped+=result.skippedPreviously||0;updatedRows+=result.updatedRows||0;
+      invalid+=result.invalidVideoIds||0;
+      if(result.errors?.length)errors.push(...result.errors);
+    }
+    const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset=0&limit=500");
+    studioLibrary=refreshed.items||[];
+    studioSelection=[];studioRenderValues();
+    studioStatus.textContent=(full?"Sync YouTube":"Test YouTube")+" completato: "+requested+" richiesti, "+processed+" elaborati, "+withTags+" con tag, "+withoutTags+" senza tag pubblici, "+skipped+" già interrogati saltati, "+invalid+" ID non validi, "+updatedRows+" righe archivio aggiornate."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+  }catch(error){studioStatus.textContent="Arricchimento YouTube interrotto: "+error.message}
+  finally{buttons.forEach(button=>button.disabled=false)}
+}
+document.getElementById("header-youtube-test").addEventListener("click",()=>runYouTubeTagsSync("test"));
+document.getElementById("header-youtube-full").addEventListener("click",()=>runYouTubeTagsSync("full"));
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
