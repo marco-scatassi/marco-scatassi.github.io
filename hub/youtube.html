@@ -633,9 +633,6 @@ async function runMergedMetadataSync(){
       if(!rows.length)break;
     }
     if(!tracks.length)throw new Error("Favorite songs non contiene brani.");
-    const pending=tracks.filter(track=>track.metadata_source!=="manual"&&(
-      !Array.isArray(track.genre)||!track.genre.length||!Array.isArray(track.mood)||!track.mood.length
-    ));
     let skipLastFm=false,skipFreqBlog=false;
     let processed=0,lastfm=0,freqblog=0,taggedLastFm=0,taggedFreqBlog=0,mergedUpdated=0,manual=0;
     let rateLastFm=false,rateFreqBlog=false,skippedLastFm=0,skippedFreqBlog=0;
