@@ -105,7 +105,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 
 </style></head>
 <body>
-<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="nav-link" id="header-youtube-test" type="button">Test tag YouTube (25)</button><button class="nav-link" id="header-youtube-full" type="button">Sync tag YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
+<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-lastfm" type="button">Sync Last.fm</button><button class="nav-link" id="header-lastfm-full" type="button">Full sync Last.fm</button><button class="nav-link" id="header-youtube-sync" type="button">Aggiorna tag YouTube</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
@@ -115,7 +115,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="search-row"><button class="action" id="load-liked-filters" type="button">Leggi filtri da YouTube Music</button><span class="search-feedback" id="liked-filter-status" role="status" aria-live="polite">Premi il pulsante per interrogare YouTube Music.</span></div>
   <div class="filter-chip-list" id="liked-filter-list"><div class="empty">Filtri non ancora caricati.</div></div>
 </section>
-<p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
+<p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p><p class="small-note" id="youtube-tags-status" role="status" aria-live="polite">Tag YouTube: aggiornamento incrementale non ancora eseguito.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
 <div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
@@ -549,7 +549,8 @@ const studioTitle=document.getElementById("studio-title"),studioTracks=document.
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSource=null,studioLibrary=[],studioSelection=[];
 const studioTagNames={mood:"Mood",genre:"Genere"};
-const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(t=>Array.isArray(t[field])?t[field]:[]).map(v=>String(v).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"it"));
+const studioTagsFor=(track,field)=>{const youtubeField=field==="genre"?"youtube_genre":field==="mood"?"youtube_mood":null;return [...new Set([...(Array.isArray(track[field])?track[field]:[]),...(youtubeField&&Array.isArray(track[youtubeField])?track[youtubeField]:[])].map(value=>String(value).trim()).filter(Boolean))]};
+const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(track=>studioTagsFor(track,field)))].sort((a,b)=>a.localeCompare(b,"it"));
 function studioRenderValues(){
   const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
   const first=document.createElement("option");first.value="";first.textContent=values.length?"Scegli un valore":"Nessun tag assegnato";studioValue.append(first);
@@ -559,7 +560,7 @@ function studioRenderValues(){
 }
 function studioRenderTracks(){
   const field=studioGroup.value,value=studioValue.value;
-  const matches=studioLibrary.filter(t=>!value||(Array.isArray(t[field])?t[field]:[]).includes(value));
+  const matches=studioLibrary.filter(track=>!value||studioTagsFor(track,field).includes(value));
   studioSelection=studioSelection.filter(id=>matches.some(t=>t.id===id));
   studioTracks.replaceChildren();
   const toolbar=document.createElement("div");toolbar.className="search-row";
@@ -640,57 +641,72 @@ async function runLastFmSync(mode){
   }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
   finally{buttons.forEach(button=>button.disabled=false)}
 }
-async function runYouTubeTagsSync(mode){
-  const full=mode==="full";
-  const buttons=[document.getElementById("header-youtube-test"),document.getElementById("header-youtube-full")];
-  buttons.forEach(button=>button.disabled=true);
-  studio.hidden=false;
+async function runYouTubeTagsSync(){
+  const button=document.getElementById("header-youtube-sync");
+  const status=document.getElementById("youtube-tags-status");
+  if(button.disabled)return;
+  button.disabled=true;
+  status.textContent="Tag YouTube: caricamento della raccolta Favorite songs…";
   try{
-    if(!studioSource)await openStudio();
-    if(!studioSource)throw new Error("La raccolta Favorite songs non è disponibile.");
-    const allTracks=[];
+    const playlists=await workerGet("/api/youtube/library/playlists");
+    const source=(Array.isArray(playlists.items)?playlists.items:[]).find(playlist=>(playlist.title||"").trim().toLocaleLowerCase("en")==="favorite songs");
+    if(!source)throw new Error("La raccolta Favorite songs non risulta nell'archivio Supabase. Prima sincronizza la raccolta da YouTube.");
+    const tracks=[];
     let offset=0,hasMore=true;
     while(hasMore){
-      const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+offset+"&limit=500");
+      const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+offset+"&limit=500");
       const rows=Array.isArray(page.items)?page.items:[];
-      allTracks.push(...rows);offset+=rows.length;hasMore=page.hasMore===true&&rows.length>0;
+      tracks.push(...rows);
+      offset+=rows.length;
+      hasMore=page.hasMore===true&&rows.length>0;
+      status.textContent="Tag YouTube: letti "+tracks.length+" brani dall'archivio…";
       if(!rows.length)break;
     }
-    studioLibrary=allTracks;
-    const pending=allTracks.filter(track=>track.video_id&&(full||!track.youtube_tags_lookup_at));
-    const selected=full?pending:pending.slice(0,25);
-    if(!selected.length){
-      studioStatus.textContent=full?"Nessun brano da interrogare.":"Nessun brano senza un tentativo YouTube precedente.";
+    const pending=tracks.filter(track=>track.video_id&&!track.youtube_tags_lookup_at);
+    if(!pending.length){
+      status.textContent="Tag YouTube: tutti i "+tracks.length+" brani con video ID hanno già un tentativo registrato. Nessun dato modificato.";
       return;
     }
     let requested=0,processed=0,withTags=0,withoutTags=0,skipped=0,updatedRows=0,invalid=0;
     const errors=[];
-    for(let i=0;i<selected.length;i+=30){
-      const batch=selected.slice(i,i+30);
-      studioStatus.textContent=(full?"Sync YouTube":"Test YouTube")+": elaborazione "+Math.min(i+batch.length,selected.length)+" di "+selected.length+"…";
+    for(let i=0;i<pending.length;i+=30){
+      const batch=pending.slice(i,i+30);
+      status.textContent="Tag YouTube: elaborazione "+Math.min(i+batch.length,pending.length)+" / "+pending.length+"…";
       const result=await workerPost("/api/youtube/library/enrich-youtube-tags",{
-        sourcePlaylistId:studioSource.id,itemIds:batch.map(track=>track.id),mode:full?"full":"incremental"
+        sourcePlaylistId:source.id,itemIds:batch.map(track=>track.id),mode:"incremental"
       });
-      requested+=result.requested||0;processed+=result.processed||0;
-      withTags+=result.withTags||0;withoutTags+=result.withoutTags||0;
-      skipped+=result.skippedPreviously||0;updatedRows+=result.updatedRows||0;
+      requested+=result.requested||0;
+      processed+=result.processed||0;
+      withTags+=result.withTags||0;
+      withoutTags+=result.withoutTags||0;
+      skipped+=result.skippedPreviously||0;
+      updatedRows+=result.updatedRows||0;
       invalid+=result.invalidVideoIds||0;
-      if(result.errors?.length)errors.push(...result.errors);
+      if(Array.isArray(result.errors))errors.push(...result.errors);
     }
-    const refreshedTracks=[];let refreshOffset=0,refreshMore=true;
-    while(refreshMore){
-      const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+refreshOffset+"&limit=500");
-      const rows=Array.isArray(refreshed.items)?refreshed.items:[];refreshedTracks.push(...rows);refreshOffset+=rows.length;
-      refreshMore=refreshed.hasMore===true&&rows.length>0;if(!rows.length)break;
+    if(studioSource?.id===source.id){
+      const refreshedTracks=[];
+      let refreshOffset=0,refreshMore=true;
+      while(refreshMore){
+        const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+refreshOffset+"&limit=500");
+        const rows=Array.isArray(page.items)?page.items:[];
+        refreshedTracks.push(...rows);
+        refreshOffset+=rows.length;
+        refreshMore=page.hasMore===true&&rows.length>0;
+        if(!rows.length)break;
+      }
+      studioLibrary=refreshedTracks;
+      if(!studio.hidden)studioRenderValues();
     }
-    studioLibrary=refreshedTracks;
-    studioSelection=[];studioRenderValues();
-    studioStatus.textContent=(full?"Sync YouTube":"Test YouTube")+" completato: "+requested+" richiesti, "+processed+" elaborati, "+withTags+" con tag, "+withoutTags+" senza tag pubblici, "+skipped+" già interrogati saltati, "+invalid+" ID non validi, "+updatedRows+" righe archivio aggiornate."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
-  }catch(error){studioStatus.textContent="Arricchimento YouTube interrotto: "+error.message}
-  finally{buttons.forEach(button=>button.disabled=false)}
+    const summary="Tag YouTube aggiornati: "+requested+" richiesti, "+processed+" elaborati, "+withTags+" con tag pubblici, "+withoutTags+" senza tag pubblici, "+skipped+" già interrogati saltati, "+invalid+" ID video non validi, "+updatedRows+" righe archivio aggiornate.";
+    status.textContent=summary+(errors.length?" Errori ("+errors.length+"): "+errors.slice(0,3).join(" · "):"");
+  }catch(error){
+    status.textContent="Aggiornamento tag YouTube interrotto: "+error.message;
+  }finally{
+    button.disabled=false;
+  }
 }
-document.getElementById("header-youtube-test").addEventListener("click",()=>runYouTubeTagsSync("test"));
-document.getElementById("header-youtube-full").addEventListener("click",()=>runYouTubeTagsSync("full"));
+document.getElementById("header-youtube-sync").addEventListener("click",runYouTubeTagsSync);
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
 studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
