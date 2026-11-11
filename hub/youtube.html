@@ -255,17 +255,22 @@ let editPlaylistItems=[],editSelectedIds=[],editBusy=false;
 const editSelect=document.getElementById("edit-playlist-select"),editForm=document.getElementById("edit-playlist-form"),editTracks=document.getElementById("edit-playlist-tracks"),editStatus=document.getElementById("edit-playlist-status");
 const editFacetFields=["title","artist","album","mood","genre"];
 const editFacetLists={title:"edit-title-options",artist:"edit-artist-options",album:"edit-album-options",mood:"edit-mood-options",genre:"edit-genre-options"};
-function updateEditFacetOptions(tracks){
+function updateEditFacetOptions(source){
   const values={title:new Set(),artist:new Set(),album:new Set(),mood:new Set(),genre:new Set()};
-  tracks.forEach(track=>{
-    ["title","artist","album"].forEach(field=>{if(track[field])values[field].add(String(track[field]).trim())});
-    ["mood","genre"].forEach(field=>(Array.isArray(track[field])?track[field]:[]).forEach(value=>{if(value)values[field].add(String(value).trim())}));
-  });
+  if(Array.isArray(source)){
+    source.forEach(track=>{
+      ["title","artist","album"].forEach(field=>{if(track[field])values[field].add(String(track[field]).trim())});
+      ["mood","genre"].forEach(field=>(Array.isArray(track[field])?track[field]:[]).forEach(value=>{if(value)values[field].add(String(value).trim())}));
+    });
+  }else{
+    editFacetFields.forEach(field=>(Array.isArray(source?.[field])?source[field]:[]).forEach(value=>{if(value)values[field].add(String(value).trim())}));
+  }
   editFacetFields.forEach(field=>{
     const list=document.getElementById(editFacetLists[field]),merged=new Set([...Array.from(list.querySelectorAll("option")).map(option=>option.value),...values[field]]);
     list.replaceChildren(...[...merged].sort((a,b)=>a.localeCompare(b,"it")).slice(0,500).map(value=>{const option=document.createElement("option");option.value=value;return option}));
   });
 }
+
 function readEditFilters(prefix){
   return Object.fromEntries(editFacetFields.map(field=>[field,document.getElementById(prefix+field+"-filter").value.trim().toLocaleLowerCase("it")]));
 }
@@ -296,10 +301,12 @@ async function loadEditPlaylist(id){
   try{
     const result=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(id));
     editPlaylistItems=result.items||[];editSelectedIds=editPlaylistItems.map(t=>t.id);
+     updateEditFacetOptions(editPlaylistItems);
+     try{const facetResult=await workerGet("/api/youtube/library/search?facets=1");updateEditFacetOptions(facetResult.facets||{})}catch(error){console.warn("Suggerimenti archivio non disponibili:",error.message)}
     document.getElementById("edit-playlist-title").value=playlist.title||"";
     document.getElementById("edit-playlist-description").value=playlist.description||"";
     document.getElementById("edit-playlist-privacy").value=playlist.privacy_status||"private";
-    document.getElementById("edit-track-search").value="";
+    editFacetFields.forEach(field=>document.getElementById("edit-track-"+field+"-filter").value="");
     editForm.hidden=false;renderEditTracks();
   }catch(error){editStatus.textContent="Impossibile caricare la playlist: "+error.message}
 }
