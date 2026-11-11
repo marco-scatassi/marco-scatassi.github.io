@@ -623,6 +623,10 @@ async function runUnifiedMetadataSync(){
   try{
     if(!studioSource||!studioLibrary.length){await openStudio();studio.hidden=true;}
     if(!studioSource||!studioLibrary.length)throw new Error("Favorite songs non disponibile.");
+    status.textContent="Verifica e ricostruzione dei generi e mood aggregati…";
+    const reconciliation=await workerPost("/api/youtube/library/reconcile-metadata",{});
+    studioLibrary=[];let reconcileOffset=0,reconcileMore=true;
+    while(reconcileMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+reconcileOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);reconcileOffset+=rows.length;reconcileMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
     const pending=studioLibrary.filter(t=>(!Array.isArray(t.genre)||!t.genre.length||!Array.isArray(t.mood)||!t.mood.length)&&(!t.lastfm_lookup_at||!t.freqblog_lookup_at));
     if(!pending.length){status.textContent="Tutti i brani hanno già genere e mood, oppure entrambe le fonti sono già state interrogate. Nessuna chiamata API necessaria.";return}
     let lastfmQueried=0,freqQueried=0,lastfmLimited=false,freqLimited=false;
@@ -649,7 +653,7 @@ async function runUnifiedMetadataSync(){
     while(refreshMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+refreshOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);refreshOffset+=rows.length;refreshMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
     studioSelection=[];studioRenderValues();
     const warning=lastfmLimited?"Limite Last.fm raggiunto: i brani rimanenti sono stati saltati. ":freqLimited?"Limite FreqBlog raggiunto: i brani rimanenti sono stati saltati. ":"";
-    status.textContent=warning+"Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+    status.textContent=warning+"Aggregati verificati su "+(reconciliation.updatedRows||0)+" righe. Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
   }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
   finally{button.disabled=false}
 }
