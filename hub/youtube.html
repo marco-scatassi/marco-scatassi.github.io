@@ -350,10 +350,10 @@ function runEditArchiveSearch(){
   const mood=document.getElementById("edit-add-track-mood-filter").value.trim();
   const genre=document.getElementById("edit-add-track-genre-filter").value.trim();
   editSearchResults.hidden=true;editSearchResults.replaceChildren();
-  if(q.length===1||(!q&&!mood&&!genre))return;
+  if((q.length>0&&q.length<2&&!mood&&!genre)||(!q&&!mood&&!genre))return;
   editSearchTimer=setTimeout(async()=>{
     try{
-      const params=new URLSearchParams({limit:"40"});if(q)params.set("q",q);if(mood)params.set("mood",mood);if(genre)params.set("genre",genre);
+      const params=new URLSearchParams({limit:"40"});if(q.length>=2)params.set("q",q);if(mood)params.set("mood",mood);if(genre)params.set("genre",genre);
       const result=await workerGet("/api/youtube/library/search?"+params.toString());
       const currentIds=new Set(editPlaylistItems.map(t=>t.id)),unique=new Map();(result.items||[]).forEach(t=>{if(!unique.has(t.id))unique.set(t.id,t)});
       editSearchResults.replaceChildren();
