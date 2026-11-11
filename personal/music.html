@@ -105,25 +105,25 @@
       color:#087e99; font-size:13px; font-weight:800;
     }
     .playlist-youtube-link:hover { color:#e83e91; }
-    .music-index { border-color:rgba(255,255,255,.9); box-shadow:0 12px 35px rgba(31,55,85,.08); }
-    .music-index-signal { height:25px; display:flex; align-items:center; gap:3px; padding:0 8px; border-radius:9px; background:linear-gradient(135deg,rgba(0,174,202,.12),rgba(232,62,145,.12)); }
-    .music-index-signal i { display:block; width:3px; border-radius:5px; background:linear-gradient(var(--cyan),var(--pink)); animation:signal 1s ease-in-out infinite alternate; }
-    .music-index-signal i:nth-child(1),.music-index-signal i:nth-child(4) { height:7px; }
-    .music-index-signal i:nth-child(2) { height:16px; animation-delay:.2s; }
-    .music-index-signal i:nth-child(3) { height:11px; animation-delay:.4s; }
-    @keyframes signal { to { transform:scaleY(.55); opacity:.65 } }
-    .music-index-link { position:relative; min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 10px; border-radius:12px; color:#64748b; font-size:12px; font-weight:800; text-decoration:none; transition:background .2s,color .2s,transform .2s; }
+    .music-index { border-color:rgba(255,255,255,.92); box-shadow:0 14px 38px rgba(31,55,85,.11); }
+    .music-index-record { width:76px; height:76px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,rgba(0,174,202,.12),rgba(232,62,145,.12)); }
+    .music-index-record .music-disc { width:66px; box-shadow:0 5px 15px rgba(23,36,58,.2); }
+    .music-index-record .music-disc i { width:22px; height:22px; font-size:10px; }
+    .music-index-divider { width:1px; height:42px; background:linear-gradient(transparent,#cbd5e1,transparent); }
+    .music-index-link { position:relative; min-height:48px; display:flex; align-items:center; justify-content:center; gap:9px; padding:9px 12px; border-radius:999px; color:#64748b; font-size:12px; font-weight:850; text-decoration:none; transition:background .2s,color .2s,transform .2s; white-space:nowrap; }
+    .music-index-link i { font-size:15px; }
     .music-index-link:hover { background:rgba(0,174,202,.08); color:#087e99; transform:translateY(-1px); }
-    .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.13),rgba(232,62,145,.09)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.12); }
-    .music-index-link.is-active::after { content:""; position:absolute; bottom:3px; left:25%; right:25%; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--cyan),var(--pink)); }
-    .music-index-number { color:#94a3b8; font-size:9px; letter-spacing:.08em; }
-    .music-index-link.is-active .music-index-number { color:var(--pink); }
+    .music-index-link.is-active { color:#087e99; background:linear-gradient(110deg,rgba(0,174,202,.14),rgba(232,62,145,.1)); box-shadow:inset 0 0 0 1px rgba(0,174,202,.14); }
+    .music-index-link.is-active::after { content:""; position:absolute; bottom:3px; left:30%; right:30%; height:2px; border-radius:2px; background:linear-gradient(90deg,var(--cyan),var(--pink)); }
+    .music-index-caption { padding:0 13px 0 5px; color:#94a3b8; font-size:8px; line-height:1.55; letter-spacing:.16em; text-align:right; white-space:nowrap; }
+    .music-index-caption strong { color:#087e99; font-size:10px; letter-spacing:.12em; }
     @media(max-width:520px) {
-      .music-index { top:84px; }
-      .music-index-link { flex-direction:column; gap:3px; padding:7px 3px; font-size:10px; }
-      .music-index-number { display:none; }
+      .music-index { top:84px; padding:6px; border-radius:24px; }
+      .music-index-record { width:56px; height:56px; }
+      .music-index-record .music-disc { width:49px; }
+      .music-index-record .music-disc i { width:18px; height:18px; font-size:8px; }
+      .music-index-link { flex-direction:column; gap:3px; min-height:48px; padding:6px 3px; font-size:10px; }
       .music-index-link i { font-size:14px; }
-      .music-index-label { padding:0 8px 2px; }
     }
     @media(prefers-reduced-motion:reduce) { .music-index-signal i { animation:none; } }
 
@@ -147,7 +147,7 @@
   </header>
 
   <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
-    <section id="music-intro" class="grid md:grid-cols-[1.3fr_.7fr] gap-10 items-center scroll-mt-36">
+    <section id="music-intro" class="scroll-mt-36">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
           Personal frequency / 001
@@ -164,29 +164,23 @@
           <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">CREATIVITY</span>
         </div>
       </div>
-      <div class="reveal flex justify-center">
-        <div class="music-disc"><i class="fa-solid fa-music"></i></div>
-      </div>
     </section>
 
-    <nav class="music-index glass rounded-2xl p-2 md:p-3 sticky top-24 z-40" aria-label="Esplora i contenuti musicali">
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <div class="music-index-label px-3 flex items-center gap-2 shrink-0">
-          <span class="music-index-signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span><span class="block text-[9px] font-black tracking-[.22em] text-slate-400 uppercase">Tune in</span><span class="block text-xs font-black text-slate-800">Esplora</span></span>
+    <nav class="music-index glass rounded-full p-2 sticky top-24 z-40" aria-label="Esplora i contenuti musicali">
+      <div class="flex items-center gap-2 md:gap-4">
+        <div class="music-index-record shrink-0" aria-hidden="true">
+          <div class="music-disc"><i class="fa-solid fa-music"></i></div>
         </div>
-        <div class="hidden sm:block w-px h-8 bg-slate-200"></div>
-        <div class="grid grid-cols-3 gap-1 flex-1" role="list">
-          <a class="music-index-link is-active" href="#music-intro" data-section="music-intro">
-            <span class="music-index-number">01</span><i class="fa-solid fa-wave-square" aria-hidden="true"></i><span>La mia musica</span>
-          </a>
-          <a class="music-index-link" href="#featured-video-section" data-section="featured-video-section">
-            <span class="music-index-number">02</span><i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
+        <div class="music-index-divider hidden sm:block"></div>
+        <div class="grid grid-cols-2 gap-1 flex-1 min-w-0">
+          <a class="music-index-link is-active" href="#featured-video-section" data-section="featured-video-section">
+            <i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Live moment</span>
           </a>
           <a class="music-index-link" href="#public-playlists-section" data-section="public-playlists-section" data-playlists-link hidden>
-            <span class="music-index-number">03</span><i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
+            <i class="fa-solid fa-compact-disc" aria-hidden="true"></i><span>Playlist</span>
           </a>
         </div>
+        <span class="music-index-caption hidden md:block">NOW PLAYING<br><strong>MY MUSIC</strong></span>
       </div>
     </nav>
 
