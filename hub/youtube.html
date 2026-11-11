@@ -392,16 +392,29 @@ function runEditArchiveSearch(){
       editFacetFields.forEach(field=>{if(filters[field])params.set(field,document.getElementById("edit-track-"+field+"-filter").value.trim())});
       const result=await workerGet("/api/youtube/library/search?"+params.toString());
       updateEditFacetOptions(result.items||[]);
-      const currentIds=new Set(editPlaylistItems.map(t=>t.id)),unique=new Map();(result.items||[]).forEach(t=>{if(!unique.has(t.id))unique.set(t.id,t)});
-      editSearchResults.replaceChildren();
-      [...unique.values()].forEach(track=>{
-        const row=document.createElement("div");row.className="track-picker-result";
-        const label=document.createElement("span");label.textContent=[track.title,track.artist,track.playlist_title].filter(Boolean).join(" · ");
-        const button=document.createElement("button");button.type="button";button.className="nav-link";
-        const exists=currentIds.has(track.id);button.textContent=exists?"Già presente":"＋ Aggiungi";button.disabled=exists;
-        button.addEventListener("click",()=>{if(!editPlaylistItems.some(t=>t.id===track.id)){editPlaylistItems.push(track);editSelectedIds.push(track.id);currentIds.add(track.id);renderEditTracks();button.textContent="Aggiunto";button.disabled=true}});
-        row.append(label,button);editSearchResults.append(row);
+      const currentIds=new Set(editPlaylistItems.map(t=>t.id));
+      const currentVideoIds=new Set(editPlaylistItems.map(t=>t.video_id).filter(Boolean));
+      const unique=new Map();
+      (result.items||[]).forEach(track=>{
+        const key=track.video_id||track.id;
+        if(!unique.has(key))unique.set(key,track);
       });
+      editSearchResults.replaceChildren();
+      [...unique.values()]
+        .filter(track=>!currentIds.has(track.id)&&(!track.video_id||!currentVideoIds.has(track.video_id)))
+        .forEach(track=>{
+          const row=document.createElement("div");row.className="track-picker-result";
+          const label=document.createElement("span");label.textContent=[track.title,track.artist,track.playlist_title].filter(Boolean).join(" · ");
+          const button=document.createElement("button");button.type="button";button.className="nav-link";button.textContent="＋ Aggiungi";
+          button.addEventListener("click",()=>{
+            const alreadyIncluded=editPlaylistItems.some(t=>t.id===track.id||(track.video_id&&t.video_id===track.video_id));
+            if(!alreadyIncluded){
+              editPlaylistItems.push(track);editSelectedIds.push(track.id);
+              renderEditTracks();runEditArchiveSearch();
+            }
+          });
+          row.append(label,button);editSearchResults.append(row);
+        });
       if(!editSearchResults.childElementCount){const empty=document.createElement("p");empty.className="small-note";empty.textContent="Nessun brano trovato nell’archivio.";editSearchResults.append(empty)}
       editSearchResults.hidden=false;
     }catch(error){editStatus.textContent="Ricerca brani non riuscita: "+error.message}
