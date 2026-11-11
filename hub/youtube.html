@@ -33,6 +33,7 @@ h1{margin:10px 0 8px;font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spaci
 .video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;background:#202b3b}.video-name{margin:0;font-size:14px;line-height:1.45;overflow-wrap:anywhere}.video-sub{margin:6px 0 0;color:var(--muted);font:10px var(--mono)}
 .empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed rgba(145,164,186,.3);border-radius:8px;line-height:1.6}.load-more{margin-top:15px}.small-note{color:var(--muted);font-size:11px;line-height:1.6}.diagnostic-result{white-space:pre-wrap;overflow-wrap:anywhere}
 .search-tools{display:grid;gap:10px;margin:0 0 18px}.search-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.search-input{flex:1 1 260px;min-width:0;min-height:42px;padding:10px 13px;border:1px solid #ccd5df;border-radius:9px;background:#fff;color:#172638;font:14px system-ui,sans-serif;outline:none}.search-input:focus{border-color:#00aeca;box-shadow:0 0 0 3px #00aeca20}.search-results{display:grid;gap:0;margin-top:4px;border-top:1px solid #e5eaf0}.search-result{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;width:100%;padding:10px 0;text-align:left;color:#172638;background:transparent;border:0;border-bottom:1px solid #e5eaf0;border-radius:0;cursor:pointer}.search-result:hover{background:#f5f8fc}.search-result img{width:64px;aspect-ratio:16/9;object-fit:cover;border-radius:6px}.search-result strong{display:block;font-size:13px}.search-result small{display:block;margin-top:4px;color:#718096;font-size:11px}.search-feedback{margin:0;color:#718096;font-size:12px}.search-more{justify-self:start}
+.filter-chip-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.filter-chip{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #d8e1ea;border-radius:999px;background:#f5f8fc;color:#26384a;font-size:12px}.filter-chip[aria-current="true"]{border-color:#00aeca;background:#e8f9fc;color:#07586a}.filter-chip small{font-size:9px;color:#718096;text-transform:uppercase;letter-spacing:.5px}
 @media(max-width:600px){header{padding:13px 18px;align-items:flex-start}.brand{font-size:12px;padding-top:11px}.nav-link{padding:8px 10px;font-size:10px}main{margin-top:30px}.panel{padding:15px}.video-row{grid-template-columns:112px minmax(0,1fr);gap:10px}.video-name{font-size:12px}}
 
 :root{color-scheme:light;--cyan:#00aeca;--pink:#172638;--yellow:#167443;--bg:#f5f8fc;--surface:#fff;--text:#172638;--muted:#718096;--line:#e5eaf0;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--sans:system-ui,sans-serif}
@@ -108,6 +109,12 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
 <p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
+<div class="section-head"><h2>Filtri Video piaciuti</h2><span class="count" id="liked-filter-count">NON CARICATI</span></div>
+<section class="panel" id="liked-filter-panel" aria-label="Filtri della raccolta Video piaciuti">
+  <p class="small-note">Legge da YouTube Music i filtri disponibili nella raccolta dei brani piaciuti. È una verifica in sola lettura: non modifica playlist o preferenze.</p>
+  <div class="search-row"><button class="action" id="load-liked-filters" type="button">Leggi filtri da YouTube Music</button><span class="search-feedback" id="liked-filter-status" role="status" aria-live="polite">Premi il pulsante per interrogare YouTube Music.</span></div>
+  <div class="filter-chip-list" id="liked-filter-list"><div class="empty">Filtri non ancora caricati.</div></div>
+</section>
 <p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p>
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div>
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
@@ -209,6 +216,32 @@ async function workerRequest(path,method="GET",body=null){
 }
 async function workerGet(path){return workerRequest(path,"GET")}
 async function workerPost(path,body=null){return workerRequest(path,"POST",body)}
+const likedFilterButton=document.getElementById("load-liked-filters");
+const likedFilterCount=document.getElementById("liked-filter-count");
+const likedFilterStatus=document.getElementById("liked-filter-status");
+const likedFilterList=document.getElementById("liked-filter-list");
+function renderLikedMusicFilters(result){
+  const filters=Array.isArray(result.filters)?result.filters:[];
+  likedFilterList.replaceChildren();
+  likedFilterCount.textContent=String(filters.length)+" FILTRI";
+  if(!filters.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="YouTube Music non ha restituito filtri riconoscibili per questa raccolta.";likedFilterList.appendChild(empty);return}
+  filters.forEach(filter=>{
+    const chip=document.createElement("span");chip.className="filter-chip";chip.setAttribute("aria-current",filter.selected===true?"true":"false");
+    const label=document.createElement("span");label.textContent=typeof filter.label==="string"?filter.label:"Filtro senza nome";chip.appendChild(label);
+    if(filter.selected===true){const state=document.createElement("small");state.textContent="attivo";chip.appendChild(state)}
+    likedFilterList.appendChild(chip);
+  });
+}
+likedFilterButton.addEventListener("click",async()=>{
+  likedFilterButton.disabled=true;likedFilterButton.textContent="LETTURA…";likedFilterStatus.textContent="Richiesta autenticata a YouTube Music in corso…";likedFilterCount.textContent="CARICAMENTO…";
+  try{
+    const result=await workerGet("/api/youtube/music/liked-filters");
+    renderLikedMusicFilters(result);
+    likedFilterStatus.textContent=result.authenticated===true&&result.readOnly===true?"Risposta autenticata · sola lettura · "+(result.chipCount||0)+" filtri rilevati":"Risposta ricevuta da YouTube Music.";
+  }catch(error){
+    likedFilterCount.textContent="ERRORE";likedFilterList.replaceChildren();const empty=document.createElement("div");empty.className="empty";empty.textContent=error.message;likedFilterList.appendChild(empty);likedFilterStatus.textContent="Impossibile leggere i filtri.";
+  }finally{likedFilterButton.disabled=false;likedFilterButton.textContent="Rileggi filtri da YouTube Music"}
+});
 function bestThumb(snippets){const t=snippets||{};return t.maxres?.url||t.standard?.url||t.high?.url||t.medium?.url||t.default?.url||""}
 function renderPlaylists(playlists){
   grid.replaceChildren();
