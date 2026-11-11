@@ -615,33 +615,45 @@ async function openStudio(){
     document.getElementById("studio-auth-status").textContent="Archivio caricato da Supabase. I permessi YouTube saranno verificati solo quando crei o modifichi una playlist.";
   }catch(error){studioStatus.textContent=error.message}
 }
-async function runLastFmSync(mode){
-  if(!studioSource||!studioLibrary.length)return;
-  const full=mode==="full";
-  const pending=studioLibrary.filter(t=>t.metadata_source!=="manual"&&(full||(!t.lastfm_lookup_at&&t.metadata_source!=="lastfm")));
-  if(!pending.length){studioStatus.textContent=full?"Nessun brano da riprovare (i brani manuali sono esclusi).":"Nessun nuovo brano da interrogare: tutti i tentativi precedenti vengono saltati.";return}
-  const buttons=[document.getElementById("studio-lastfm"),document.getElementById("studio-lastfm-full")].filter(Boolean);
-  buttons.forEach(button=>button.disabled=true);
-  let requested=0,lookedUp=0,enriched=0,noTags=0,skipped=0,notFound=0,errors=[];
+async function runUnifiedMetadataSync(){
+  const button=document.getElementById("header-metadata-sync");
+  const status=document.getElementById("metadata-sync-status");
+  if(button.disabled)return;
+  button.disabled=true;
   try{
-    for(let i=0;i<pending.length;i+=10){
-      const batch=pending.slice(i,i+10);
-      studioStatus.textContent=(full?"Full sync":"Sync incrementale")+": invio "+Math.min(i+batch.length,pending.length)+" di "+pending.length+"…";
-      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode});
-      requested+=result.requested||0;lookedUp+=result.lookedUp||0;enriched+=result.enriched||0;
-      noTags+=result.noUsefulTags||0;skipped+=result.skippedTagged||0;notFound+=result.notFound||0;
+    if(!studioSource||!studioLibrary.length)await openStudio();
+    if(!studioSource||!studioLibrary.length)throw new Error("Favorite songs non disponibile.");
+    const pending=studioLibrary.filter(t=>(!Array.isArray(t.genre)||!t.genre.length||!Array.isArray(t.mood)||!t.mood.length)&&(!t.lastfm_lookup_at||!t.freqblog_lookup_at));
+    if(!pending.length){status.textContent="Tutti i brani hanno già genere e mood, oppure entrambe le fonti sono già state interrogate. Nessuna chiamata API necessaria.";return}
+    let lastfmQueried=0,freqQueried=0,lastfmLimited=false,freqLimited=false;
+    const errors=[];
+    const lastfmPending=pending.filter(t=>!t.lastfm_lookup_at);
+    for(let i=0;i<lastfmPending.length;i+=10){
+      const batch=lastfmPending.slice(i,i+10);
+      status.textContent="Last.fm: "+Math.min(i+batch.length,lastfmPending.length)+" / "+lastfmPending.length+"…";
+      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
+      lastfmQueried+=result.lookedUp||0;
+      if(result.rateLimited){lastfmLimited=true;break}
       if(result.errors?.length)errors.push(...result.errors);
+    }
+    const freqPending=pending.filter(t=>!t.freqblog_lookup_at);
+    if(!lastfmLimited){
+      for(let i=0;i<freqPending.length;i+=30){
+        const batch=freqPending.slice(i,i+30);
+        status.textContent="FreqBlog: "+Math.min(i+batch.length,freqPending.length)+" / "+freqPending.length+"…";
+        const result=await workerPost("/api/youtube/library/enrich-freqblog",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
+        freqQueried+=result.queried||0;
+        if(result.rateLimited){freqLimited=true;break}
+        if(result.errors?.length)errors.push(...result.errors);
+      }
     }
     const refreshed=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id));
     studioLibrary=refreshed.items||[];studioSelection=[];studioRenderValues();
-    studioStatus.textContent=(full?"Full sync":"Sync incrementale")+" completato: "+requested+" richiesti, "+lookedUp+" ricerche concluse, "+enriched+" classificati, "+noTags+" senza tag utili, "+notFound+" non trovati, "+skipped+" già interrogati saltati."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
-  }catch(error){studioStatus.textContent="Classificazione interrotta: "+error.message}
-  finally{buttons.forEach(button=>button.disabled=false)}
+    const warning=lastfmLimited?"Limite Last.fm raggiunto: i brani rimanenti sono stati saltati. ":freqLimited?"Limite FreqBlog raggiunto: i brani rimanenti sono stati saltati. ":"";
+    status.textContent=warning+"Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
+  }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
+  finally{button.disabled=false}
 }
-document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
-document.getElementById("close-playlist-studio").addEventListener("click",()=>studio.hidden=true);
-studioGroup.addEventListener("change",()=>{studioSelection=[];studioRenderValues()});
-studioValue.addEventListener("change",()=>{studioSelection=[];const v=studioValue.value;studioTitle.value=v?v.charAt(0).toLocaleUpperCase("it")+v.slice(1):"";studioRenderTracks()});
 document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
 document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
 studioCreate.addEventListener("click",async()=>{
