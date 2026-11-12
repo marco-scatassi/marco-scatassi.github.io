@@ -190,6 +190,13 @@ La revisione del markup e dei CSS ha rilevato due titoli con `whitespace-nowrap`
 
 Questo controllo è statico: non sostituisce una prova in browser a 360, 390, 768 e 1440 px. Restano da verificare visivamente overflow, dimensioni dei target touch, contrasto, focus da tastiera e stati interattivi. Non è stato eseguito un test browser né un controllo del sito pubblicato.
 
+
+### Primo redesign visivo della Home
+
+La Home è stata aggiornata con una prima modifica visibile: le due scelte Portfolio e Personal sono ora presentate come card chiare con superfici leggere, bordi, ombre fredde e accenti ciano/rosa distinti. Sono state aggiunte brevi descrizioni delle destinazioni, rivista la spaziatura tra le card e rimossa la forzatura del titolo principale su una sola riga. Sono presenti adattamenti specifici per viewport molto stretti e il rispetto di `prefers-reduced-motion` anche per l'hover delle card.
+
+La metafora dei chip USB e l'animazione di inserimento sono state mantenute. La modifica è stata verificata rileggendo il file su GitHub; non è stato eseguito un test in browser né una verifica visuale del sito pubblicato.
+
 ## Metodo di modifica
 
 Per ogni intervento grafico o funzionale frontend:
