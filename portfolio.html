@@ -1683,33 +1683,60 @@
   let transition;
   try { transition = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) {}
   if (!transition || transition.target !== location.pathname.split('/').pop()) return;
-  const target = document.querySelector('.hub-chip-destination .hub-chip');
+
   const wrapper = document.querySelector('.hub-chip-destination');
-  if (!target || !wrapper) { sessionStorage.removeItem(key); document.documentElement.classList.remove('hub-chip-arrival-pending'); return; }
-  const finish = () => {
-    wrapper.style.visibility = '';
+  const target = wrapper && wrapper.querySelector('.hub-chip');
+  const clear = () => {
+    if (wrapper) wrapper.style.visibility = '';
     document.documentElement.classList.remove('hub-chip-arrival-pending');
-    sessionStorage.removeItem(key);
+    try { sessionStorage.removeItem(key); } catch (_) {}
   };
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
+  if (!target || !wrapper) { clear(); return; }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      !Number.isFinite(transition.left) || !Number.isFinite(transition.top) ||
+      !Number.isFinite(transition.width) || !Number.isFinite(transition.height) ||
+      transition.width <= 0 || transition.height <= 0 ||
+      typeof target.animate !== 'function') {
+    clear();
+    return;
+  }
+
+  // Misurare il punto finale prima di nasconderlo e animare un clone indipendente.
   const destination = target.getBoundingClientRect();
   const flight = target.cloneNode(true);
   flight.classList.add('hub-chip-arrival-flight');
-  Object.assign(flight.style, { left: transition.left+'px', top: transition.top+'px', width: transition.width+'px', height: transition.height+'px' });
+  flight.setAttribute('aria-hidden', 'true');
+  Object.assign(flight.style, {
+    left: transition.left + 'px',
+    top: transition.top + 'px',
+    width: transition.width + 'px',
+    height: transition.height + 'px',
+    boxSizing: 'border-box',
+    transformOrigin: 'top left'
+  });
   document.body.appendChild(flight);
   wrapper.style.visibility = 'hidden';
+
   const dx = destination.left - transition.left;
   const dy = destination.top - transition.top;
   const sx = destination.width / transition.width;
   const sy = destination.height / transition.height;
-  const animation = flight.animate([
-    { transform:'translate3d(0,0,0) scale(1)', opacity:1 },
-    { transform:`translate3d(${dx*.58}px,${dy*.58-24}px,0) scale(${1+(sx-1)*.58},${1+(sy-1)*.58})`, opacity:1, offset:.62 },
-    { transform:`translate3d(${dx}px,${dy}px,0) scale(${sx},${sy})`, opacity:1 }
-  ], { duration:820, easing:'cubic-bezier(.2,.75,.2,1)', fill:'forwards' });
-  animation.onfinish = () => { flight.remove(); finish(); };
-  animation.oncancel = () => { flight.remove(); finish(); };
-  window.addEventListener('pagehide', () => { flight.remove(); }, { once:true });
+
+  try {
+    const animation = flight.animate([
+      { transform: 'translate3d(0,0,0) scale(1,1)', opacity: 1, offset: 0 },
+      { transform: `translate3d(${dx * .58}px,${dy * .58 - 18}px,0) scale(${1 + (sx - 1) * .58},${1 + (sy - 1) * .58})`, opacity: 1, offset: .58 },
+      { transform: `translate3d(${dx}px,${dy}px,0) scale(${sx},${sy})`, opacity: 1, offset: 1 }
+    ], { duration: 900, easing: 'cubic-bezier(.2,.75,.2,1)', fill: 'forwards' });
+
+    animation.onfinish = () => { flight.remove(); clear(); };
+    animation.oncancel = () => { flight.remove(); clear(); };
+    window.addEventListener('pagehide', () => flight.remove(), { once: true });
+  } catch (_) {
+    flight.remove();
+    clear();
+  }
 })();
 </script>
 
