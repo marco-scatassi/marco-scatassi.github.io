@@ -199,6 +199,12 @@ L'interazione è affidata a due pulsanti semanticamente accessibili, con feedbac
 
 La verifica eseguita in questa modifica è statica sul markup e sul CSS aggiornati in GitHub. Non è stato eseguito un test browser, una verifica visuale a 360/390/768/1440 px né un controllo del sito pubblicato. La precedente impostazione a card è superata da questo redesign.
 
+### Transizione persistente dei chip tra le pagine
+
+I chip della Home sono mantenuti come elementi visivi nelle hero di Portfolio e Personal. Al clic, la Home salva in `sessionStorage` la destinazione e la posizione/dimensione del chip selezionato; la pagina di destinazione ricrea il chip nella posizione finale prevista e anima un clone dalla geometria iniziale fino a quel punto. Il chip statico resta quindi presente nella pagina dopo la transizione. Il trasferimento è limitato alla navigazione avviata dalla Home, non usa dipendenze esterne e rispetta `prefers-reduced-motion` mostrando direttamente il chip nella destinazione.
+
+La verifica eseguita è statica: sono stati controllati i selettori, gli elementi di destinazione, la persistenza del dato di transizione e i percorsi di fallback. Non è stata eseguita una prova browser; restano da verificare visivamente il punto di arrivo e la fluidità su desktop e mobile.
+
 ## Metodo di modifica
 
 Per ogni intervento grafico o funzionale frontend:
