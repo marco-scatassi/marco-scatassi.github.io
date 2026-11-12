@@ -349,8 +349,8 @@
     
     .hub-chip-destination { --hub-accent:var(--ph-color-cyan); position:relative; display:inline-flex; align-items:center; justify-content:center; width:clamp(76px,8vw,104px); height:clamp(124px,13vw,158px); flex:0 0 auto; filter:drop-shadow(0 16px 16px rgba(23,40,59,.16)); }
     .hub-chip-destination.personal { --hub-accent:var(--ph-color-pink); }
-    .passion-title-wrap { position:relative; display:inline-block; white-space:nowrap; padding-right:clamp(76px,9vw,108px); }
-    .passion-title-wrap .title-chip { position:absolute; left:calc(100% - clamp(76px,9vw,108px) + clamp(8px,1.8vw,20px)); top:50%; width:clamp(54px,6vw,78px); height:clamp(90px,10vw,130px); transform:translateY(-50%) rotate(18deg); transform-origin:center; z-index:4; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
+    .passion-title-wrap { position:relative; display:inline-block; white-space:nowrap; padding-right:clamp(104px,13vw,140px); }
+    .passion-title-wrap .title-chip { position:absolute; left:calc(100% + 8px); top:50%; width:clamp(58px,6vw,78px); height:clamp(92px,9.6vw,124px); transform:translateY(-50%) rotate(18deg); transform-origin:center; z-index:4; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
     .passion-title-wrap .title-chip .hub-usb-drive { inset:13px 6px 0; }
     .passion-title-wrap .title-chip .hub-usb-drive::before { top:-13px; width:26px; height:14px; }
     .passion-title-wrap .title-chip .hub-usb-drive::after { top:-10px; left:calc(50% - 4px); width:8px; height:9px; }
@@ -421,7 +421,7 @@
             </div>
 
             <h1 class="hero-title text-5xl md:text-7xl font-black tracking-tight leading-tight reveal">
-                Esplora le mie<br class="hidden sm:block"> <span class="passion-title-wrap">Passioni<div class="hub-chip-destination personal title-chip" aria-label="Personal space chip"><span class="hub-chip personal" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-compass"></i></span><span class="hub-chip-code">PH / 02</span><span class="hub-usb-led"></span></span></span></span></div></span>
+                Esplora le mie<br class="hidden sm:block"> <span class="passion-title-wrap">Passioni<span class="hub-chip-destination personal title-chip" aria-label="Personal space chip"><span class="hub-chip personal" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-compass"></i></span><span class="hub-chip-code">PH / 02</span><span class="hub-usb-led"></span></span></span></span></div></span>
             </h1>
 
             <p class="text-base md:text-xl text-slate-500 max-w-2xl mx-auto mt-8 leading-relaxed reveal">
@@ -674,7 +674,6 @@
   let transition;
   try { transition = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) {}
   if (!transition || transition.target !== location.pathname.split('/').pop()) return;
-
   const wrapper = document.querySelector('.hub-chip-destination');
   const target = wrapper && wrapper.querySelector('.hub-chip');
   const clear = () => {
@@ -683,64 +682,40 @@
     try { sessionStorage.removeItem(key); } catch (_) {}
   };
   if (!target || !wrapper) { clear(); return; }
-
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      !Number.isFinite(transition.left) || !Number.isFinite(transition.top) ||
-      !Number.isFinite(transition.width) || !Number.isFinite(transition.height) ||
-      transition.width <= 0 || transition.height <= 0 ||
-      typeof target.animate !== 'function') {
-    clear();
-    return;
-  }
+      ![transition.left, transition.top, transition.width, transition.height].every(Number.isFinite) ||
+      transition.width <= 0 || transition.height <= 0 || typeof target.animate !== 'function') { clear(); return; }
 
-  // Misurare il punto finale prima di nasconderlo e animare un clone indipendente.
-  const destination = target.getBoundingClientRect();
-  const flight = target.cloneNode(true);
+  const destination = wrapper.getBoundingClientRect();
+  const flight = wrapper.cloneNode(true);
   flight.classList.add('hub-chip-arrival-flight');
   flight.setAttribute('aria-hidden', 'true');
-  const targetStyle = getComputedStyle(target);
+  const accent = wrapper.classList.contains('personal') ? '#d93691' : '#078fae';
   Object.assign(flight.style, {
-    left: transition.left + 'px',
-    top: transition.top + 'px',
-    width: transition.width + 'px',
-    height: transition.height + 'px',
-    boxSizing: 'border-box',
-    transformOrigin: 'center center',
-    // Il clone vive sotto document.body: copia le variabili ereditate dal chip
-    // originale per evitare cambi di colore durante l'ultimo fotogramma.
-    '--accent': targetStyle.getPropertyValue('--accent').trim(),
-    color: targetStyle.color
+    position:'fixed', left:transition.left+'px', top:transition.top+'px',
+    width:transition.width+'px', height:transition.height+'px', margin:'0',
+    boxSizing:'border-box', transformOrigin:'center center',
+    '--hub-accent':accent, '--accent':accent, color:accent
   });
+  const flightChip = flight.querySelector('.hub-chip');
+  if (flightChip) flightChip.style.setProperty('--accent',accent);
   document.body.appendChild(flight);
   wrapper.style.visibility = 'hidden';
 
-  const startCenterX = transition.left + transition.width / 2;
-  const startCenterY = transition.top + transition.height / 2;
-  // getBoundingClientRect restituisce il centro corretto anche per il chip
-  // inclinato in Personal: il clone termina sullo stesso centro visivo.
-  const endCenterX = destination.left + destination.width / 2;
-  const endCenterY = destination.top + destination.height / 2;
-  const dx = endCenterX - startCenterX;
-  const dy = endCenterY - startCenterY;
-  // Usa le dimensioni di layout, non il bounding box già espanso dalla rotazione.
-  const sx = wrapper.offsetWidth / transition.width;
-  const sy = wrapper.offsetHeight / transition.height;
-  const endRotation = wrapper.classList.contains('title-chip') ? 18 : 0;
-
+  const dx = destination.left + destination.width/2 - (transition.left + transition.width/2);
+  const dy = destination.top + destination.height/2 - (transition.top + transition.height/2);
+  const scale = Math.min(destination.width/transition.width,destination.height/transition.height);
+  const rotation = wrapper.classList.contains('title-chip') ? 18 : 0;
   try {
     const animation = flight.animate([
-      { transform: 'translate3d(0,0,0) rotate(0deg) scale(1,1)', opacity: 1, offset: 0 },
-      { transform: `translate3d(${dx * .52}px,${dy * .52}px,0) rotate(${endRotation * .52}deg) scale(${1 + (sx - 1) * .52},${1 + (sy - 1) * .52})`, opacity: 1, offset: .52 },
-      { transform: `translate3d(${dx}px,${dy}px,0) rotate(${endRotation}deg) scale(${sx},${sy})`, opacity: 1, offset: 1 }
-    ], { duration: 1150, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
-
-    animation.onfinish = () => { flight.remove(); clear(); };
-    animation.oncancel = () => { flight.remove(); clear(); };
-    window.addEventListener('pagehide', () => flight.remove(), { once: true });
-  } catch (_) {
-    flight.remove();
-    clear();
-  }
+      {transform:'translate3d(0,0,0) rotate(0deg) scale(1)',offset:0},
+      {transform:`translate3d(${dx*.5}px,${dy*.5}px,0) rotate(${rotation*.5}deg) scale(${1+(scale-1)*.5})`,offset:.5},
+      {transform:`translate3d(${dx}px,${dy}px,0) rotate(${rotation}deg) scale(${scale})`,offset:1}
+    ],{duration:2200,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+    animation.onfinish=()=>{flight.remove();clear();};
+    animation.oncancel=()=>{flight.remove();clear();};
+    window.addEventListener('pagehide',()=>flight.remove(),{once:true});
+  } catch (_) { flight.remove(); clear(); }
 })();
 </script>
 
