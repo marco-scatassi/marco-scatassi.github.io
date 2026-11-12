@@ -151,29 +151,19 @@
             color: var(--dark);
         }
 
-        .hub-return {
-            display: grid;
-            place-items: center;
-            width: 42px;
-            height: 42px;
-            border: 1px solid rgba(8,127,156,.28);
-            border-radius: 9px;
-            color: var(--cyan);
-            background: rgba(8,127,156,.06);
-            font-size: 20px;
-            transition: color .2s, background .2s, border-color .2s, transform .2s;
+        .nav-link {
+            transition: color .25s, transform .25s;
         }
 
-        .hub-return:hover {
-            color: #fff;
-            background: var(--cyan);
-            border-color: var(--cyan);
-            transform: translateY(-2px);
+        .nav-link:hover {
+            color: var(--pink);
+            transform: translateX(-3px);
         }
 
-        .hub-return:focus-visible {
+        .nav-link:focus-visible {
             outline: 2px solid var(--cyan);
             outline-offset: 4px;
+            border-radius: 3px;
         }
 
         .logo span {
@@ -911,8 +901,12 @@
             Marco Scatassi
         </a>
 
-        <a class="hub-return" href="index.html" aria-label="Torna alla selezione dei chip" title="Torna alla selezione dei chip">
+        <a href="index.html"
+           class="nav-link text-xs sm:text-sm font-bold text-cyan-700 flex items-center gap-2"
+           aria-label="Torna alla selezione dei chip">
             <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
+            <span class="hidden sm:inline">Selezione personaggio</span>
+            <span class="sm:hidden">Selezione</span>
         </a>
     </div>
 </header>
@@ -941,9 +935,9 @@
         </p>
 
         <div class="hero-buttons">
-            <a href="#projects" class="btn btn-primary">
-                <i class="fa-solid fa-terminal"></i>
-                Esplora Progetti
+            <a href="#skills" class="btn btn-primary">
+                <i class="fa-solid fa-microchip"></i>
+                Tech &amp; Certs
             </a>
 
             <a href="../assets/CV_Marco_Scatassi.pdf" download class="btn btn-secondary">
@@ -1060,13 +1054,133 @@
     </div>
 </section>
 
+<!-- SKILLS -->
+
+<section id="skills" class="section section-alt">
+    <div class="container">
+
+        <div class="section-heading center">
+            <h2>Tech Stack & Hardware</h2>
+            <p>// Moduli di competenza caricati nel sistema</p>
+        </div>
+
+        <div class="skills-grid">
+
+            <div class="card skill-card reveal">
+                <h3><i class="fa-solid fa-cloud"></i> Cloud & Infrastructure</h3>
+                <div class="tags">
+                    <span class="tag">Snowflake (Admin & DW)</span>
+                    <span class="tag">Terraform (IaC)</span>
+                    <span class="tag">GitLab CI/CD</span>
+                    <span class="tag">Cloud Architecture</span>
+                </div>
+            </div>
+
+            <div class="card skill-card card-pink reveal">
+                <h3><i class="fa-solid fa-database"></i> Data Engineering</h3>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">SQL</span>
+                    <span class="tag">dbt</span>
+                    <span class="tag">Databricks</span>
+                    <span class="tag">Streamlit</span>
+                    <span class="tag">ETL & Loading</span>
+                </div>
+            </div>
+
+            <div class="card skill-card card-yellow reveal">
+                <h3><i class="fa-solid fa-brain"></i> Data Science & Gov</h3>
+                <div class="tags">
+                    <span class="tag">Machine Learning</span>
+                    <span class="tag">RBAC & Security</span>
+                    <span class="tag">Performance Tuning</span>
+                    <span class="tag">Statistical Modeling</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+
+<section id="certifications" class="section">
+    <div class="container">
+
+        <div class="section-heading center">
+            <h2>Verified Neural Certs</h2>
+            <p>// Credenziali di sicurezza ufficiali</p>
+        </div>
+
+        <div class="cert-grid">
+
+            <div class="card cert-card reveal">
+                <div class="cert-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3>SnowPro Advanced: Administrator</h3>
+                    <span class="cert-date">// Snowflake • 16/04/2026</span>
+                    <p>
+                        Amministrazione avanzata di account Snowflake,
+                        sicurezza, governance e ottimizzazione.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card cert-card card-pink reveal">
+                <div class="cert-icon" style="color:var(--pink);background:rgba(217,54,112,.08)">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3>SnowPro Core Certification</h3>
+                    <span class="cert-date">// Snowflake • 09/02/2024</span>
+                    <p>
+                        Competenza nella progettazione e gestione
+                        di soluzioni sicure e scalabili.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card cert-card card-yellow reveal">
+                <div class="cert-icon" style="color:var(--yellow);background:rgba(168,121,0,.08)">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3>dbt Analytics Engineering</h3>
+                    <span class="cert-date">// dbt Labs • 04/04/2024</span>
+                    <p>
+                        Capacità di costruire, testare e mantenere
+                        modelli di trasformazione dati.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card cert-card reveal">
+                <div class="cert-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3>Databricks Fundamentals</h3>
+                    <span class="cert-date">// Databricks • 18/06/2024</span>
+                    <p>
+                        Comprensione dei concetti chiave della
+                        Databricks Data Intelligence Platform.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <!-- PROJECTS -->
 
 <section id="projects" class="section">
     <div class="container">
 
         <div class="section-heading">
-            <h2>Active Projects</h2>
+            <h2>University Projects</h2>
             <p>// Repository GitHub Ufficiali</p>
         </div>
 
@@ -1214,125 +1328,6 @@
     </div>
 </section>
 
-<!-- SKILLS -->
-
-<section id="skills" class="section section-alt">
-    <div class="container">
-
-        <div class="section-heading center">
-            <h2>Tech Stack & Hardware</h2>
-            <p>// Moduli di competenza caricati nel sistema</p>
-        </div>
-
-        <div class="skills-grid">
-
-            <div class="card skill-card reveal">
-                <h3><i class="fa-solid fa-cloud"></i> Cloud & Infrastructure</h3>
-                <div class="tags">
-                    <span class="tag">Snowflake (Admin & DW)</span>
-                    <span class="tag">Terraform (IaC)</span>
-                    <span class="tag">GitLab CI/CD</span>
-                    <span class="tag">Cloud Architecture</span>
-                </div>
-            </div>
-
-            <div class="card skill-card card-pink reveal">
-                <h3><i class="fa-solid fa-database"></i> Data Engineering</h3>
-                <div class="tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">SQL</span>
-                    <span class="tag">dbt</span>
-                    <span class="tag">Databricks</span>
-                    <span class="tag">Streamlit</span>
-                    <span class="tag">ETL & Loading</span>
-                </div>
-            </div>
-
-            <div class="card skill-card card-yellow reveal">
-                <h3><i class="fa-solid fa-brain"></i> Data Science & Gov</h3>
-                <div class="tags">
-                    <span class="tag">Machine Learning</span>
-                    <span class="tag">RBAC & Security</span>
-                    <span class="tag">Performance Tuning</span>
-                    <span class="tag">Statistical Modeling</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- CERTIFICATIONS -->
-
-<section id="certifications" class="section">
-    <div class="container">
-
-        <div class="section-heading center">
-            <h2>Verified Neural Certs</h2>
-            <p>// Credenziali di sicurezza ufficiali</p>
-        </div>
-
-        <div class="cert-grid">
-
-            <div class="card cert-card reveal">
-                <div class="cert-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h3>SnowPro Advanced: Administrator</h3>
-                    <span class="cert-date">// Snowflake • 16/04/2026</span>
-                    <p>
-                        Amministrazione avanzata di account Snowflake,
-                        sicurezza, governance e ottimizzazione.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card cert-card card-pink reveal">
-                <div class="cert-icon" style="color:var(--pink);background:rgba(217,54,112,.08)">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h3>SnowPro Core Certification</h3>
-                    <span class="cert-date">// Snowflake • 09/02/2024</span>
-                    <p>
-                        Competenza nella progettazione e gestione
-                        di soluzioni sicure e scalabili.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card cert-card card-yellow reveal">
-                <div class="cert-icon" style="color:var(--yellow);background:rgba(168,121,0,.08)">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h3>dbt Analytics Engineering</h3>
-                    <span class="cert-date">// dbt Labs • 04/04/2024</span>
-                    <p>
-                        Capacità di costruire, testare e mantenere
-                        modelli di trasformazione dati.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card cert-card reveal">
-                <div class="cert-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h3>Databricks Fundamentals</h3>
-                    <span class="cert-date">// Databricks • 18/06/2024</span>
-                    <p>
-                        Comprensione dei concetti chiave della
-                        Databricks Data Intelligence Platform.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
 
 <!-- CONTACT -->
 
