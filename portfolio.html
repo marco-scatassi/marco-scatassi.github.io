@@ -151,6 +151,39 @@
             color: var(--dark);
         }
 
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border: 1px solid rgba(8,127,156,.28);
+            border-radius: 999px;
+            color: var(--cyan);
+            background: rgba(8,127,156,.06);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            transition: color .2s, background .2s, border-color .2s, transform .2s;
+        }
+
+        .section-chip:hover {
+            color: #fff;
+            background: var(--cyan);
+            border-color: var(--cyan);
+            transform: translateY(-1px);
+        }
+
+        .section-chip:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 3px;
+        }
+
         .nav-link {
             transition: color .25s, transform .25s;
         }
@@ -901,13 +934,16 @@
             Marco Scatassi
         </a>
 
-        <a href="index.html"
-           class="nav-link text-xs sm:text-sm font-bold text-cyan-700 flex items-center gap-2"
-           aria-label="Torna alla selezione dei chip">
-            <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
-            <span class="hidden sm:inline">Selezione personaggio</span>
-            <span class="sm:hidden">Selezione</span>
-        </a>
+        <div class="nav-actions">
+            <a href="index.html"
+               class="nav-link text-xs sm:text-sm font-bold text-cyan-700 flex items-center gap-2"
+               aria-label="Torna alla selezione dei chip">
+                <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
+                <span class="hidden sm:inline">Selezione personaggio</span>
+                <span class="sm:hidden">Selezione</span>
+            </a>
+            <a href="personal.html" class="section-chip" aria-label="Vai allo spazio personale">Personal</a>
+        </div>
     </div>
 </header>
 
@@ -945,9 +981,9 @@
                 Scarica CV
             </a>
 
-            <a href="personal.html" class="btn btn-neutral">
-                <i class="fa-solid fa-leaf"></i>
-                Spazio Personale
+            <a href="#contact" class="btn btn-neutral">
+                <i class="fa-solid fa-envelope"></i>
+                Contattami
             </a>
         </div>
     </div>
