@@ -1,0 +1,87 @@
+/* Personal Hub — shared light cyberpunk design system
+   Shared tokens and opt-in primitives. Page-specific layouts stay local. */
+:root {
+  color-scheme: light;
+
+  /* Core surfaces */
+  --ph-color-bg: #f4f7fb;
+  --ph-color-surface: #ffffff;
+  --ph-color-surface-muted: #edf2f7;
+  --ph-color-ink: #17283b;
+  --ph-color-text: #334155;
+  --ph-color-muted: #526174;
+  --ph-color-subtle: #64748b;
+  --ph-color-line: rgba(23, 40, 59, .14);
+
+  /* Functional accents: use these for text, links and controls */
+  --ph-color-cyan: #087f9c;
+  --ph-color-pink: #d93670;
+  --ph-color-yellow: #a87900;
+
+  /* Luminous accents: reserve for gradients, glow and decoration */
+  --ph-color-cyan-glow: #00aeca;
+  --ph-color-pink-glow: #e83e91;
+  --ph-color-yellow-glow: #f4c542;
+
+  /* Gradient and depth */
+  --ph-gradient-accent: linear-gradient(110deg, var(--ph-color-cyan), var(--ph-color-pink));
+  --ph-shadow-card: 0 10px 35px rgba(23, 40, 59, .06);
+  --ph-shadow-card-hover: 0 20px 48px rgba(23, 40, 59, .11);
+  --ph-shadow-cyan: 0 8px 28px rgba(8, 127, 156, .14);
+  --ph-shadow-pink: 0 8px 28px rgba(217, 54, 112, .13);
+
+  /* Shape, spacing and motion */
+  --ph-radius-sm: 8px;
+  --ph-radius-md: 14px;
+  --ph-radius-lg: 22px;
+  --ph-radius-pill: 999px;
+  --ph-content-width: 1152px;
+  --ph-transition-fast: 180ms ease;
+  --ph-transition-base: 260ms ease;
+}
+
+/* Opt-in primitives: existing page styles are not overridden. */
+.ph-surface {
+  color: var(--ph-color-ink);
+  background: var(--ph-color-surface);
+  border: 1px solid var(--ph-color-line);
+  border-radius: var(--ph-radius-lg);
+  box-shadow: var(--ph-shadow-card);
+}
+
+.ph-glass {
+  color: var(--ph-color-ink);
+  background: rgba(255, 255, 255, .82);
+  border: 1px solid rgba(255, 255, 255, .92);
+  border-radius: var(--ph-radius-lg);
+  box-shadow: var(--ph-shadow-card);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.ph-gradient-text {
+  background: var(--ph-gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ph-focusable:focus-visible,
+.ph-focusable a:focus-visible,
+.ph-focusable button:focus-visible {
+  outline: 3px solid var(--ph-color-cyan);
+  outline-offset: 3px;
+}
+
+.ph-interactive {
+  transition:
+    transform var(--ph-transition-base),
+    box-shadow var(--ph-transition-base),
+    border-color var(--ph-transition-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-interactive {
+    transition: none;
+  }
+}
