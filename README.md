@@ -175,6 +175,15 @@ L'ordine consigliato evita di investire tempo in decorazioni prima di aver siste
 
 Non aggiungere effetti per aumentare artificialmente la complessità visiva. La qualità deve emergere da composizione, contenuti, tipografia e interazioni.
 
+### Stato della migrazione
+
+La prima migrazione dei token è stata completata per `index.html` e `portfolio.html`:
+- le variabili locali di palette ora fanno riferimento ai token `--ph-*`;
+- i colori estesi di Tailwind nel Portfolio usano le stesse variabili;
+- gli shadow cyan e pink del Portfolio puntano alle ombre condivise.
+
+Le pagine mantengono ancora componenti e regole locali per layout e identità. La migrazione non è conclusa per Personal, Music, Nature e Journal. Ogni pagina va verificata visivamente prima di ulteriori sostituzioni.
+
 ## Metodo di modifica
 
 Per ogni intervento grafico o funzionale frontend:
