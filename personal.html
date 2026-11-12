@@ -12,11 +12,11 @@
             theme: {
                 extend: {
                     colors: {
-                        cyberBg: '#f5f8fc',
-                        cyberCyan: '#00aeca',
-                        cyberPink: '#e83e91',
-                        cyberYellow: '#f4c542',
-                        cyberDark: '#172638'
+                        cyberBg: 'var(--ph-color-bg)',
+                        cyberCyan: 'var(--ph-color-cyan-glow)',
+                        cyberPink: 'var(--ph-color-pink-glow)',
+                        cyberYellow: 'var(--ph-color-yellow-glow)',
+                        cyberDark: 'var(--ph-color-ink)'
                     }
                 }
             }
@@ -28,13 +28,13 @@
 
     <style>
         :root {
-            --bg: #f5f8fc;
+            --bg: var(--ph-color-bg);
             --surface: rgba(255,255,255,.82);
-            --cyan: #00aeca;
-            --pink: #e83e91;
-            --yellow: #f4c542;
-            --dark: #172638;
-            --muted: #64748b;
+            --cyan: var(--ph-color-cyan-glow);
+            --pink: var(--ph-color-pink-glow);
+            --yellow: var(--ph-color-yellow-glow);
+            --dark: var(--ph-color-ink);
+            --muted: var(--ph-color-subtle);
         }
 
         * { box-sizing: border-box; }
