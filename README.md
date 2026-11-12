@@ -202,6 +202,13 @@ La metafora dei chip USB e l'animazione di inserimento sono state mantenute. La 
 
 Le scelte Portfolio e Personal sono ora controlli a tutta superficie: l'intera card è attivabile con mouse, touch e tastiera, non soltanto il chip USB. Le card mostrano inoltre un invito all'azione esplicito, un feedback hover/focus e mantengono l'animazione del chip verso il lettore prima della navigazione. Il markup usa un singolo pulsante per card, evitando controlli interattivi annidati.
 
+
+### Evoluzione grafica e animazione della Home
+
+La Home adotta una direzione più contemporanea mantenendo il tema light cyberpunk: gerarchia tipografica più decisa, sfondo con griglia e aloni cromatici più discreti, card più ampie e profonde con accento specifico per Portfolio e Personal. I chip USB sono stati ridisegnati con proporzioni più compatte, connettore e corpo più definiti, superfici metalliche chiare e dettagli luminosi contenuti. Su smartphone le card passano a una composizione compatta a righe per mantenere leggibili sia il lettore sia l'azione.
+
+L'animazione di selezione ora segue un tragitto più diretto verso lo slot, con rotazione lieve, riduzione progressiva e dissolvenza nell'inserimento. La navigazione immediata resta attiva per chi usa `prefers-reduced-motion`. La verifica eseguita è statica sul contenuto GitHub: non è stato eseguito un test browser o un controllo visuale sui viewport reali.
+
 ## Metodo di modifica
 
 Per ogni intervento grafico o funzionale frontend:
