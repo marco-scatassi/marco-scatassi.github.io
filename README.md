@@ -197,6 +197,11 @@ La Home è stata aggiornata con una prima modifica visibile: le due scelte Portf
 
 La metafora dei chip USB e l'animazione di inserimento sono state mantenute. La modifica è stata verificata rileggendo il file su GitHub; non è stato eseguito un test in browser né una verifica visuale del sito pubblicato.
 
+
+### Interazione e rifinitura della Home
+
+Le scelte Portfolio e Personal sono ora controlli a tutta superficie: l'intera card è attivabile con mouse, touch e tastiera, non soltanto il chip USB. Le card mostrano inoltre un invito all'azione esplicito, un feedback hover/focus e mantengono l'animazione del chip verso il lettore prima della navigazione. Il markup usa un singolo pulsante per card, evitando controlli interattivi annidati.
+
 ## Metodo di modifica
 
 Per ogni intervento grafico o funzionale frontend:
