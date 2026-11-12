@@ -48,40 +48,47 @@
       mask-image: none;
     }
     #ambient-canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:.65; }
-    .shell { position:relative; z-index:1; width:min(1152px,100%); margin:auto; padding:0 24px 22px; }
+    .shell { position:relative; z-index:1; width:min(1152px,100%); min-height:calc(100svh - 64px); margin:auto; padding:0 24px 14px; display:flex; flex-direction:column; }
     .site-header { position:sticky; top:0; z-index:100; background:rgba(245,248,252,.82); backdrop-filter:blur(18px); border-bottom:1px solid rgba(0,174,202,.15); }
-    .navbar { max-width:1024px; height:80px; padding:0 24px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .navbar { max-width:1024px; height:64px; padding:0 24px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .logo { color:var(--ink); font-size:18px; font-weight:800; letter-spacing:-.025em; text-decoration:none; display:flex; align-items:center; gap:12px; }
     .logo-context { color:#94a3b8; font-size:12px; font-weight:500; letter-spacing:0; }
     .logo-dot { display:inline-block; flex:0 0 11px; width:11px; height:11px; border-radius:50%; background:#00aeca; box-shadow:0 0 14px rgba(0,174,202,.6); animation:pulse 2s infinite; }
     .top-note { color:var(--muted); font-size:12px; font-weight:700; }
     .gradient-text { background:linear-gradient(110deg,var(--cyan),var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .intro { display:flex; align-items:end; justify-content:space-between; gap:30px; margin:clamp(48px,8vh,82px) 0 32px; }
-    .intro-copy { max-width:680px; }
+    .intro { display:block; margin:clamp(18px,3.2vh,34px) 0 16px; }
+    .intro-copy { max-width:760px; }
     .eyebrow { display:flex; align-items:center; gap:9px; margin:0 0 12px; color:#d93670; font:600 10px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.13em; text-transform:uppercase; }
     .eyebrow::before { content:""; width:22px; height:3px; background:var(--pink); }
-    h1 { margin:0; font:700 clamp(44px,7vw,76px)/.92 Inter,sans-serif; letter-spacing:-.025em; text-transform:uppercase; }
+    h1 { margin:0; font:750 clamp(34px,4.5vw,58px)/.98 Inter,sans-serif; letter-spacing:-.035em; text-transform:uppercase; }
     h1 span { color:#d93670; }
-    .subtitle { max-width:330px; margin:0 0 4px; color:var(--muted); font-size:14px; line-height:1.6; }
+    .subtitle { max-width:620px; margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.5; }
     .section-label { display:flex; align-items:center; gap:12px; margin:0 0 14px; color:#526174; font:500 10px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.13em; text-transform:uppercase; }
     .section-label::after { content:""; flex:1; height:1px; background:var(--line); }
-    .chip-stage { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; justify-items:center; gap:clamp(28px,7vw,90px); min-height:245px; padding:38px clamp(8px,4vw,48px) 18px; }
-    .chip-option { display:flex; flex-direction:column; align-items:center; gap:15px; }
-    .chip { --accent:var(--cyan); position:relative; display:block; width:clamp(180px,25vw,250px); height:90px; padding:0; border:0; border-radius:0; color:inherit; background:transparent; cursor:pointer; transition:transform .22s ease,filter .22s ease; }
+    .chip-stage { position:relative; display:flex; flex-direction:column; align-items:center; gap:12px; padding:4px 8px 8px; }
+    .chip-option { display:flex; flex-direction:column; align-items:center; gap:5px; }
+    .chip { --accent:var(--cyan); position:relative; display:block; width:clamp(180px,23vw,220px); height:62px; padding:0; border:0; border-radius:0; color:inherit; background:transparent; cursor:pointer; transition:transform .22s ease,filter .22s ease; }
     .chip.personal { --accent:var(--pink); }
     .chip:hover,.chip:focus-visible { transform:translateY(-5px) rotate(-2deg); filter:drop-shadow(0 12px 12px rgba(23,40,59,.2)); outline:none; }
     .chip:focus-visible { outline:2px solid var(--accent); outline-offset:9px; border-radius:7px; }
     .chip:disabled { cursor:wait; }
-    .usb-drive { position:absolute; inset:7px 27px 7px 0; display:block; overflow:visible; border:1px solid color-mix(in srgb,var(--accent) 65%,#263d50); border-radius:9px 5px 5px 9px; background:linear-gradient(160deg,#fdfefe 0%,#dce6ed 48%,#b8c8d4 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.95),inset 0 -4px 8px rgba(23,40,59,.16),0 7px 13px rgba(23,40,59,.17); }
-    .usb-drive::before { content:""; position:absolute; z-index:2; top:24px; right:-27px; width:29px; height:34px; border:1px solid #788b99; border-left:0; border-radius:0 3px 3px 0; background:linear-gradient(90deg,#aebbc4,#e5ebef 35%,#8799a6); box-shadow:2px 2px 3px rgba(23,40,59,.16); }
-    .usb-drive::after { content:""; position:absolute; z-index:3; top:30px; right:-21px; width:6px; height:22px; border-left:2px solid #657987; border-right:2px solid #657987; opacity:.9; }
+    .usb-drive { position:absolute; inset:5px 25px 5px 0; display:block; overflow:visible; border:1px solid color-mix(in srgb,var(--accent) 65%,#263d50); border-radius:9px 5px 5px 9px; background:linear-gradient(160deg,#fdfefe 0%,#dce6ed 48%,#b8c8d4 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.95),inset 0 -4px 8px rgba(23,40,59,.16),0 7px 13px rgba(23,40,59,.17); }
+    .usb-drive::before { content:""; position:absolute; z-index:2; top:15px; right:-25px; width:26px; height:26px; border:1px solid #788b99; border-left:0; border-radius:0 3px 3px 0; background:linear-gradient(90deg,#aebbc4,#e5ebef 35%,#8799a6); box-shadow:2px 2px 3px rgba(23,40,59,.16); }
+    .usb-drive::after { content:""; position:absolute; z-index:3; top:19px; right:-19px; width:6px; height:17px; border-left:2px solid #657987; border-right:2px solid #657987; opacity:.9; }
     .usb-inlay { position:absolute; inset:7px; display:flex; align-items:center; justify-content:space-between; padding:0 13px; border:1px solid color-mix(in srgb,var(--accent) 35%,transparent); border-radius:5px; background:linear-gradient(115deg,rgba(255,255,255,.8),color-mix(in srgb,var(--accent) 8%,#dce6ed)); }
     .usb-mark { display:grid; place-items:center; width:39px; height:39px; border:1px solid color-mix(in srgb,var(--accent) 55%,#718096); border-radius:6px; color:var(--accent); background:rgba(255,255,255,.7); font-size:17px; box-shadow:inset 0 0 12px color-mix(in srgb,var(--accent) 12%,transparent); }
     .usb-led { position:absolute; right:13px; bottom:9px; width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
-    .chip-label { color:var(--ink); font:700 17px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:-.02em; }
+    .chip-label { color:var(--ink); font:700 14px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:-.02em; }
     .chip.personal + .chip-label { color:var(--pink); }
     .chip.professional + .chip-label { color:var(--cyan); }
-    .dock { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; width:min(340px,100%); min-height:116px; margin:0 auto 5px; padding:17px 26px; border:1px solid rgba(8,127,156,.3); border-radius:12px; background:linear-gradient(180deg,#e6edf3,#d5e0e9); box-shadow:0 12px 25px rgba(23,40,59,.12),inset 0 2px 4px rgba(255,255,255,.9),inset 0 -5px 12px rgba(23,40,59,.08); }
+    .mini-reader { --accent:var(--cyan); display:flex; align-items:center; justify-content:space-between; gap:10px; width:154px; height:34px; padding:5px 9px; border:1px solid color-mix(in srgb,var(--accent) 45%,#8194a3); border-radius:7px; background:linear-gradient(180deg,#e6edf3,#d5e0e9); box-shadow:0 4px 9px rgba(23,40,59,.12),inset 0 1px 3px rgba(255,255,255,.9); }
+    .mini-reader.personal { --accent:var(--pink); }
+    .reader-slot { position:relative; width:82px; height:9px; overflow:hidden; border:1px solid #31485b; border-radius:3px; background:linear-gradient(180deg,#17283b,#344b5e); box-shadow:inset 0 2px 4px rgba(0,0,0,.55); }
+    .reader-slot::after { content:""; position:absolute; inset:2px 5px; border-radius:2px; background:var(--accent); opacity:.25; transition:opacity .25s,box-shadow .25s; }
+    .mini-reader.is-active .reader-slot::after { opacity:1; box-shadow:0 0 8px var(--accent); }
+    .reader-led { width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:.75; box-shadow:0 0 6px var(--accent); }
+    .reader-label { color:#526174; font:700 7px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; white-space:nowrap; }
+    .dock { display:none; }
     .dock::before { content:""; position:absolute; inset:7px; border:1px solid rgba(255,255,255,.75); border-radius:8px; pointer-events:none; }
     .dock-label { margin-bottom:11px; color:#526174; font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-transform:uppercase; }
     .dock-slot { position:relative; width:150px; height:23px; overflow:hidden; border:1px solid #31485b; border-radius:4px; background:linear-gradient(180deg,#17283b,#344b5e); box-shadow:inset 0 3px 7px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.9); }
@@ -93,21 +100,24 @@
     .bottomline { display:flex; justify-content:space-between; gap:15px; margin-top:22px; color:#64748b; font:9px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
     @keyframes pulse { 0%,100% { box-shadow:0 0 8px rgba(8,127,156,.4); } 50% { box-shadow:0 0 20px rgba(8,127,156,.9); } }
     @media(max-width:700px) {
-      .shell { width:min(100% - 30px,540px); padding-top:20px; }
-      .top-note { font-size:11px; }
-      .intro { display:block; margin:48px 0 28px; }
-      .subtitle { margin-top:16px; max-width:420px; }
-      .chip-stage { grid-template-columns:1fr 1fr; gap:12px; min-height:190px; padding:20px 0 15px; }
-      .chip-option { gap:11px; }
-      .chip { width:clamp(125px,39vw,190px); height:74px; }
-      .usb-drive { inset:7px 22px 7px 0; }
-      .usb-drive::before { right:-22px; top:21px; width:24px; height:28px; }
-      .usb-drive::after { top:25px; right:-17px; height:18px; }
-      .usb-inlay { inset:6px; padding:0 8px; }
-      .usb-mark { width:31px; height:31px; font-size:14px; }
-      .chip-label { font-size:15px; }
-      .dock { min-height:108px; }
-      .bottomline { font-size:8px; }
+      .shell { width:min(100% - 30px,540px); padding:12px 0 10px; }
+      .navbar { height:58px; }
+      .top-note { font-size:10px; }
+      .intro { margin:18px 0 14px; }
+      h1 { font-size:clamp(34px,9vw,46px); }
+      .subtitle { margin-top:8px; font-size:12px; }
+      .chip-stage { gap:10px; padding:2px 0 5px; }
+      .chip-option { gap:4px; }
+      .chip { width:190px; height:58px; }
+      .usb-drive { inset:5px 23px 5px 0; }
+      .usb-drive::before { right:-23px; top:14px; width:24px; height:26px; }
+      .usb-drive::after { top:18px; right:-17px; height:17px; }
+      .usb-inlay { inset:5px; padding:0 8px; }
+      .usb-mark { width:29px; height:29px; font-size:13px; }
+      .chip-label { font-size:13px; }
+      .mini-reader { width:142px; height:30px; }
+      .reader-slot { width:74px; }
+      .bottomline { margin-top:auto; padding-top:8px; font-size:8px; }
     }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; } .character:hover { transform:none; } }
   </style>
@@ -133,24 +143,21 @@
     </section>
     <section aria-label="Scegli una sezione">
       <p class="section-label">Seleziona una sezione</p>
-      <div class="chip-stage" aria-label="Seleziona un chip da inserire nel lettore">
+      <div class="chip-stage" aria-label="Seleziona un chip da inserire nel proprio lettore">
         <div class="chip-option">
-          <button class="chip professional" type="button" data-target="portfolio.html" aria-label="Inserisci il chip Portfolio e apri il portfolio">
+          <div class="mini-reader" id="reader-portfolio" aria-hidden="true"><span class="reader-label">PORT 01</span><span class="reader-slot" id="slot-portfolio"></span><span class="reader-led"></span></div>
+          <button class="chip professional" type="button" data-target="portfolio.html" data-reader="portfolio" aria-label="Inserisci il chip Portfolio e apri il portfolio">
             <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span>
           </button>
           <span class="chip-label">Portfolio</span>
         </div>
         <div class="chip-option">
-          <button class="chip personal" type="button" data-target="personal.html" aria-label="Inserisci il chip Personal e apri lo spazio personale">
+          <div class="mini-reader personal" id="reader-personal" aria-hidden="true"><span class="reader-label">PORT 02</span><span class="reader-slot" id="slot-personal"></span><span class="reader-led"></span></div>
+          <button class="chip personal" type="button" data-target="personal.html" data-reader="personal" aria-label="Inserisci il chip Personal e apri lo spazio personale">
             <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span>
           </button>
           <span class="chip-label">Personal</span>
         </div>
-      </div>
-      <div class="dock" id="chip-dock" aria-live="polite">
-        <span class="dock-label">Neural interface / data port</span>
-        <span class="dock-slot" id="dock-slot" aria-hidden="true"></span>
-        <p class="dock-status" id="dock-status">Waiting for data chip</p>
       </div>
     </section>
     <footer class="bottomline"><span>© Marco Scatassi</span><span>Personal Hub</span></footer>
@@ -163,42 +170,35 @@ function resizeCanvas(){const dpr=Math.min(window.devicePixelRatio||1,1.5);width
 function drawNetwork(){ctx.clearRect(0,0,width,height);particles.forEach((p,i)=>{if(!reducedMotion){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>width)p.vx*=-1;if(p.y<0||p.y>height)p.vy*=-1;}ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fillStyle='rgba(8,127,156,.48)';ctx.fill();for(let j=i+1;j<particles.length;j++){const q=particles[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<112){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(8,127,156,${(1-d/112)*.12})`;ctx.lineWidth=1;ctx.stroke();}}});if(!reducedMotion)animationFrame=requestAnimationFrame(drawNetwork);}
 resizeCanvas();drawNetwork();window.addEventListener('resize',()=>{cancelAnimationFrame(animationFrame);resizeCanvas();drawNetwork();},{passive:true});
 
-const chips=[...document.querySelectorAll('.chip')],dock=document.getElementById('chip-dock'),slot=document.getElementById('dock-slot'),dockStatus=document.getElementById('dock-status');
+const chips=[...document.querySelectorAll('.chip')];
 let loadingChip=false;
 chips.forEach(chip=>chip.addEventListener('click',()=>{
   if(loadingChip)return;
   loadingChip=true;
   chips.forEach(item=>item.disabled=true);
-  const target=chip.dataset.target,from=chip.getBoundingClientRect(),to=slot.getBoundingClientRect();
-  dock.classList.add('is-active');
-  dockStatus.textContent='Chip detected / inserting...';
+  const target=chip.dataset.target;
+  const reader=document.getElementById('reader-'+chip.dataset.reader);
+  const slot=document.getElementById('slot-'+chip.dataset.reader);
+  const from=chip.getBoundingClientRect(),to=slot.getBoundingClientRect();
+  reader.classList.add('is-active');
   if(reducedMotion){window.location.assign(target);return;}
   const flight=chip.cloneNode(true);
-  flight.classList.add('chip-flight');
-  flight.removeAttribute('data-target');
-  flight.setAttribute('aria-hidden','true');
+  flight.classList.add('chip-flight'); flight.removeAttribute('data-target'); flight.setAttribute('aria-hidden','true');
   Object.assign(flight.style,{left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px'});
-  document.body.appendChild(flight);
-  chip.style.visibility='hidden';
-  const dx=to.left-from.left+(to.width-from.width)/2;
-  const dy=to.top-from.top+(to.height-from.height)/2;
+  document.body.appendChild(flight); chip.style.visibility='hidden';
+  const dx=to.left-from.left+(to.width-from.width)/2,dy=to.top-from.top+(to.height-from.height)/2;
   const sx=to.width/from.width,sy=to.height/from.height;
   const motion=flight.animate([
     {transform:'translate(0,0) scale(1)',opacity:1,filter:'brightness(1)'},
-    {transform:`translate(${dx*.72}px,${dy*.72}px) scale(${1+(sx-1)*.72},${1+(sy-1)*.72})`,opacity:1,filter:'brightness(1.25)'},
-    {transform:`translate(${dx}px,${dy}px) scale(${sx},${sy})`,opacity:.15,filter:'brightness(1.8)'}
+    {transform:'translate('+dx*.72+'px,'+dy*.72+'px) scale('+(1+(sx-1)*.72)+','+(1+(sy-1)*.72)+')',opacity:1,filter:'brightness(1.25)'},
+    {transform:'translate('+dx+'px,'+dy+'px) scale('+sx+','+sy+')',opacity:.15,filter:'brightness(1.8)'}
   ],{duration:850,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'});
-  motion.onfinish=()=>{flight.remove();dockStatus.textContent='Data chip accepted / loading...';window.location.assign(target);};
+  motion.onfinish=()=>{flight.remove();window.location.assign(target);};
 }));
-
 function resetChipInterface(){
   document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
-  chips.forEach(chip=>{
-    chip.disabled=false;
-    chip.style.visibility='';
-  });
-  dock.classList.remove('is-active');
-  dockStatus.textContent='Waiting for data chip';
+  chips.forEach(chip=>{chip.disabled=false;chip.style.visibility='';});
+  document.querySelectorAll('.mini-reader').forEach(reader=>reader.classList.remove('is-active'));
   loadingChip=false;
 }
 window.addEventListener('pageshow',resetChipInterface);
