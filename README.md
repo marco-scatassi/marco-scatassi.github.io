@@ -205,9 +205,9 @@ La navigazione dalla Home usa la **Cross-document View Transitions API** del bro
 
 Il chip di destinazione resta visibile: non viene più applicata una regola `visibility:hidden` durante il caricamento e non viene più animato con `transform` sovrascrivendo le trasformazioni del layout. In Personal il chip continua a occupare il proprio spazio accanto al titolo “Esplora le mie Passioni”, come elemento flex separato; il layout del titolo non deve essere coperto dal chip.
 
-Per evitare l'effetto di doppia immagine durante il movimento, il livello snapshot precedente del chip viene reso trasparente e resta visibile soltanto quello nuovo, che viene spostato e ridimensionato dal browser.
+Per evitare la doppia immagine, il gruppo della transizione isola il compositing e lo snapshot precedente viene escluso dal rendering: durante il movimento resta un solo chip visibile, quello della pagina di arrivo.
 
-La transizione è abilitata solo tra pagine dello stesso sito e nei browser che supportano le navigazioni cross-document View Transitions. Nei browser non compatibili la navigazione resta immediata e il chip viene mostrato normalmente, senza sparire e riapparire tramite un'animazione simulata. Con `prefers-reduced-motion: reduce` la transizione viene disattivata.
+L'opt-in alla Cross-document View Transitions è intenzionalmente direzionale: Home mantiene l'abilitazione, mentre Personal e Portfolio la attivano soltanto quando arrivano da Home con una destinazione valida in `sessionStorage`. Di conseguenza, i link “Scelta iniziale” non avviano alcuna transizione: il chip scompare insieme alla pagina, come il resto del contenuto. Anche con `prefers-reduced-motion: reduce` l'opt-in non viene aggiunto. Nei browser non compatibili la navigazione resta immediata.
 
 La verifica di questa modifica è statica sul codice aggiornato in GitHub. Non è stata eseguita una prova browser né una verifica visiva su desktop/mobile: fluidità effettiva, compatibilità del browser e assenza di sovrapposizioni devono essere confermate con test in browser.
 
