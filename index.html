@@ -191,8 +191,8 @@ chips.forEach(chip=>chip.addEventListener('click',()=>{
   document.body.appendChild(flight);
   chip.style.visibility='hidden';
   const dx=to.left+to.width/2-(from.left+from.width/2);
-  const dy=to.bottom-(from.top+from.height);
-  const travel=Math.max(18,Math.abs(dy)+10);
+  const dy=to.top+to.height/2-(from.top+14);
+  const travel=Math.max(18,Math.abs(dy));
   const motion=flight.animate([
     {transform:'translate(0,0)',filter:'brightness(1)'},
     {transform:'translate('+dx+'px,'+(-travel*.78)+'px)',filter:'brightness(1.08)',offset:.72},
