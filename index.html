@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f4f7fb">
   <meta name="description" content="Marco Scatassi — portfolio e spazio personale.">
-  <title>Marco Scatassi | Home</title>
+  <title>Marco Scatassi | Personal Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/design-system.css">
   <style>
@@ -16,212 +15,255 @@
       --paper: var(--ph-color-bg);
       --ink: var(--ph-color-ink);
       --muted: var(--ph-color-muted);
-      --yellow: var(--ph-color-yellow);
-      --pink: var(--ph-color-pink);
       --cyan: var(--ph-color-cyan);
-      --line: var(--ph-color-line);
+      --pink: var(--ph-color-pink);
       --mouse-x: 50vw;
-      --mouse-y: 30vh;
+      --mouse-y: 42vh;
     }
     * { box-sizing: border-box; }
-    html { min-height: 100%; background: var(--paper); }
+    html, body { min-width: 320px; min-height: 100%; margin: 0; }
     body {
-      min-height: 100vh;
-      margin: 0;
-      overflow-x: hidden;
+      min-height: 100svh;
+      overflow: hidden;
       color: var(--ink);
       background: var(--paper);
       font-family: Inter, ui-sans-serif, system-ui, sans-serif;
     }
-    body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),rgba(0,174,202,.10),transparent 68%),radial-gradient(420px circle at 82% 78%,rgba(232,62,145,.07),transparent 70%),linear-gradient(rgba(8,127,156,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(8,127,156,.025) 1px,transparent 1px); background-size:auto,auto,36px 36px,36px 36px; mask-image:linear-gradient(to bottom,black 0%,rgba(0,0,0,.55) 72%,transparent 100%); }
-    #ambient-canvas { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:.65; }
-    .shell { position:relative; z-index:1; width:min(1152px,100%); min-height:calc(100svh - 64px); margin:auto; padding:clamp(14px,2.5vh,28px) 24px 18px; display:flex; flex-direction:column; }
-    .site-header { position:sticky; top:0; z-index:100; background:rgba(245,248,252,.82); backdrop-filter:blur(18px); border-bottom:1px solid rgba(0,174,202,.15); }
-    .navbar { max-width:1024px; height:64px; padding:0 24px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-    .logo { color:var(--ink); font-size:18px; font-weight:800; letter-spacing:-.025em; text-decoration:none; display:flex; align-items:center; gap:12px; }
-    .logo-context { color:#94a3b8; font-size:12px; font-weight:500; letter-spacing:0; }
-    .logo-dot { display:inline-block; flex:0 0 11px; width:11px; height:11px; border-radius:50%; background:#00aeca; box-shadow:0 0 14px rgba(0,174,202,.6); animation:pulse 2s infinite; }
-    .top-note { color:var(--muted); font-size:12px; font-weight:700; }
-    .gradient-text { background:linear-gradient(110deg,var(--cyan),var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .intro { position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; margin:clamp(34px,7vh,76px) 0 clamp(30px,5vh,56px); }
-    .intro::after { content:""; width:54px; height:3px; margin-top:24px; border-radius:99px; background:linear-gradient(90deg,var(--cyan),var(--pink)); }
-    .eyebrow { display:inline-flex; align-items:center; gap:9px; margin:0 0 18px; padding:7px 12px; border:1px solid rgba(217,54,112,.16); border-radius:999px; color:#b82b60; background:rgba(255,255,255,.72); font:700 10px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
-    .eyebrow::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--pink); box-shadow:0 0 9px rgba(232,62,145,.55); }
-    h1 { max-width:900px; margin:0; font:800 clamp(36px,5.2vw,64px)/1.02 Inter,sans-serif; letter-spacing:-.065em; text-transform:none; }
-    .subtitle { max-width:620px; margin:18px 0 0; color:#526174; font-size:15px; line-height:1.75; }
-    .section-label { display:flex; align-items:center; gap:12px; margin:0 0 26px; color:#526174; font:500 10px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.13em; text-transform:uppercase; }
-    .section-label::after { content:""; flex:1; height:1px; background:var(--line); }
-    .chip-stage { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:clamp(20px,3vw,34px); width:min(850px,100%); margin:0 auto; padding:8px 8px 24px; }
-    .chip-option { --card-accent:var(--cyan); position:relative; isolation:isolate; display:flex; width:100%; min-width:0; flex-direction:column; align-items:center; gap:13px; padding:clamp(22px,3vw,34px) 24px 26px; overflow:hidden; border:1px solid rgba(23,40,59,.09); border-radius:30px; color:var(--ink); text-align:center; cursor:pointer; background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(247,250,253,.9)); box-shadow:0 18px 48px rgba(23,40,59,.065),inset 0 1px 0 #fff; transition:transform .32s cubic-bezier(.2,.75,.25,1),border-color .32s ease,box-shadow .32s ease; }
-    .chip-option:nth-child(2) { --card-accent:var(--pink); }
-    .chip-option::before { content:""; position:absolute; z-index:-1; width:240px; height:240px; top:-150px; right:-95px; border-radius:50%; background:var(--card-accent); opacity:.07; filter:blur(2px); transition:transform .45s ease,opacity .35s ease; }
-    .chip-option:hover,.chip-option:focus-visible { transform:translateY(-7px); border-color:color-mix(in srgb,var(--card-accent) 34%,white); box-shadow:0 26px 62px rgba(23,40,59,.11),0 8px 28px color-mix(in srgb,var(--card-accent) 10%,transparent); outline:none; }
-    .chip-option:hover::before,.chip-option:focus-visible::before { transform:translate(-16px,16px) scale(1.2); opacity:.13; }
-    .chip-option:focus-visible { outline:3px solid var(--card-accent); outline-offset:5px; }
-    .chip-option:disabled { cursor:wait; opacity:.8; }
-    .chip-hint { max-width:260px; color:var(--muted); font-size:12px; line-height:1.55; }
-    .chip-action { display:inline-flex; align-items:center; justify-content:center; gap:10px; margin-top:8px; padding:11px 17px; border:1px solid color-mix(in srgb,var(--card-accent) 24%,white); border-radius:999px; color:color-mix(in srgb,var(--card-accent) 82%,#17283b); background:color-mix(in srgb,var(--card-accent) 7%,white); font-size:11px; font-weight:800; transition:background .25s ease,transform .25s ease; }
-    .chip-option:hover .chip-action,.chip-option:focus-visible .chip-action { transform:translateY(-1px); background:color-mix(in srgb,var(--card-accent) 12%,white); }
-    .chip-action i { transition:transform .25s ease; }
-    .chip-option:hover .chip-action i,.chip-option:focus-visible .chip-action i { transform:translateX(3px); }
-    .chip { --accent:var(--cyan); position:relative; display:block; width:104px; height:166px; margin:8px 0 3px; color:inherit; background:transparent; pointer-events:none; filter:drop-shadow(0 12px 12px rgba(23,40,59,.13)); transition:transform .35s cubic-bezier(.2,.75,.25,1),filter .35s ease; }
-    .chip.personal { --accent:var(--pink); }
-    .chip-option:hover .chip,.chip-option:focus-visible .chip { transform:translateY(-7px) rotate(-4deg) scale(1.035); filter:drop-shadow(0 19px 17px rgba(23,40,59,.19)); }
-    .usb-drive { position:absolute; inset:17px 9px 0; display:block; overflow:visible; border:1px solid color-mix(in srgb,var(--accent) 52%,#b8c8d4); border-radius:15px 15px 11px 11px; background:linear-gradient(135deg,#fff 0%,#eef3f7 38%,#cbd8e1 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.98),inset 0 -7px 13px rgba(23,40,59,.12),0 9px 18px rgba(23,40,59,.13); }
-    .usb-drive::before { content:""; position:absolute; z-index:2; top:-18px; left:50%; width:34px; height:19px; transform:translateX(-50%); border:1px solid #9aaab5; border-bottom:0; border-radius:6px 6px 0 0; background:linear-gradient(180deg,#aab8c2,#f4f7f9 78%); }
-    .usb-drive::after { content:""; position:absolute; z-index:3; top:-13px; left:calc(50% - 5px); width:10px; height:12px; border-left:2px solid #718493; border-right:2px solid #718493; opacity:.85; }
-    .usb-inlay { position:absolute; inset:9px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:12px 0 10px; border:1px solid color-mix(in srgb,var(--accent) 30%,transparent); border-radius:9px; background:linear-gradient(145deg,rgba(255,255,255,.92),color-mix(in srgb,var(--accent) 8%,#e7edf2)); }
-    .usb-mark { display:grid; place-items:center; width:48px; height:48px; border:1px solid color-mix(in srgb,var(--accent) 36%,white); border-radius:13px; color:var(--accent); background:rgba(255,255,255,.84); font-size:19px; box-shadow:0 5px 14px color-mix(in srgb,var(--accent) 12%,transparent); }
-    .usb-led { position:absolute; right:9px; bottom:9px; width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
-    .chip-label { color:var(--ink); font:800 22px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:-.045em; }
-    .chip.personal + .chip-label { color:var(--pink); }
-    .chip.professional + .chip-label { color:var(--cyan); }
-    .mini-reader { --accent:var(--cyan); display:flex; align-items:center; justify-content:space-between; gap:10px; width:190px; height:46px; padding:7px 13px; position:relative; z-index:3; border:1px solid rgba(23,40,59,.12); border-radius:12px; background:linear-gradient(180deg,#f8fafc,#e5edf3); box-shadow:0 7px 15px rgba(23,40,59,.09),inset 0 1px 2px rgba(255,255,255,.95); }
-    .mini-reader.personal { --accent:var(--pink); }
-    .reader-slot { position:relative; width:30px; height:7px; overflow:hidden; border:1px solid #31485b; border-radius:3px; background:linear-gradient(180deg,#17283b,#344b5e); box-shadow:inset 0 2px 4px rgba(0,0,0,.55); }
-    .reader-slot::after { content:""; position:absolute; inset:2px 5px; border-radius:2px; background:var(--accent); opacity:.25; transition:opacity .25s,box-shadow .25s; }
-    .mini-reader.is-active .reader-slot::after { opacity:1; box-shadow:0 0 8px var(--accent); }
-    .mini-reader.is-inserted { box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 22%,transparent),0 5px 15px rgba(23,40,59,.18),inset 0 1px 3px rgba(255,255,255,.9); }
-    .reader-led { width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:.75; box-shadow:0 0 6px var(--accent); }
-    .reader-label { color:#526174; font:700 7px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; white-space:nowrap; }
-    .dock { display:none; }
-    .dock::before { content:""; position:absolute; inset:7px; border:1px solid rgba(255,255,255,.75); border-radius:8px; pointer-events:none; }
-    .dock-label { margin-bottom:11px; color:#526174; font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-transform:uppercase; }
-    .dock-slot { position:relative; width:150px; height:23px; overflow:hidden; border:1px solid #31485b; border-radius:4px; background:linear-gradient(180deg,#17283b,#344b5e); box-shadow:inset 0 3px 7px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.9); }
-    .dock-slot::after { content:""; position:absolute; inset:8px 9px; border-radius:2px; background:#00aeca; opacity:.2; transition:opacity .25s,box-shadow .25s; }
-    .dock.is-active .dock-slot::after { opacity:1; box-shadow:0 0 13px #00aeca,0 0 25px rgba(0,174,202,.8); }
-    .dock-status { min-height:13px; margin:8px 0 0; color:#64748b; font:500 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; text-transform:uppercase; }
-    .dock.is-active .dock-status { color:#087f9c; }
-    .chip-flight { position:fixed!important; z-index:120!important; margin:0!important; pointer-events:none!important; transform-origin:center center; transition:none!important; }
-    .bottomline { display:flex; justify-content:space-between; gap:15px; margin-top:auto; padding-top:24px; color:#64748b; font:9px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
-    @keyframes pulse { 0%,100% { box-shadow:0 0 8px rgba(8,127,156,.4); } 50% { box-shadow:0 0 20px rgba(8,127,156,.9); } }
-    @media(max-width:700px) {
-      .shell { width:min(100% - 30px,620px); padding:10px 0 12px; }
-      .navbar { height:58px; padding:0 18px; }
-      .top-note { font-size:9px; }
-      .intro { margin:30px 0; }
-      h1 { font-size:clamp(30px,7vw,42px); letter-spacing:-.055em; }
-      .subtitle { max-width:460px; margin-top:13px; font-size:13px; }
-      .intro::after { margin-top:19px; }
-      .chip-stage { gap:14px; padding:2px 0 8px; }
-      .chip-option { padding:22px 12px 20px; gap:11px; border-radius:23px; }
-      .chip { width:88px; height:144px; margin:4px 0; }
-      .usb-drive { inset:16px 7px 0; }
-      .usb-drive::before { top:-16px; width:30px; height:17px; }
-      .usb-drive::after { top:-12px; }
-      .usb-inlay { inset:7px; padding:10px 0 8px; }
-      .usb-mark { width:40px; height:40px; font-size:16px; }
-      .chip-label { font-size:19px; }
-      .chip-hint { font-size:10px; }
-      .chip-action { padding:9px 11px; font-size:9px; }
-      .mini-reader { width:100%; max-width:150px; height:38px; padding:6px 8px; gap:5px; }
-      .bottomline { padding-top:20px; font-size:8px; }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(560px circle at var(--mouse-x) var(--mouse-y), rgba(0,174,202,.12), transparent 70%),
+        radial-gradient(500px circle at 82% 82%, rgba(232,62,145,.075), transparent 72%),
+        linear-gradient(rgba(8,127,156,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8,127,156,.028) 1px, transparent 1px);
+      background-size: auto, auto, 42px 42px, 42px 42px;
+      mask-image: linear-gradient(to bottom, black, rgba(0,0,0,.7) 75%, transparent);
     }
-    @media(max-width:430px) {
-      .chip-stage { grid-template-columns:1fr; max-width:350px; gap:13px; }
-      .chip-option { display:grid; grid-template-columns:62px minmax(0,1fr); grid-template-areas:"reader reader" "chip title" "chip hint" "chip action"; justify-items:start; align-items:center; column-gap:16px; row-gap:5px; padding:17px 18px; text-align:left; }
-      .mini-reader { grid-area:reader; justify-self:stretch; max-width:none; }
-      .chip { grid-area:chip; width:62px; height:105px; margin:0; }
-      .usb-drive { inset:12px 5px 0; border-radius:10px 10px 7px 7px; }
-      .usb-drive::before { top:-12px; width:22px; height:13px; }
-      .usb-drive::after { top:-9px; left:calc(50% - 4px); width:8px; height:8px; }
-      .usb-inlay { inset:5px; padding:7px 0; }
-      .usb-mark { width:29px; height:29px; border-radius:8px; font-size:12px; }
-      .chip-label { grid-area:title; align-self:end; font-size:18px; }
-      .chip-hint { grid-area:hint; align-self:start; max-width:none; font-size:10px; }
-      .chip-action { grid-area:action; justify-self:start; margin-top:5px; padding:8px 11px; font-size:9px; }
-      .bottomline { padding:18px 3px 0; }
+    #ambient-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .42; }
+    .viewport { position: relative; z-index: 1; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: clamp(22px,4vw,48px) clamp(22px,5.5vw,84px) clamp(18px,3vw,34px); }
+    .signature, .coordinates, .bottom-note { color: #64748b; font: 600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .signature { display: flex; align-items: center; gap: 11px; }
+    .signature-mark { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 13px rgba(0,174,202,.7); }
+    .coordinates { justify-self: end; }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .experience { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: center; width: min(1120px,100%); margin: 0 auto; }
+    .experience::before { content: ""; position: absolute; top: 14%; bottom: 14%; left: 50%; width: 1px; background: linear-gradient(transparent,rgba(23,40,59,.13) 22%,rgba(23,40,59,.13) 78%,transparent); }
+    .choice {
+      --accent: var(--cyan);
+      position: relative; display: flex; min-width: 0; min-height: min(610px,70svh);
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 30px clamp(12px,4vw,52px); border: 0; border-radius: 0;
+      color: var(--ink); background: transparent; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent;
     }
-    @media(max-width:360px) { .navbar { padding:0 12px; } .logo { gap:8px; font-size:16px; } .logo-context { font-size:10px; } .top-note { font-size:8px; } }
-    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; animation:none!important; } .chip-option:hover,.chip-option:focus-visible,.chip-option:hover .chip { transform:none; } }
-    @media(max-width:380px) { .chip-stage { gap:8px; } .chip-option { padding-inline:7px; } .reader-label { font-size:6px; } }\n    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; } .character:hover,.chip-option:hover { transform:none; } }
+    .choice.personal { --accent: var(--pink); }
+    .choice::before {
+      content: ""; position: absolute; z-index: -1; width: min(36vw,390px); aspect-ratio: 1;
+      border-radius: 50%; background: var(--accent); opacity: .045; filter: blur(42px);
+      transform: scale(.82); transition: opacity .45s ease, transform .65s cubic-bezier(.2,.75,.25,1);
+    }
+    .choice:hover::before, .choice:focus-visible::before { opacity: .105; transform: scale(1.08); }
+    .choice:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; border-radius: 24px; }
+    .choice:disabled { cursor: wait; }
+    .choice-index { display: flex; align-items: center; gap: 10px; margin-bottom: clamp(18px,3vh,32px); color: #718096; font: 600 10px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .17em; }
+    .choice-index::before { content: ""; width: 22px; height: 1px; background: var(--accent); }
+    .chip {
+      --accent: var(--cyan); position: relative; display: block; width: clamp(105px,12vw,148px);
+      height: clamp(174px,20vw,236px); margin: 0 0 clamp(26px,4vh,42px);
+      pointer-events: none; color: inherit; filter: drop-shadow(0 22px 20px rgba(23,40,59,.14));
+      transition: transform .55s cubic-bezier(.2,.75,.25,1), filter .55s ease;
+    }
+    .chip.personal { --accent: var(--pink); }
+    .choice:hover .chip, .choice:focus-visible .chip { transform: translateY(-12px) rotate(-5deg) scale(1.035); filter: drop-shadow(0 32px 24px rgba(23,40,59,.2)); }
+    .usb-drive {
+      position: absolute; inset: 21px 10px 0; display: block; overflow: visible;
+      border: 1px solid color-mix(in srgb,var(--accent) 48%,#b8c8d4); border-radius: 18px 18px 13px 13px;
+      background: linear-gradient(135deg,#fff 0%,#eef3f7 38%,#cbd8e1 100%);
+      box-shadow: inset 0 2px 3px rgba(255,255,255,.98),inset 0 -8px 16px rgba(23,40,59,.12),0 12px 22px rgba(23,40,59,.12);
+    }
+    .usb-drive::before { content: ""; position: absolute; z-index: 2; top: -22px; left: 50%; width: 43px; height: 23px; transform: translateX(-50%); border: 1px solid #9aaab5; border-bottom: 0; border-radius: 7px 7px 0 0; background: linear-gradient(180deg,#aab8c2,#f4f7f9 78%); }
+    .usb-drive::after { content: ""; position: absolute; z-index: 3; top: -16px; left: calc(50% - 6px); width: 12px; height: 15px; border-left: 2px solid #718493; border-right: 2px solid #718493; opacity: .85; }
+    .usb-inlay { position: absolute; inset: 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 17px 0 13px; border: 1px solid color-mix(in srgb,var(--accent) 30%,transparent); border-radius: 11px; background: linear-gradient(145deg,rgba(255,255,255,.94),color-mix(in srgb,var(--accent) 8%,#e7edf2)); }
+    .usb-mark { display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid color-mix(in srgb,var(--accent) 36%,white); border-radius: 16px; color: var(--accent); background: rgba(255,255,255,.86); font-size: 23px; box-shadow: 0 6px 18px color-mix(in srgb,var(--accent) 13%,transparent); }
+    .chip-code { color: #718096; font: 700 8px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .18em; }
+    .usb-led { position: absolute; right: 11px; bottom: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .choice-name { margin: 0; color: var(--ink); font-size: clamp(31px,4vw,48px); font-weight: 800; letter-spacing: -.065em; line-height: 1; transition: color .3s ease; }
+    .choice:hover .choice-name, .choice:focus-visible .choice-name { color: var(--accent); }
+    .choice-description { margin: 13px 0 0; color: #64748b; font-size: 13px; line-height: 1.6; }
+    .choice-cta { display: inline-flex; align-items: center; gap: 11px; margin-top: clamp(22px,3.5vh,36px); color: var(--accent); font: 700 10px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .choice-cta i { transition: transform .3s ease; }
+    .choice:hover .choice-cta i, .choice:focus-visible .choice-cta i { transform: translateX(6px); }
+    .bottomline { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .bottom-note { letter-spacing: .11em; }
+    .status { display: flex; align-items: center; gap: 8px; color: #718096; font: 600 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+    .chip-flight { position: fixed !important; z-index: 120 !important; margin: 0 !important; pointer-events: none !important; transform-origin: center center; transition: none !important; }
+    @media (max-width: 700px) {
+      body { overflow: auto; }
+      .viewport { min-height: 100svh; padding: 22px 18px 18px; }
+      .experience { width: min(560px,100%); }
+      .choice { min-height: 60svh; padding: 22px 10px; }
+      .choice-index { margin-bottom: 24px; font-size: 9px; }
+      .chip { width: clamp(84px,17vw,112px); height: clamp(145px,29vw,180px); margin-bottom: 28px; }
+      .usb-drive { inset: 17px 8px 0; }
+      .usb-drive::before { top: -18px; width: 35px; height: 19px; }
+      .usb-drive::after { top: -13px; }
+      .usb-inlay { inset: 8px; padding: 13px 0 10px; }
+      .usb-mark { width: 45px; height: 45px; font-size: 18px; }
+      .choice-name { font-size: clamp(25px,5vw,34px); }
+      .choice-description { max-width: 180px; font-size: 11px; }
+      .choice-cta { font-size: 8px; letter-spacing: .08em; }
+    }
+    @media (max-width: 430px) {
+      .viewport { padding: 20px 15px 16px; }
+      .signature, .coordinates { font-size: 8px; }
+      .experience { grid-template-columns: 1fr; align-content: center; padding: 20px 0; }
+      .experience::before { top: 50%; right: 8%; bottom: auto; left: 8%; width: auto; height: 1px; background: linear-gradient(90deg,transparent,rgba(23,40,59,.15),transparent); }
+      .choice { min-height: 0; display: grid; grid-template-columns: 78px minmax(0,1fr); grid-template-rows: auto auto auto; grid-template-areas: "chip index" "chip name" "chip desc" "chip cta"; justify-items: start; align-content: center; column-gap: 20px; row-gap: 5px; padding: 24px 12px; text-align: left; }
+      .choice-index { grid-area: index; margin: 0 0 3px; }
+      .chip { grid-area: chip; width: 65px; height: 108px; margin: 0; align-self: center; }
+      .usb-drive { inset: 13px 5px 0; border-radius: 10px 10px 7px 7px; }
+      .usb-drive::before { top: -13px; width: 24px; height: 14px; }
+      .usb-drive::after { top: -9px; left: calc(50% - 4px); width: 8px; height: 9px; }
+      .usb-inlay { inset: 5px; padding: 8px 0 6px; border-radius: 6px; }
+      .usb-mark { width: 30px; height: 30px; border-radius: 8px; font-size: 12px; }
+      .chip-code { font-size: 6px; }
+      .choice-name { grid-area: name; font-size: 28px; }
+      .choice-description { grid-area: desc; margin: 3px 0 0; font-size: 11px; }
+      .choice-cta { grid-area: cta; margin-top: 12px; font-size: 8px; }
+      .bottom-note, .status { font-size: 7px; }
+    }
+    @media (max-height: 650px) and (min-width: 701px) {
+      .viewport { padding-top: 18px; padding-bottom: 16px; }
+      .choice { min-height: 72svh; }
+      .chip { height: 160px; width: 100px; margin-bottom: 20px; }
+      .choice-index { margin-bottom: 15px; }
+      .choice-cta { margin-top: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+      .choice:hover .chip, .choice:focus-visible .chip { transform: none; }
+    }
   </style>
 </head>
 <body>
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
-  <header class="site-header">
-    <div class="navbar">
-      <a href="index.html" class="logo" aria-label="Home">
-        <span class="logo-dot"></span>
-        <span>Marco Scatassi <span class="logo-context">| Personal Hub</span></span>
-      </a>
-      <div class="top-note">Portfolio &amp; Spazio Personale</div>
+  <main class="viewport">
+    <div class="topline">
+      <div class="signature"><span class="signature-mark"></span><span>MARCO SCATASSI <span style="opacity:.45">/</span> PERSONAL HUB</span></div>
+      <div class="coordinates">A PERSONAL DIGITAL SPACE <span style="color:var(--cyan)">— 01 / 02</span></div>
     </div>
-  </header>
-  <main class="shell">
-    <section class="intro" aria-labelledby="page-title">
-      <p class="eyebrow">Portfolio &amp; personal</p>
-      <h1 id="page-title" class="gradient-text">Scegli da dove iniziare</h1>
-      <p class="subtitle">Due aree, un unico spazio. Seleziona quella che vuoi visitare.</p>
-    </section>
-    <section aria-label="Scegli una sezione">
-      <div class="chip-stage" aria-label="Seleziona un chip da inserire nel proprio lettore">
-        <button class="chip-option" type="button" data-target="portfolio.html" data-reader="portfolio" aria-label="Apri la sezione Portfolio">
-          <div class="mini-reader" id="reader-portfolio" aria-hidden="true"><span class="reader-label">PORT 01</span><span class="reader-slot" id="slot-portfolio"></span><span class="reader-led"></span></div>
-          <span class="chip professional" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span></span>
-          <span class="chip-label">Portfolio</span>
-          <span class="chip-hint">Competenze, progetti e contatti</span>
-          <span class="chip-action">Esplora il portfolio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-        </button>
-        <button class="chip-option" type="button" data-target="personal.html" data-reader="personal" aria-label="Apri lo spazio Personal">
-          <div class="mini-reader personal" id="reader-personal" aria-hidden="true"><span class="reader-label">PORT 02</span><span class="reader-slot" id="slot-personal"></span><span class="reader-led"></span></div>
-          <span class="chip personal" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span></span>
-          <span class="chip-label">Personal</span>
-          <span class="chip-hint">Musica, natura e diario</span>
-          <span class="chip-action">Entra nello spazio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-        </button>
-      </div>
-    </section>
-    <footer class="bottomline"><span>© Marco Scatassi</span><span>Personal Hub</span></footer>
-  </main>
-<script>
-const finePointer=window.matchMedia('(pointer:fine)').matches,reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if(finePointer&&!reducedMotion)window.addEventListener('pointermove',e=>{document.documentElement.style.setProperty('--mouse-x',e.clientX+'px');document.documentElement.style.setProperty('--mouse-y',e.clientY+'px');},{passive:true});
-const canvas=document.getElementById('ambient-canvas'),ctx=canvas.getContext('2d');let particles=[],width=0,height=0,animationFrame;
-function resizeCanvas(){const dpr=Math.min(window.devicePixelRatio||1,1.5);width=window.innerWidth;height=window.innerHeight;canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);particles=Array.from({length:Math.min(48,Math.floor(width/28))},()=>({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,radius:1+Math.random()*1.4}));}
-function drawNetwork(){ctx.clearRect(0,0,width,height);particles.forEach((p,i)=>{if(!reducedMotion){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>width)p.vx*=-1;if(p.y<0||p.y>height)p.vy*=-1;}ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fillStyle='rgba(8,127,156,.48)';ctx.fill();for(let j=i+1;j<particles.length;j++){const q=particles[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<112){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(8,127,156,${(1-d/112)*.12})`;ctx.lineWidth=1;ctx.stroke();}}});if(!reducedMotion)animationFrame=requestAnimationFrame(drawNetwork);}
-resizeCanvas();drawNetwork();window.addEventListener('resize',()=>{cancelAnimationFrame(animationFrame);resizeCanvas();drawNetwork();},{passive:true});
 
-const cards=[...document.querySelectorAll('.chip-option')];
-let loadingChip=false;
-cards.forEach(card=>card.addEventListener('click',()=>{
-  if(loadingChip)return;
-  loadingChip=true;
-  cards.forEach(item=>item.disabled=true);
-  const target=card.dataset.target;
-  const reader=document.getElementById('reader-'+card.dataset.reader);
-  const slot=document.getElementById('slot-'+card.dataset.reader);
-  const chip=card.querySelector('.chip');
-  const from=chip.getBoundingClientRect(),to=slot.getBoundingClientRect();
-  reader.classList.add('is-active');
-  if(reducedMotion){window.location.assign(target);return;}
-  const flight=chip.cloneNode(true);
-  flight.classList.add('chip-flight');
-  flight.setAttribute('aria-hidden','true');
-  Object.assign(flight.style,{left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px'});
-  document.body.appendChild(flight);
-  chip.style.visibility='hidden';
-  const dx=to.left+to.width/2-(from.left+from.width/2);
-  const dy=to.top+to.height/2-(from.top+from.height/2);
-  const angle=Math.atan2(dy,dx)*180/Math.PI;
-  const motion=flight.animate([
-    {transform:'translate3d(0,0,0) rotate(0deg) scale(1)',filter:'brightness(1)',opacity:1,offset:0},
-    {transform:'translate3d('+dx*.42+'px,'+(dy*.42-24)+'px,0) rotate('+angle*.32+'deg) scale(.92)',filter:'brightness(1.08)',opacity:1,offset:.58},
-    {transform:'translate3d('+dx+'px,'+dy+'px,0) rotate('+angle*.55+'deg) scale(.34)',filter:'brightness(1.22)',opacity:.96,offset:.88},
-    {transform:'translate3d('+dx+'px,'+dy+'px,0) rotate('+angle*.55+'deg) scale(.12)',filter:'brightness(1.35)',opacity:0,offset:1}
-  ],{duration:820,easing:'cubic-bezier(.22,.72,.18,1)',fill:'forwards'});
-  motion.onfinish=()=>{flight.remove();reader.classList.add('is-inserted');window.location.assign(target);};
-}));
-function resetChipInterface(){
-  document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
-  cards.forEach(card=>{card.disabled=false;card.querySelector('.chip').style.visibility='';});
-  document.querySelectorAll('.mini-reader').forEach(reader=>reader.classList.remove('is-active'));
-  loadingChip=false;
-}
-window.addEventListener('pageshow',resetChipInterface);
-window.addEventListener('pagehide',()=>{
-  document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
-});
-</script>
+    <section class="experience" aria-label="Scegli la tua destinazione">
+      <button class="choice" type="button" data-target="portfolio.html" data-reader="portfolio" aria-label="Apri Portfolio: competenze, progetti e contatti">
+        <span class="choice-index">01 <span>— PROFESSIONAL</span></span>
+        <span class="chip professional" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span></span>
+        <span class="choice-name">Portfolio</span>
+        <span class="choice-description">Competenze, progetti e contatti</span>
+        <span class="choice-cta">Explore portfolio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      </button>
+
+      <button class="choice personal" type="button" data-target="personal.html" data-reader="personal" aria-label="Apri Personal: musica, natura e diario">
+        <span class="choice-index">02 <span>— PERSONAL</span></span>
+        <span class="chip personal" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span></span>
+        <span class="choice-name">Personal</span>
+        <span class="choice-description">Musica, natura e diario</span>
+        <span class="choice-cta">Enter personal space <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      </button>
+    </section>
+
+    <footer class="bottomline">
+      <span class="bottom-note">DESIGNED AS A SPACE, NOT A WEBSITE</span>
+      <span class="status">SYSTEM READY</span>
+    </footer>
+  </main>
+  <script>
+    const finePointer = window.matchMedia('(pointer:fine)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (finePointer && !reducedMotion) {
+      window.addEventListener('pointermove', event => {
+        document.documentElement.style.setProperty('--mouse-x', event.clientX + 'px');
+        document.documentElement.style.setProperty('--mouse-y', event.clientY + 'px');
+      }, { passive: true });
+    }
+
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [], width = 0, height = 0, animationFrame;
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width * dpr; canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      particles = Array.from({ length: Math.min(42, Math.floor(width / 30)) }, () => ({
+        x: Math.random() * width, y: Math.random() * height,
+        vx: (Math.random() - .5) * .18, vy: (Math.random() - .5) * .18,
+        radius: .8 + Math.random() * 1.2
+      }));
+    }
+    function drawNetwork() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((particle, index) => {
+        if (!reducedMotion) {
+          particle.x += particle.vx; particle.y += particle.vy;
+          if (particle.x < 0 || particle.x > width) particle.vx *= -1;
+          if (particle.y < 0 || particle.y > height) particle.vy *= -1;
+        }
+        ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(8,127,156,.4)'; ctx.fill();
+        for (let next = index + 1; next < particles.length; next++) {
+          const other = particles[next], distance = Math.hypot(particle.x - other.x, particle.y - other.y);
+          if (distance < 118) {
+            ctx.beginPath(); ctx.moveTo(particle.x, particle.y); ctx.lineTo(other.x, other.y);
+            ctx.strokeStyle = `rgba(8,127,156,${(1 - distance / 118) * .1})`; ctx.lineWidth = 1; ctx.stroke();
+          }
+        }
+      });
+      if (!reducedMotion) animationFrame = requestAnimationFrame(drawNetwork);
+    }
+    resizeCanvas(); drawNetwork();
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(animationFrame); resizeCanvas(); drawNetwork();
+    }, { passive: true });
+
+    const choices = [...document.querySelectorAll('.choice')];
+    let navigating = false;
+    choices.forEach(choice => choice.addEventListener('click', () => {
+      if (navigating) return;
+      navigating = true;
+      choices.forEach(item => item.disabled = true);
+      const target = choice.dataset.target;
+      const chip = choice.querySelector('.chip');
+      const origin = chip.getBoundingClientRect();
+      if (reducedMotion) { window.location.assign(target); return; }
+
+      const flight = chip.cloneNode(true);
+      flight.classList.add('chip-flight');
+      flight.setAttribute('aria-hidden', 'true');
+      Object.assign(flight.style, {
+        left: origin.left + 'px', top: origin.top + 'px',
+        width: origin.width + 'px', height: origin.height + 'px'
+      });
+      document.body.appendChild(flight);
+      chip.style.visibility = 'hidden';
+
+      const destinationX = window.innerWidth / 2 - (origin.left + origin.width / 2);
+      const destinationY = window.innerHeight / 2 - (origin.top + origin.height / 2);
+      const direction = choice.classList.contains('personal') ? 1 : -1;
+      const animation = flight.animate([
+        { transform: 'translate3d(0,0,0) rotate(0deg) scale(1)', opacity: 1, offset: 0 },
+        { transform: `translate3d(${destinationX * .48}px,${destinationY * .48 - 28}px,0) rotate(${direction * 10}deg) scale(.9)`, opacity: 1, offset: .58 },
+        { transform: `translate3d(${destinationX}px,${destinationY}px,0) rotate(${direction * 24}deg) scale(.18)`, opacity: .15, offset: 1 }
+      ], { duration: 760, easing: 'cubic-bezier(.2,.75,.2,1)', fill: 'forwards' });
+      animation.onfinish = () => window.location.assign(target);
+    }));
+    function resetInterface() {
+      document.querySelectorAll('.chip-flight').forEach(element => element.remove());
+      choices.forEach(choice => { choice.disabled = false; choice.querySelector('.chip').style.visibility = ''; });
+      navigating = false;
+    }
+    window.addEventListener('pageshow', resetInterface);
+    window.addEventListener('pagehide', () => document.querySelectorAll('.chip-flight').forEach(element => element.remove()));
+  </script>
 </body>
 </html>
