@@ -177,12 +177,12 @@ Non aggiungere effetti per aumentare artificialmente la complessità visiva. La 
 
 ### Stato della migrazione
 
-La prima migrazione dei token è stata completata per `index.html` e `portfolio.html`:
-- le variabili locali di palette ora fanno riferimento ai token `--ph-*`;
-- i colori estesi di Tailwind nel Portfolio usano le stesse variabili;
-- gli shadow cyan e pink del Portfolio puntano alle ombre condivise.
+La migrazione dei token di palette è stata completata per tutte le sei pagine principali:
+- `index.html` e `portfolio.html` usano i token condivisi per le palette locali; il Portfolio usa gli stessi token anche nella configurazione colori di Tailwind e per le ombre cyan/pink;
+- `personal.html`, `personal/music.html`, `personal/nature.html` e `personal/journal.html` collegano background, testo e colori luminosi decorativi ai token condivisi;
+- nelle pagine personali i colori cyan, pink e yellow più luminosi restano assegnati a glow, gradienti e decorazioni: non sono stati sostituiti con le tonalità funzionali più scure.
 
-Le pagine mantengono ancora componenti e regole locali per layout e identità. La migrazione non è conclusa per Personal, Music, Nature e Journal. Ogni pagina va verificata visivamente prima di ulteriori sostituzioni.
+La migrazione riguarda i token di palette, non una riscrittura completa dei CSS: layout, componenti, trasparenze e dettagli specifici restano locali per preservare l'identità di ciascuna pagina. La verifica visiva cross-device e il controllo degli stati interattivi sono ancora da eseguire.
 
 ## Metodo di modifica
 
