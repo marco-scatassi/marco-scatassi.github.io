@@ -201,9 +201,9 @@ La verifica eseguita in questa modifica è statica sul markup e sul CSS aggiorna
 
 ### Transizione persistente dei chip tra le pagine
 
-I chip della Home sono mantenuti come elementi visivi nelle hero di Portfolio e Personal. Al clic, la Home salva in `sessionStorage` la destinazione e la posizione/dimensione del chip selezionato e naviga subito. La pagina di destinazione anima direttamente il chip finale con una transizione FLIP (traslazione e scala uniforme), senza creare cloni: CSS, colore e proporzioni dell'elemento finale restano invariati durante il movimento. In Personal l'inclinazione originale del titolo viene mantenuta e il chip è ancorato al bordo destro dello spazio riservato accanto a “Passioni”. La durata è di 2,2 secondi. Se `prefers-reduced-motion` è attivo o i dati/strumenti di animazione non sono disponibili, il chip viene mostrato direttamente.
+La Home salva in `sessionStorage` la destinazione e la posizione/dimensione del chip selezionato e naviga subito. La pagina di destinazione anima il chip reale con traslazione e scala. Lo stato CSS che lo nasconde in attesa dell'arrivo viene rimosso prima di avviare l'animazione, così il chip resta visibile durante il movimento. In Personal il chip è un elemento fratello del titolo, disposto in uno spazio dedicato accanto al testo: non è più posizionato sopra o dentro la parola “Passioni”. La durata è di 2,2 secondi. Se `prefers-reduced-motion` è attivo o i dati/strumenti di animazione non sono disponibili, il chip viene mostrato direttamente.
 
-La verifica eseguita è statica: sono stati controllati i selettori, gli elementi di destinazione, la persistenza del dato di transizione e i percorsi di fallback. Non è stata eseguita una prova browser; restano da verificare visivamente il punto di arrivo e la fluidità su desktop e mobile.
+La verifica eseguita è statica sul codice aggiornato. Non è stata eseguita una prova browser né un controllo visivo del sito pubblicato: fluidità, punto di arrivo e ingombro responsive devono ancora essere verificati in browser.
 
 ## Metodo di modifica
 
