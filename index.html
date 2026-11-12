@@ -65,23 +65,22 @@
     .subtitle { max-width:330px; margin:0 0 4px; color:var(--muted); font-size:14px; line-height:1.6; }
     .section-label { display:flex; align-items:center; gap:12px; margin:0 0 14px; color:#526174; font:500 10px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:.13em; text-transform:uppercase; }
     .section-label::after { content:""; flex:1; height:1px; background:var(--line); }
-    .chip-stage { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:clamp(18px,4vw,54px); min-height:330px; padding:30px clamp(8px,4vw,48px); }
-    .chip { --accent:var(--cyan); position:relative; display:flex; flex-direction:column; align-items:stretch; min-height:190px; padding:19px 20px 17px; border:1px solid color-mix(in srgb,var(--accent) 65%,#17283b); border-radius:9px; color:var(--ink); text-align:left; background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(225,236,244,.96)); box-shadow:0 12px 28px rgba(23,40,59,.13),inset 0 0 0 4px rgba(255,255,255,.72),inset 0 -5px 0 color-mix(in srgb,var(--accent) 18%,transparent); cursor:pointer; isolation:isolate; transition:transform .22s ease,box-shadow .22s ease; }
+    .chip-stage { position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; justify-items:center; gap:clamp(28px,7vw,90px); min-height:245px; padding:38px clamp(8px,4vw,48px) 18px; }
+    .chip-option { display:flex; flex-direction:column; align-items:center; gap:15px; }
+    .chip { --accent:var(--cyan); position:relative; display:block; width:clamp(180px,25vw,250px); height:90px; padding:0; border:0; border-radius:0; color:inherit; background:transparent; cursor:pointer; transition:transform .22s ease,filter .22s ease; }
     .chip.personal { --accent:var(--pink); }
-    .chip::before { content:""; position:absolute; inset:8px; z-index:-1; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:5px; pointer-events:none; }
-    .chip:hover,.chip:focus-visible { transform:translateY(-5px) rotate(-1deg); box-shadow:0 18px 32px rgba(23,40,59,.18),inset 0 0 0 4px rgba(255,255,255,.72); outline:none; }
-    .chip:focus-visible { outline:2px solid var(--accent); outline-offset:5px; }
+    .chip:hover,.chip:focus-visible { transform:translateY(-5px) rotate(-2deg); filter:drop-shadow(0 12px 12px rgba(23,40,59,.2)); outline:none; }
+    .chip:focus-visible { outline:2px solid var(--accent); outline-offset:9px; border-radius:7px; }
     .chip:disabled { cursor:wait; }
-    .chip-head,.chip-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .chip-brand { color:var(--accent); font:800 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-transform:uppercase; }
-    .chip-code { color:#718096; font:500 9px ui-monospace,SFMono-Regular,Menlo,monospace; }
-    .chip-core { display:flex; align-items:center; gap:14px; margin:24px 0 20px; }
-    .chip-icon { display:grid; place-items:center; width:49px; height:49px; flex:0 0 49px; border:1px solid color-mix(in srgb,var(--accent) 55%,transparent); border-radius:5px; color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,white); font-size:21px; box-shadow:inset 0 0 15px color-mix(in srgb,var(--accent) 12%,transparent); }
-    .chip h2 { margin:0; font:800 clamp(23px,3vw,32px)/1 Inter,sans-serif; letter-spacing:-.04em; text-transform:uppercase; }
-    .chip-subtitle { margin:5px 0 0; color:#64748b; font-size:11px; }
-    .chip-contacts { display:flex; align-items:center; gap:5px; }
-    .chip-contacts span { display:block; width:17px; height:5px; border-radius:2px; background:linear-gradient(90deg,#a87900,#e8c56a); box-shadow:0 1px 1px rgba(23,40,59,.18); }
-    .chip-foot { padding-top:11px; border-top:1px solid rgba(23,40,59,.12); color:#526174; font:700 9px Inter,system-ui,sans-serif; letter-spacing:.09em; text-transform:uppercase; }
+    .usb-drive { position:absolute; inset:7px 27px 7px 0; display:block; overflow:visible; border:1px solid color-mix(in srgb,var(--accent) 65%,#263d50); border-radius:9px 5px 5px 9px; background:linear-gradient(160deg,#fdfefe 0%,#dce6ed 48%,#b8c8d4 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.95),inset 0 -4px 8px rgba(23,40,59,.16),0 7px 13px rgba(23,40,59,.17); }
+    .usb-drive::before { content:""; position:absolute; z-index:2; top:24px; right:-27px; width:29px; height:34px; border:1px solid #788b99; border-left:0; border-radius:0 3px 3px 0; background:linear-gradient(90deg,#aebbc4,#e5ebef 35%,#8799a6); box-shadow:2px 2px 3px rgba(23,40,59,.16); }
+    .usb-drive::after { content:""; position:absolute; z-index:3; top:30px; right:-21px; width:6px; height:22px; border-left:2px solid #657987; border-right:2px solid #657987; opacity:.9; }
+    .usb-inlay { position:absolute; inset:7px; display:flex; align-items:center; justify-content:space-between; padding:0 13px; border:1px solid color-mix(in srgb,var(--accent) 35%,transparent); border-radius:5px; background:linear-gradient(115deg,rgba(255,255,255,.8),color-mix(in srgb,var(--accent) 8%,#dce6ed)); }
+    .usb-mark { display:grid; place-items:center; width:39px; height:39px; border:1px solid color-mix(in srgb,var(--accent) 55%,#718096); border-radius:6px; color:var(--accent); background:rgba(255,255,255,.7); font-size:17px; box-shadow:inset 0 0 12px color-mix(in srgb,var(--accent) 12%,transparent); }
+    .usb-led { position:absolute; right:13px; bottom:9px; width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
+    .chip-label { color:var(--ink); font:700 17px Inter,ui-sans-serif,system-ui,sans-serif; letter-spacing:-.02em; }
+    .chip.personal + .chip-label { color:var(--pink); }
+    .chip.professional + .chip-label { color:var(--cyan); }
     .dock { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; width:min(340px,100%); min-height:116px; margin:0 auto 5px; padding:17px 26px; border:1px solid rgba(8,127,156,.3); border-radius:12px; background:linear-gradient(180deg,#e6edf3,#d5e0e9); box-shadow:0 12px 25px rgba(23,40,59,.12),inset 0 2px 4px rgba(255,255,255,.9),inset 0 -5px 12px rgba(23,40,59,.08); }
     .dock::before { content:""; position:absolute; inset:7px; border:1px solid rgba(255,255,255,.75); border-radius:8px; pointer-events:none; }
     .dock-label { margin-bottom:11px; color:#526174; font:700 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-transform:uppercase; }
@@ -98,9 +97,15 @@
       .top-note { font-size:11px; }
       .intro { display:block; margin:48px 0 28px; }
       .subtitle { margin-top:16px; max-width:420px; }
-      .chip-stage { grid-template-columns:1fr; gap:15px; min-height:0; padding:12px 4px 20px; }
-      .chip { min-height:166px; padding:16px 18px 14px; }
-      .chip-core { margin:18px 0 15px; }
+      .chip-stage { grid-template-columns:1fr 1fr; gap:12px; min-height:190px; padding:20px 0 15px; }
+      .chip-option { gap:11px; }
+      .chip { width:clamp(125px,39vw,190px); height:74px; }
+      .usb-drive { inset:7px 22px 7px 0; }
+      .usb-drive::before { right:-22px; top:21px; width:24px; height:28px; }
+      .usb-drive::after { top:25px; right:-17px; height:18px; }
+      .usb-inlay { inset:6px; padding:0 8px; }
+      .usb-mark { width:31px; height:31px; font-size:14px; }
+      .chip-label { font-size:15px; }
       .dock { min-height:108px; }
       .bottomline { font-size:8px; }
     }
@@ -129,16 +134,18 @@
     <section aria-label="Scegli una sezione">
       <p class="section-label">Seleziona una sezione</p>
       <div class="chip-stage" aria-label="Seleziona un chip da inserire nel lettore">
-        <button class="chip professional" type="button" data-target="portfolio.html" aria-label="Inserisci il chip Portfolio e apri il portfolio">
-          <span class="chip-head"><span class="chip-brand">PERSONAL HUB / DATA CHIP</span><span class="chip-code">PH-01</span></span>
-          <div class="chip-core"><span class="chip-icon"><i class="fa-solid fa-terminal" aria-hidden="true"></i></span><div class="chip-copy"><h2>Portfolio</h2><span class="chip-subtitle">Professional profile</span></div></div>
-          <span class="chip-foot"><span>Load professional data</span><span class="chip-contacts" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span></span>
-        </button>
-        <button class="chip personal" type="button" data-target="personal.html" aria-label="Inserisci il chip Personal e apri lo spazio personale">
-          <span class="chip-head"><span class="chip-brand">PERSONAL HUB / DATA CHIP</span><span class="chip-code">PH-02</span></span>
-          <div class="chip-core"><span class="chip-icon"><i class="fa-solid fa-compass" aria-hidden="true"></i></span><div class="chip-copy"><h2>Personal</h2><span class="chip-subtitle">Personal archive</span></div></div>
-          <span class="chip-foot"><span>Load personal data</span><span class="chip-contacts" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span></span>
-        </button>
+        <div class="chip-option">
+          <button class="chip professional" type="button" data-target="portfolio.html" aria-label="Inserisci il chip Portfolio e apri il portfolio">
+            <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span>
+          </button>
+          <span class="chip-label">Portfolio</span>
+        </div>
+        <div class="chip-option">
+          <button class="chip personal" type="button" data-target="personal.html" aria-label="Inserisci il chip Personal e apri lo spazio personale">
+            <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span>
+          </button>
+          <span class="chip-label">Personal</span>
+        </div>
       </div>
       <div class="dock" id="chip-dock" aria-live="polite">
         <span class="dock-label">Neural interface / data port</span>
