@@ -35,10 +35,10 @@
     </script>
 
     <style>
-    @view-transition { navigation: auto; }
     ::view-transition-group(hub-chip-flight) { animation-duration: 1.7s; animation-timing-function: cubic-bezier(.22,.8,.25,1); }
-    ::view-transition-old(hub-chip-flight) { animation: none; opacity: 0; mix-blend-mode: normal; }
-    ::view-transition-new(hub-chip-flight) { animation: none; opacity: 1; mix-blend-mode: normal; }
+    ::view-transition-image-pair(hub-chip-flight) { isolation: isolate; }
+    ::view-transition-old(hub-chip-flight) { display: none; animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(hub-chip-flight) { animation: none; mix-blend-mode: normal; }
 
         
 
@@ -949,8 +949,12 @@
   <script>
     try {
       const pending = JSON.parse(sessionStorage.getItem('ph-chip-transition') || 'null');
-      if (pending && pending.target === location.pathname.split('/').pop() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (pending && pending.target === location.pathname.split('/').pop() && !reducedMotion) {
         document.documentElement.classList.add('hub-chip-arrival-pending');
+        const transitionOptIn = document.createElement('style');
+        transitionOptIn.textContent = '@view-transition { navigation: auto; }';
+        document.head.append(transitionOptIn);
       }
       sessionStorage.removeItem('ph-chip-transition');
     } catch (_) {}
