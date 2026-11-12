@@ -100,8 +100,11 @@
     .playlist-track-link:hover .playlist-track-title { color:#078da7; }
     .playlist-track-title { font-weight:750; color:#17243a; }
     .playlist-track-meta { font-size:11px; color:#64748b; margin-top:2px; }
+    .playlist-links {
+      display:flex; flex-wrap:wrap; gap:8px 20px; padding:0 20px 16px;
+    }
     .playlist-youtube-link {
-      display:inline-flex; align-items:center; gap:8px; margin-top:16px;
+      display:inline-flex; align-items:center; gap:8px; margin-top:8px;
       color:#087e99; font-size:13px; font-weight:800;
     }
     .playlist-youtube-link:hover { color:#e83e91; }
@@ -394,14 +397,25 @@
           copy.append(title, meta, hint);
           toggle.append(cover, copy);
           card.appendChild(toggle);
+          const playlistLinks = document.createElement('div');
+          playlistLinks.className = 'playlist-links';
+
           const youtubeLink = document.createElement('a');
           youtubeLink.className = 'playlist-youtube-link';
           youtubeLink.href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
           youtubeLink.target = '_blank';
           youtubeLink.rel = 'noopener noreferrer';
-          youtubeLink.textContent = 'Apri la playlist su YouTube ↗';
-          youtubeLink.style.margin = '0 20px 16px';
-          card.appendChild(youtubeLink);
+          youtubeLink.innerHTML = '<i class="fa-brands fa-youtube" aria-hidden="true"></i> Apri su YouTube ↗';
+
+          const youtubeMusicLink = document.createElement('a');
+          youtubeMusicLink.className = 'playlist-youtube-link';
+          youtubeMusicLink.href = 'https://music.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
+          youtubeMusicLink.target = '_blank';
+          youtubeMusicLink.rel = 'noopener noreferrer';
+          youtubeMusicLink.innerHTML = '<i class="fa-solid fa-headphones" aria-hidden="true"></i> Apri su YouTube Music ↗';
+
+          playlistLinks.append(youtubeLink, youtubeMusicLink);
+          card.appendChild(playlistLinks);
 
           const details = document.createElement('div');
           details.className = 'playlist-details p-5';
