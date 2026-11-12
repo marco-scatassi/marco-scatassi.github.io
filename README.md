@@ -42,6 +42,25 @@ Pagine personali:
 
 La home iniziale deve rendere immediata la scelta tra Portfolio e Personal. La metafora del chip USB e l'animazione verso le due aree fanno parte dell'identità e non vanno rimosse senza una motivazione progettuale forte.
 
+## Design system condiviso
+
+Il file `assets/css/design-system.css` è la fonte condivisa per i token visivi e per le primitive riutilizzabili. È caricato da Home, Portfolio, Personal, Music, Nature e Journal.
+
+La direzione approvata è **light cyberpunk equilibrata**:
+- superfici chiare e testo blu notte;
+- ciano e rosa funzionali in tonalità leggibili;
+- tonalità più luminose riservate a gradienti e decorazioni;
+- glow, vetro e ombre contenuti, mai a scapito del contrasto.
+
+I token condivisi usano il prefisso `--ph-` per evitare collisioni con le variabili locali già presenti nelle pagine. I principali gruppi sono:
+- `--ph-color-*`: background, superfici, testo, bordi e accenti;
+- `--ph-gradient-*` e `--ph-shadow-*`: gradienti e profondità;
+- `--ph-radius-*`, `--ph-transition-*`: forme e movimento.
+
+Le primitive `.ph-surface`, `.ph-glass`, `.ph-gradient-text`, `.ph-focusable` e `.ph-interactive` sono opt-in: non cambiano automaticamente componenti esistenti. Le pagine possono mantenere layout e identità specifici, ma i nuovi componenti dovrebbero usare questi token invece di introdurre nuovi valori arbitrari.
+
+Durante la migrazione, sostituire gradualmente i valori duplicati con i token condivisi. Evitare una riscrittura massiva dei CSS inline: ogni pagina va verificata dopo l'adozione dei nuovi stili.
+
 ## Regole condivise di UI
 
 ### Colore e contrasto
