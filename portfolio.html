@@ -1703,20 +1703,22 @@
     return;
   }
 
+  // La classe pending nascondeva il chip anche durante l'animazione.
+  // La rimuoviamo prima di avviare WAAPI, così il chip è visibile per tutto il volo.
+  document.documentElement.classList.remove('hub-chip-arrival-pending');
+  chip.style.visibility = 'visible';
+
   const end = chip.getBoundingClientRect();
   if (!end.width || !end.height) { clear(); return; }
 
-  // FLIP sul chip reale: niente clone con CSS o proporzioni diverse.
-  // Translate e scale sono proprietà indipendenti: il transform del titolo
-  // Personal (centratura + inclinazione) rimane intatto durante tutto il volo.
   const startScale = Math.min(transition.width / end.width, transition.height / end.height);
   const dx = transition.left + transition.width / 2 - (end.left + end.width / 2);
   const dy = transition.top + transition.height / 2 - (end.top + end.height / 2);
 
   try {
     const animation = chip.animate([
-      { translate: `${dx}px ${dy}px`, scale: String(startScale) },
-      { translate: '0px 0px', scale: '1' }
+      { transform: `translate(${dx}px, ${dy}px) scale(${startScale})` },
+      { transform: 'none' }
     ], {
       duration: 2200,
       easing: 'cubic-bezier(.4,0,.2,1)',
