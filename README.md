@@ -182,7 +182,13 @@ La migrazione dei token di palette è stata completata per tutte le sei pagine p
 - `personal.html`, `personal/music.html`, `personal/nature.html` e `personal/journal.html` collegano background, testo e colori luminosi decorativi ai token condivisi;
 - nelle pagine personali i colori cyan, pink e yellow più luminosi restano assegnati a glow, gradienti e decorazioni: non sono stati sostituiti con le tonalità funzionali più scure.
 
-La migrazione riguarda i token di palette, non una riscrittura completa dei CSS: layout, componenti, trasparenze e dettagli specifici restano locali per preservare l'identità di ciascuna pagina. La verifica visiva cross-device e il controllo degli stati interattivi sono ancora da eseguire.
+La migrazione riguarda i token di palette, non una riscrittura completa dei CSS: layout, componenti, trasparenze e dettagli specifici restano locali per preservare l'identità di ciascuna pagina.
+
+### Primo controllo responsive statico
+
+La revisione del markup e dei CSS ha rilevato due titoli con `whitespace-nowrap` che potevano forzare una riga troppo larga sui viewport stretti. La regola è stata rimossa dai titoli principali di Music e Journal, lasciando al testo la possibilità di andare a capo. Sono stati inoltre controllati viewport meta, breakpoint e supporto a `prefers-reduced-motion` nelle sei pagine.
+
+Questo controllo è statico: non sostituisce una prova in browser a 360, 390, 768 e 1440 px. Restano da verificare visivamente overflow, dimensioni dei target touch, contrasto, focus da tastiera e stati interattivi. Non è stato eseguito un test browser né un controllo del sito pubblicato.
 
 ## Metodo di modifica
 
