@@ -383,7 +383,10 @@
   <script>
     try {
       const pending = JSON.parse(sessionStorage.getItem('ph-chip-transition') || 'null');
-      if (pending && pending.target === location.pathname.split('/').pop() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('hub-chip-arrival-pending');
+      if (pending && pending.target === location.pathname.split('/').pop() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('hub-chip-arrival-pending');
+      }
+      sessionStorage.removeItem('ph-chip-transition');
     } catch (_) {}
   </script>
 
