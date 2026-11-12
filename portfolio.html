@@ -35,6 +35,10 @@
     </script>
 
     <style>
+    @view-transition { navigation: auto; }
+    ::view-transition-group(hub-chip-flight) { animation-duration: 1.7s; animation-timing-function: cubic-bezier(.22,.8,.25,1); }
+    ::view-transition-old(hub-chip-flight), ::view-transition-new(hub-chip-flight) { animation: none; mix-blend-mode: normal; }
+
         
 
         :root {
@@ -936,17 +940,18 @@
     .hub-usb-mark { display:grid; place-items:center; width:39px; height:39px; border:1px solid color-mix(in srgb,var(--accent) 36%,white); border-radius:11px; color:var(--accent); background:rgba(255,255,255,.86); font-size:16px; }
     .hub-chip-code { color:#718096; font:700 6px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; }
     .hub-usb-led { position:absolute; right:8px; bottom:8px; width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
-    .hub-chip-arrival-flight { position:fixed!important; z-index:9999!important; margin:0!important; pointer-events:none!important; filter:drop-shadow(0 24px 24px rgba(23,40,59,.2)); }
-    .hub-chip-arrival-pending .hub-chip-destination { visibility:hidden; }
+    .hub-chip-arrival-pending .hub-chip-destination { view-transition-name:hub-chip-flight; }
     @media(max-width:700px) { .hub-chip-destination { width:66px; height:108px; } .hub-usb-drive { inset:13px 5px 0; } .hub-usb-drive::before { top:-13px;width:24px;height:14px; } .hub-usb-drive::after { top:-9px;left:calc(50% - 4px);width:8px;height:9px; } .hub-usb-inlay { inset:5px;padding:8px 0 6px; } .hub-usb-mark { width:29px;height:29px;font-size:12px; } }
-    @media(prefers-reduced-motion:reduce) { .hub-chip-arrival-flight { display:none!important; } }
 
     </style>
 
   <script>
     try {
       const pending = JSON.parse(sessionStorage.getItem('ph-chip-transition') || 'null');
-      if (pending && pending.target === location.pathname.split('/').pop()) document.documentElement.classList.add('hub-chip-arrival-pending');
+      if (pending && pending.target === location.pathname.split('/').pop() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('hub-chip-arrival-pending');
+      }
+      sessionStorage.removeItem('ph-chip-transition');
     } catch (_) {}
   </script>
 
@@ -1677,66 +1682,7 @@
 </script>
 
 
-<script>
-(() => {
-  const key = 'ph-chip-transition';
-  let transition;
-  try { transition = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) {}
-  if (!transition || transition.target !== location.pathname.split('/').pop()) return;
 
-  const chip = document.querySelector('.hub-chip-destination');
-  const clear = () => {
-    if (chip) {
-      chip.style.visibility = '';
-      chip.style.removeProperty('translate');
-      chip.style.removeProperty('scale');
-    }
-    document.documentElement.classList.remove('hub-chip-arrival-pending');
-    try { sessionStorage.removeItem(key); } catch (_) {}
-  };
-
-  if (!chip || window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      ![transition.left, transition.top, transition.width, transition.height].every(Number.isFinite) ||
-      transition.width <= 0 || transition.height <= 0 ||
-      typeof chip.animate !== 'function') {
-    clear();
-    return;
-  }
-
-  // La classe pending nascondeva il chip anche durante l'animazione.
-  // La rimuoviamo prima di avviare WAAPI, così il chip è visibile per tutto il volo.
-  document.documentElement.classList.remove('hub-chip-arrival-pending');
-  chip.style.visibility = 'visible';
-
-  const end = chip.getBoundingClientRect();
-  if (!end.width || !end.height) { clear(); return; }
-
-  const startScale = Math.min(transition.width / end.width, transition.height / end.height);
-  const dx = transition.left + transition.width / 2 - (end.left + end.width / 2);
-  const dy = transition.top + transition.height / 2 - (end.top + end.height / 2);
-
-  try {
-    const animation = chip.animate([
-      { transform: `translate(${dx}px, ${dy}px) scale(${startScale})` },
-      { transform: 'none' }
-    ], {
-      duration: 2200,
-      easing: 'cubic-bezier(.4,0,.2,1)',
-      fill: 'both'
-    });
-
-    animation.onfinish = () => {
-      try { animation.commitStyles(); } catch (_) {}
-      animation.cancel();
-      clear();
-    };
-    animation.oncancel = clear;
-    window.addEventListener('pagehide', () => animation.cancel(), { once: true });
-  } catch (_) {
-    clear();
-  }
-})();
-</script>
 
 </body>
 </html>

@@ -199,11 +199,15 @@ L'interazione è affidata a due pulsanti semanticamente accessibili, con feedbac
 
 La verifica eseguita in questa modifica è statica sul markup e sul CSS aggiornati in GitHub. Non è stato eseguito un test browser, una verifica visuale a 360/390/768/1440 px né un controllo del sito pubblicato. La precedente impostazione a card è superata da questo redesign.
 
-### Transizione persistente dei chip tra le pagine
+### Transizione condivisa dei chip tra le pagine
 
-La Home salva in `sessionStorage` la destinazione e la posizione/dimensione del chip selezionato e naviga subito. La pagina di destinazione anima il chip reale con traslazione e scala. Lo stato CSS che lo nasconde in attesa dell'arrivo viene rimosso prima di avviare l'animazione, così il chip resta visibile durante il movimento. In Personal il chip è un elemento fratello del titolo, disposto in uno spazio dedicato accanto al testo: non è più posizionato sopra o dentro la parola “Passioni”. La durata è di 2,2 secondi. Se `prefers-reduced-motion` è attivo o i dati/strumenti di animazione non sono disponibili, il chip viene mostrato direttamente.
+La navigazione dalla Home usa la **Cross-document View Transitions API** del browser. Al clic viene assegnato un nome di transizione al chip selezionato e viene salvata in `sessionStorage` soltanto la destinazione. La pagina di arrivo assegna lo stesso nome al chip corrispondente: il browser crea così una coppia condivisa e interpola posizione e dimensioni tra i due documenti, invece di ricreare il movimento con coordinate calcolate e Web Animations API.
 
-La verifica eseguita è statica sul codice aggiornato. Non è stata eseguita una prova browser né un controllo visivo del sito pubblicato: fluidità, punto di arrivo e ingombro responsive devono ancora essere verificati in browser.
+Il chip di destinazione resta visibile: non viene più applicata una regola `visibility:hidden` durante il caricamento e non viene più animato con `transform` sovrascrivendo le trasformazioni del layout. In Personal il chip continua a occupare il proprio spazio accanto al titolo “Esplora le mie Passioni”, come elemento flex separato; il layout del titolo non deve essere coperto dal chip.
+
+La transizione è abilitata solo tra pagine dello stesso sito e nei browser che supportano le navigazioni cross-document View Transitions. Nei browser non compatibili la navigazione resta immediata e il chip viene mostrato normalmente, senza sparire e riapparire tramite un'animazione simulata. Con `prefers-reduced-motion: reduce` la transizione viene disattivata.
+
+La verifica di questa modifica è statica sul codice aggiornato in GitHub. Non è stata eseguita una prova browser né una verifica visiva su desktop/mobile: fluidità effettiva, compatibilità del browser e assenza di sovrapposizioni devono essere confermate con test in browser.
 
 ## Metodo di modifica
 
