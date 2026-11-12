@@ -235,6 +235,12 @@
       const target = choice.dataset.target;
       const chip = choice.querySelector('.chip');
       const origin = chip.getBoundingClientRect();
+      try {
+        sessionStorage.setItem('ph-chip-transition', JSON.stringify({
+          target: target.split('/').pop(),
+          left: origin.left, top: origin.top, width: origin.width, height: origin.height
+        }));
+      } catch (_) {}
       if (reducedMotion) { window.location.assign(target); return; }
 
       const flight = chip.cloneNode(true);
