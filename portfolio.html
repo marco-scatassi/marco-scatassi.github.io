@@ -17,16 +17,16 @@
             theme: {
                 extend: {
                     colors: {
-                        cyberBg: '#f4f7fb',
-                        cyberCard: '#ffffff',
-                        cyberCyan: '#087f9c',
-                        cyberPink: '#d93670',
-                        cyberYellow: '#a87900',
-                        cyberText: '#526174'
+                        cyberBg: 'var(--ph-color-bg)',
+                        cyberCard: 'var(--ph-color-surface)',
+                        cyberCyan: 'var(--ph-color-cyan)',
+                        cyberPink: 'var(--ph-color-pink)',
+                        cyberYellow: 'var(--ph-color-yellow)',
+                        cyberText: 'var(--ph-color-muted)'
                     },
                     boxShadow: {
-                        'neon-cyan': '0 8px 28px rgba(8,127,156,.13)',
-                        'neon-pink': '0 8px 28px rgba(217,54,112,.13)',
+                        'neon-cyan': 'var(--ph-shadow-cyan)',
+                        'neon-pink': 'var(--ph-shadow-pink)',
                         'neon-yellow': '0 8px 28px rgba(168,121,0,.13)'
                     }
                 }
@@ -38,13 +38,13 @@
         
 
         :root {
-            --cyan: #087f9c;
-            --pink: #d93670;
-            --yellow: #a87900;
-            --dark: #17283b;
-            --muted: #526174;
-            --surface: #ffffff;
-            --background: #f4f7fb;
+            --cyan: var(--ph-color-cyan);
+            --pink: var(--ph-color-pink);
+            --yellow: var(--ph-color-yellow);
+            --dark: var(--ph-color-ink);
+            --muted: var(--ph-color-muted);
+            --surface: var(--ph-color-surface);
+            --background: var(--ph-color-bg);
             --mouse-x: 50vw;
             --mouse-y: 30vh;
         }
