@@ -190,6 +190,21 @@ chips.forEach(chip=>chip.addEventListener('click',()=>{
   ],{duration:850,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'});
   motion.onfinish=()=>{flight.remove();dockStatus.textContent='Data chip accepted / loading...';window.location.assign(target);};
 }));
+
+function resetChipInterface(){
+  document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
+  chips.forEach(chip=>{
+    chip.disabled=false;
+    chip.style.visibility='';
+  });
+  dock.classList.remove('is-active');
+  dockStatus.textContent='Waiting for data chip';
+  loadingChip=false;
+}
+window.addEventListener('pageshow',resetChipInterface);
+window.addEventListener('pagehide',()=>{
+  document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
+});
 </script>
 </body>
 </html>
