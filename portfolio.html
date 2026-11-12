@@ -927,6 +927,7 @@
     
     .hub-chip-destination { --hub-accent:var(--ph-color-cyan); position:relative; display:inline-flex; align-items:center; justify-content:center; width:clamp(76px,8vw,104px); height:clamp(124px,13vw,158px); flex:0 0 auto; filter:drop-shadow(0 16px 16px rgba(23,40,59,.16)); }
     .hub-chip-destination.personal { --hub-accent:var(--ph-color-pink); }
+    .profile-frame .hub-chip-destination { position:absolute; right:-48px; bottom:-48px; z-index:4; }
     .hub-chip { --accent:var(--hub-accent,var(--ph-color-cyan)); position:relative; display:block; width:100%; height:100%; pointer-events:none; }
     .hub-usb-drive { position:absolute; inset:17px 7px 0; border:1px solid color-mix(in srgb,var(--accent) 48%,#b8c8d4); border-radius:13px 13px 9px 9px; background:linear-gradient(135deg,#fff 0%,#eef3f7 38%,#cbd8e1 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.98),inset 0 -7px 13px rgba(23,40,59,.12),0 9px 18px rgba(23,40,59,.12); }
     .hub-usb-drive::before { content:""; position:absolute; z-index:2; top:-17px; left:50%; width:32px; height:18px; transform:translateX(-50%); border:1px solid #9aaab5; border-bottom:0; border-radius:6px 6px 0 0; background:linear-gradient(180deg,#aab8c2,#f4f7f9 78%); }
@@ -1008,13 +1009,14 @@
         </div>
     </div>
 
-    <div class="hub-chip-destination" aria-label="Portfolio data chip"><span class="hub-chip professional" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="hub-chip-code">PH / 01</span><span class="hub-usb-led"></span></span></span></span></div>
+    
 <div class="profile-frame">
         <img src="images/profile1.jpeg" alt="Marco Scatassi">
         <div class="profile-label">
             <i class="fa-solid fa-circle"></i>
             NETRUNNER IDENTIFIED
         </div>
+      <div class="hub-chip-destination portfolio" aria-label="Portfolio data chip"><span class="hub-chip professional" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="hub-chip-code">PH / 01</span><span class="hub-usb-led"></span></span></span></span></div>
     </div>
 
 </section>
