@@ -13,7 +13,8 @@
   <style>
     @view-transition { navigation: auto; }
     ::view-transition-group(hub-chip-flight) { animation-duration: 1.7s; animation-timing-function: cubic-bezier(.22,.8,.25,1); }
-    ::view-transition-old(hub-chip-flight), ::view-transition-new(hub-chip-flight) { animation: none; mix-blend-mode: normal; }
+    ::view-transition-old(hub-chip-flight) { animation: none; opacity: 0; mix-blend-mode: normal; }
+    ::view-transition-new(hub-chip-flight) { animation: none; opacity: 1; mix-blend-mode: normal; }
 
     :root {
       --paper: var(--ph-color-bg);
