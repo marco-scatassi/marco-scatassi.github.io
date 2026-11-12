@@ -10,14 +10,21 @@ Questo repository contiene il frontend statico pubblicato tramite GitHub Pages. 
 
 L'identità cyberpunk è una scelta progettuale intenzionale e va mantenuta nel tempo. Il sito deve conservare un carattere tecnologico, digitale e personale, evitando sia l'estetica corporate anonima sia l'eccesso di effetti che compromette leggibilità e usabilità.
 
+### Tema di base: light
+
+Il tema light resta la scelta predefinita del Personal Hub. Non introdurre un passaggio generalizzato al dark theme: non è un requisito dell'identità cyberpunk e non deve essere considerato un'evoluzione automatica del design.
+
 Elementi distintivi:
-- superfici e fondi prevalentemente scuri;
-- contrasti leggibili e gerarchie tipografiche nette;
-- ciano come accento funzionale primario;
+- superfici chiare, bianche o grigio ghiaccio, con testo principale blu notte o antracite;
+- ciano elettrico come accento funzionale primario;
 - rosa/fucsia come accento secondario, soprattutto nei gradienti;
-- bagliori, bordi luminosi e gradienti usati con moderazione;
+- contrasti netti e gerarchie tipografiche leggibili;
+- bordi sottili, ombre fredde, glow e gradienti usati con moderazione;
 - glassmorphism dove valorizza la profondità e non riduce il contrasto;
+- sezioni o componenti scuri ammessi come contrasto intenzionale, non come motivo per rendere dark l'intero sito;
 - micro-animazioni con uno scopo, non movimento decorativo continuo.
+
+Il cyberpunk deve emergere da palette, dettagli luminosi, composizione, tipografia e interazioni, non dall'obbligo di usare fondi neri.
 
 Non trasformare tutte le pagine in copie della stessa schermata. La coerenza deve derivare da regole condivise, non dall'uniformità assoluta.
 
@@ -38,6 +45,8 @@ La home iniziale deve rendere immediata la scelta tra Portfolio e Personal. La m
 ## Regole condivise di UI
 
 ### Colore e contrasto
+- Mantenere il tema light come impostazione visiva predefinita.
+- Usare superfici chiare e testo scuro ad alto contrasto; evitare di schiarire il testo solo per imitare un'interfaccia dark.
 - Usare il ciano per azioni, stati attivi, focus e collegamenti funzionali.
 - Usare rosa/fucsia come accento complementare, non come colore concorrente per ogni elemento.
 - Riservare il giallo a evidenziazioni limitate.
