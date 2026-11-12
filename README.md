@@ -205,6 +205,8 @@ La navigazione dalla Home usa la **Cross-document View Transitions API** del bro
 
 Il chip di destinazione resta visibile: non viene più applicata una regola `visibility:hidden` durante il caricamento e non viene più animato con `transform` sovrascrivendo le trasformazioni del layout. In Personal il chip continua a occupare il proprio spazio accanto al titolo “Esplora le mie Passioni”, come elemento flex separato; il layout del titolo non deve essere coperto dal chip.
 
+Per evitare l'effetto di doppia immagine durante il movimento, il livello snapshot precedente del chip viene reso trasparente e resta visibile soltanto quello nuovo, che viene spostato e ridimensionato dal browser.
+
 La transizione è abilitata solo tra pagine dello stesso sito e nei browser che supportano le navigazioni cross-document View Transitions. Nei browser non compatibili la navigazione resta immediata e il chip viene mostrato normalmente, senza sparire e riapparire tramite un'animazione simulata. Con `prefers-reduced-motion: reduce` la transizione viene disattivata.
 
 La verifica di questa modifica è statica sul codice aggiornato in GitHub. Non è stata eseguita una prova browser né una verifica visiva su desktop/mobile: fluidità effettiva, compatibilità del browser e assenza di sovrapposizioni devono essere confermate con test in browser.
