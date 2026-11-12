@@ -241,27 +241,9 @@
           left: origin.left, top: origin.top, width: origin.width, height: origin.height
         }));
       } catch (_) {}
-      if (reducedMotion) { window.location.assign(target); return; }
-
-      const flight = chip.cloneNode(true);
-      flight.classList.add('chip-flight');
-      flight.setAttribute('aria-hidden', 'true');
-      Object.assign(flight.style, {
-        left: origin.left + 'px', top: origin.top + 'px',
-        width: origin.width + 'px', height: origin.height + 'px'
-      });
-      document.body.appendChild(flight);
-      chip.style.visibility = 'hidden';
-
-      const destinationX = window.innerWidth / 2 - (origin.left + origin.width / 2);
-      const destinationY = window.innerHeight / 2 - (origin.top + origin.height / 2);
-      const direction = choice.classList.contains('personal') ? 1 : -1;
-      const animation = flight.animate([
-        { transform: 'translate3d(0,0,0) rotate(0deg) scale(1)', opacity: 1, offset: 0 },
-        { transform: `translate3d(${destinationX * .48}px,${destinationY * .48 - 28}px,0) rotate(${direction * 10}deg) scale(.9)`, opacity: 1, offset: .58 },
-        { transform: `translate3d(${destinationX}px,${destinationY}px,0) rotate(${direction * 24}deg) scale(.18)`, opacity: .15, offset: 1 }
-      ], { duration: 760, easing: 'cubic-bezier(.2,.75,.2,1)', fill: 'forwards' });
-      animation.onfinish = () => window.location.assign(target);
+      // La navigazione parte subito: il chip viene animato una sola volta
+      // nella pagina di destinazione, dalla posizione salvata a quella finale.
+      window.location.assign(target);
     }));
     function resetInterface() {
       document.querySelectorAll('.chip-flight').forEach(element => element.remove());
