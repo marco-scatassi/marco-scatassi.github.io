@@ -1683,7 +1683,6 @@
   let transition;
   try { transition = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) {}
   if (!transition || transition.target !== location.pathname.split('/').pop()) return;
-
   const wrapper = document.querySelector('.hub-chip-destination');
   const target = wrapper && wrapper.querySelector('.hub-chip');
   const clear = () => {
@@ -1692,63 +1691,40 @@
     try { sessionStorage.removeItem(key); } catch (_) {}
   };
   if (!target || !wrapper) { clear(); return; }
-
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      !Number.isFinite(transition.left) || !Number.isFinite(transition.top) ||
-      !Number.isFinite(transition.width) || !Number.isFinite(transition.height) ||
-      transition.width <= 0 || transition.height <= 0 ||
-      typeof target.animate !== 'function') {
-    clear();
-    return;
-  }
+      ![transition.left, transition.top, transition.width, transition.height].every(Number.isFinite) ||
+      transition.width <= 0 || transition.height <= 0 || typeof target.animate !== 'function') { clear(); return; }
 
-  // Misurare il punto finale prima di nasconderlo e animare un clone indipendente.
-  const destination = target.getBoundingClientRect();
-  const flight = target.cloneNode(true);
+  const destination = wrapper.getBoundingClientRect();
+  const flight = wrapper.cloneNode(true);
   flight.classList.add('hub-chip-arrival-flight');
   flight.setAttribute('aria-hidden', 'true');
-  const targetStyle = getComputedStyle(target);
+  const accent = wrapper.classList.contains('personal') ? '#d93691' : '#078fae';
   Object.assign(flight.style, {
-    left: transition.left + 'px',
-    top: transition.top + 'px',
-    width: transition.width + 'px',
-    height: transition.height + 'px',
-    boxSizing: 'border-box',
-    transformOrigin: 'center center',
-    // Il clone vive sotto document.body: copia le variabili ereditate dal chip
-    // originale per evitare cambi di colore durante l'ultimo fotogramma.
-    '--accent': targetStyle.getPropertyValue('--accent').trim(),
-    color: targetStyle.color
+    position:'fixed', left:transition.left+'px', top:transition.top+'px',
+    width:transition.width+'px', height:transition.height+'px', margin:'0',
+    boxSizing:'border-box', transformOrigin:'center center',
+    '--hub-accent':accent, '--accent':accent, color:accent
   });
+  const flightChip = flight.querySelector('.hub-chip');
+  if (flightChip) flightChip.style.setProperty('--accent',accent);
   document.body.appendChild(flight);
   wrapper.style.visibility = 'hidden';
 
-  const startCenterX = transition.left + transition.width / 2;
-  const startCenterY = transition.top + transition.height / 2;
-  // getBoundingClientRect restituisce il centro corretto anche per il chip
-  // inclinato in Personal: il clone termina sullo stesso centro visivo.
-  const endCenterX = destination.left + destination.width / 2;
-  const endCenterY = destination.top + destination.height / 2;
-  const dx = endCenterX - startCenterX;
-  const dy = endCenterY - startCenterY;
-  const sx = destination.width / transition.width;
-  const sy = destination.height / transition.height;
-  const endRotation = wrapper.classList.contains('title-chip') ? 18 : 0;
-
+  const dx = destination.left + destination.width/2 - (transition.left + transition.width/2);
+  const dy = destination.top + destination.height/2 - (transition.top + transition.height/2);
+  const scale = Math.min(destination.width/transition.width,destination.height/transition.height);
+  const rotation = wrapper.classList.contains('title-chip') ? 18 : 0;
   try {
     const animation = flight.animate([
-      { transform: 'translate3d(0,0,0) rotate(0deg) scale(1,1)', opacity: 1, offset: 0 },
-      { transform: `translate3d(${dx * .52}px,${dy * .52}px,0) rotate(${endRotation * .52}deg) scale(${1 + (sx - 1) * .52},${1 + (sy - 1) * .52})`, opacity: 1, offset: .52 },
-      { transform: `translate3d(${dx}px,${dy}px,0) rotate(${endRotation}deg) scale(${sx},${sy})`, opacity: 1, offset: 1 }
-    ], { duration: 1150, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
-
-    animation.onfinish = () => { flight.remove(); clear(); };
-    animation.oncancel = () => { flight.remove(); clear(); };
-    window.addEventListener('pagehide', () => flight.remove(), { once: true });
-  } catch (_) {
-    flight.remove();
-    clear();
-  }
+      {transform:'translate3d(0,0,0) rotate(0deg) scale(1)',offset:0},
+      {transform:`translate3d(${dx*.5}px,${dy*.5}px,0) rotate(${rotation*.5}deg) scale(${1+(scale-1)*.5})`,offset:.5},
+      {transform:`translate3d(${dx}px,${dy}px,0) rotate(${rotation}deg) scale(${scale})`,offset:1}
+    ],{duration:2200,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+    animation.onfinish=()=>{flight.remove();clear();};
+    animation.oncancel=()=>{flight.remove();clear();};
+    window.addEventListener('pagehide',()=>flight.remove(),{once:true});
+  } catch (_) { flight.remove(); clear(); }
 })();
 </script>
 
