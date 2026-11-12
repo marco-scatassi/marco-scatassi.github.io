@@ -715,8 +715,9 @@
   const endCenterY = destination.top + destination.height / 2;
   const dx = endCenterX - startCenterX;
   const dy = endCenterY - startCenterY;
-  const sx = destination.width / transition.width;
-  const sy = destination.height / transition.height;
+  // Usa le dimensioni di layout, non il bounding box già espanso dalla rotazione.
+  const sx = wrapper.offsetWidth / transition.width;
+  const sy = wrapper.offsetHeight / transition.height;
   const endRotation = wrapper.classList.contains('title-chip') ? 18 : 0;
 
   try {
