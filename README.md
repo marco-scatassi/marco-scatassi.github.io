@@ -191,23 +191,13 @@ La revisione del markup e dei CSS ha rilevato due titoli con `whitespace-nowrap`
 Questo controllo è statico: non sostituisce una prova in browser a 360, 390, 768 e 1440 px. Restano da verificare visivamente overflow, dimensioni dei target touch, contrasto, focus da tastiera e stati interattivi. Non è stato eseguito un test browser né un controllo del sito pubblicato.
 
 
-### Primo redesign visivo della Home
+### Redesign immersivo della Home
 
-La Home è stata aggiornata con una prima modifica visibile: le due scelte Portfolio e Personal sono ora presentate come card chiare con superfici leggere, bordi, ombre fredde e accenti ciano/rosa distinti. Sono state aggiunte brevi descrizioni delle destinazioni, rivista la spaziatura tra le card e rimossa la forzatura del titolo principale su una sola riga. Sono presenti adattamenti specifici per viewport molto stretti e il rispetto di `prefers-reduced-motion` anche per l'hover delle card.
+La Home è stata ripensata come schermata d'ingresso full-screen, senza navbar, hero/titolo introduttivo e card contenitore. Portfolio e Personal sono presentati come due destinazioni all'interno di un'unica composizione: i chip USB diventano i protagonisti visivi, accompagnati da tipografia integrata, micro-etichette e accenti cromatici distinti (ciano e rosa). Il tema light cyberpunk, la metafora USB e l'accesso immediato alle due aree restano invariati.
 
-La metafora dei chip USB e l'animazione di inserimento sono state mantenute. La modifica è stata verificata rileggendo il file su GitHub; non è stato eseguito un test in browser né una verifica visuale del sito pubblicato.
+L'interazione è affidata a due pulsanti semanticamente accessibili, con feedback hover/focus e animazione del chip verso il centro della scena prima della navigazione. Su smartphone la composizione diventa verticale; su viewport più bassi sono ridotte le dimensioni degli elementi. Il movimento rispetta `prefers-reduced-motion`, che mantiene la navigazione immediata.
 
-
-### Interazione e rifinitura della Home
-
-Le scelte Portfolio e Personal sono ora controlli a tutta superficie: l'intera card è attivabile con mouse, touch e tastiera, non soltanto il chip USB. Le card mostrano inoltre un invito all'azione esplicito, un feedback hover/focus e mantengono l'animazione del chip verso il lettore prima della navigazione. Il markup usa un singolo pulsante per card, evitando controlli interattivi annidati.
-
-
-### Evoluzione grafica e animazione della Home
-
-La Home adotta una direzione più contemporanea mantenendo il tema light cyberpunk: gerarchia tipografica più decisa, sfondo con griglia e aloni cromatici più discreti, card più ampie e profonde con accento specifico per Portfolio e Personal. I chip USB sono stati ridisegnati con proporzioni più compatte, connettore e corpo più definiti, superfici metalliche chiare e dettagli luminosi contenuti. Su smartphone le card passano a una composizione compatta a righe per mantenere leggibili sia il lettore sia l'azione.
-
-L'animazione di selezione ora segue un tragitto più diretto verso lo slot, con rotazione lieve, riduzione progressiva e dissolvenza nell'inserimento. La navigazione immediata resta attiva per chi usa `prefers-reduced-motion`. La verifica eseguita è statica sul contenuto GitHub: non è stato eseguito un test browser o un controllo visuale sui viewport reali.
+La verifica eseguita in questa modifica è statica sul markup e sul CSS aggiornati in GitHub. Non è stato eseguito un test browser, una verifica visuale a 360/390/768/1440 px né un controllo del sito pubblicato. La precedente impostazione a card è superata da questo redesign.
 
 ## Metodo di modifica
 
