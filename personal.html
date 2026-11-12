@@ -349,14 +349,20 @@
     
     .hub-chip-destination { --hub-accent:var(--ph-color-cyan); position:relative; display:inline-flex; align-items:center; justify-content:center; width:clamp(76px,8vw,104px); height:clamp(124px,13vw,158px); flex:0 0 auto; filter:drop-shadow(0 16px 16px rgba(23,40,59,.16)); }
     .hub-chip-destination.personal { --hub-accent:var(--ph-color-pink); }
-    .passion-title-wrap { position:relative; display:inline-block; white-space:nowrap; padding-right:clamp(104px,13vw,140px); }
-    .passion-title-wrap .title-chip { position:absolute; right:0; left:auto; top:50%; width:clamp(58px,6vw,78px); height:clamp(92px,9.6vw,124px); transform:translateY(-50%) rotate(18deg); transform-origin:center; z-index:4; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
-    .passion-title-wrap .title-chip .hub-usb-drive { inset:13px 6px 0; }
-    .passion-title-wrap .title-chip .hub-usb-drive::before { top:-13px; width:26px; height:14px; }
-    .passion-title-wrap .title-chip .hub-usb-drive::after { top:-10px; left:calc(50% - 4px); width:8px; height:9px; }
-    .passion-title-wrap .title-chip .hub-usb-inlay { inset:6px; padding:8px 0 6px; }
-    .passion-title-wrap .title-chip .hub-usb-mark { width:30px; height:30px; font-size:12px; }
-    .passion-title-wrap .title-chip .hub-chip-code { font-size:5px; }
+    .hero-title-layout { display:flex; align-items:center; justify-content:center; gap:clamp(18px,3vw,36px); width:100%; }
+    .hero-title-layout .hero-title { margin:0; min-width:0; }
+    .hero-title-layout .title-chip { position:relative; display:block; flex:0 0 auto; width:clamp(58px,6vw,78px); height:clamp(92px,9.6vw,124px); transform:rotate(18deg); transform-origin:center; z-index:1; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
+    .hero-title-layout .title-chip .hub-usb-drive { inset:13px 6px 0; }
+    .hero-title-layout .title-chip .hub-usb-drive::before { top:-13px; width:26px; height:14px; }
+    .hero-title-layout .title-chip .hub-usb-drive::after { top:-10px; left:calc(50% - 4px); width:8px; height:9px; }
+    .hero-title-layout .title-chip .hub-usb-inlay { inset:6px; padding:8px 0 6px; }
+    .hero-title-layout .title-chip .hub-usb-mark { width:30px; height:30px; font-size:12px; }
+    .hero-title-layout .title-chip .hub-chip-code { font-size:5px; }
+    @media(max-width:640px) {
+      .hero-title-layout { gap:14px; }
+      .hero-title-layout .hero-title { font-size:clamp(2rem,8vw,2.6rem); }
+      .hero-title-layout .title-chip { width:52px; height:84px; }
+    }
     .hub-chip { --accent:var(--hub-accent,var(--ph-color-cyan)); position:relative; display:block; width:100%; height:100%; pointer-events:none; }
     .hub-usb-drive { position:absolute; inset:17px 7px 0; border:1px solid color-mix(in srgb,var(--accent) 48%,#b8c8d4); border-radius:13px 13px 9px 9px; background:linear-gradient(135deg,#fff 0%,#eef3f7 38%,#cbd8e1 100%); box-shadow:inset 0 2px 3px rgba(255,255,255,.98),inset 0 -7px 13px rgba(23,40,59,.12),0 9px 18px rgba(23,40,59,.12); }
     .hub-usb-drive::before { content:""; position:absolute; z-index:2; top:-17px; left:50%; width:32px; height:18px; transform:translateX(-50%); border:1px solid #9aaab5; border-bottom:0; border-radius:6px 6px 0 0; background:linear-gradient(180deg,#aab8c2,#f4f7f9 78%); }
@@ -420,9 +426,12 @@
                 </div>
             </div>
 
-            <h1 class="hero-title text-5xl md:text-7xl font-black tracking-tight leading-tight reveal">
-                Esplora le mie<br class="hidden sm:block"> <span class="passion-title-wrap">Passioni<span class="hub-chip-destination personal title-chip" aria-label="Personal space chip"><span class="hub-chip personal" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-compass"></i></span><span class="hub-chip-code">PH / 02</span><span class="hub-usb-led"></span></span></span></span></span>
-            </h1>
+            <div class="hero-title-layout reveal">
+                <h1 class="hero-title text-5xl md:text-7xl font-black tracking-tight leading-tight">
+                    Esplora le mie<br>Passioni
+                </h1>
+                <span class="hub-chip-destination personal title-chip" aria-label="Personal space chip"><span class="hub-chip personal" aria-hidden="true"><span class="hub-usb-drive"><span class="hub-usb-inlay"><span class="hub-usb-mark"><i class="fa-solid fa-compass"></i></span><span class="hub-chip-code">PH / 02</span><span class="hub-usb-led"></span></span></span></span>
+            </div>
 
             <p class="text-base md:text-xl text-slate-500 max-w-2xl mx-auto mt-8 leading-relaxed reveal">
                 Un luogo dove condivido le mie esperienze fuori dal lavoro:
@@ -694,20 +703,22 @@
     return;
   }
 
+  // La classe pending nascondeva il chip anche durante l'animazione.
+  // La rimuoviamo prima di avviare WAAPI, così il chip è visibile per tutto il volo.
+  document.documentElement.classList.remove('hub-chip-arrival-pending');
+  chip.style.visibility = 'visible';
+
   const end = chip.getBoundingClientRect();
   if (!end.width || !end.height) { clear(); return; }
 
-  // FLIP sul chip reale: niente clone con CSS o proporzioni diverse.
-  // Translate e scale sono proprietà indipendenti: il transform del titolo
-  // Personal (centratura + inclinazione) rimane intatto durante tutto il volo.
   const startScale = Math.min(transition.width / end.width, transition.height / end.height);
   const dx = transition.left + transition.width / 2 - (end.left + end.width / 2);
   const dy = transition.top + transition.height / 2 - (end.top + end.height / 2);
 
   try {
     const animation = chip.animate([
-      { translate: `${dx}px ${dy}px`, scale: String(startScale) },
-      { translate: '0px 0px', scale: '1' }
+      { transform: `translate(${dx}px, ${dy}px) scale(${startScale}) rotate(18deg)` },
+      { transform: 'rotate(18deg)' }
     ], {
       duration: 2200,
       easing: 'cubic-bezier(.4,0,.2,1)',
