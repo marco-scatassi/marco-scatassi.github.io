@@ -151,6 +151,31 @@
             color: var(--dark);
         }
 
+        .hub-return {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(8,127,156,.28);
+            border-radius: 9px;
+            color: var(--cyan);
+            background: rgba(8,127,156,.06);
+            font-size: 20px;
+            transition: color .2s, background .2s, border-color .2s, transform .2s;
+        }
+
+        .hub-return:hover {
+            color: #fff;
+            background: var(--cyan);
+            border-color: var(--cyan);
+            transform: translateY(-2px);
+        }
+
+        .hub-return:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+        }
+
         .logo span {
             color: var(--pink);
         }
@@ -164,66 +189,6 @@
             margin-right: 9px;
             box-shadow: 0 0 12px var(--cyan);
             animation: pulse 2s infinite;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 27px;
-        }
-
-        .nav-links a {
-            font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #526174;
-            transition: .25s;
-        }
-
-        .nav-links a:hover {
-            color: var(--cyan);
-        }
-
-        .nav-links .nav-special {
-            padding: 11px 15px;
-            color: var(--pink);
-            border: 1px solid rgba(217,54,112,.35);
-            border-radius: 7px;
-            background: rgba(217,54,112,.05);
-        }
-
-        .nav-special:hover {
-            background: var(--pink);
-            color: white !important;
-        }
-
-        #menu-btn {
-            display: none;
-            border: 0;
-            background: none;
-            color: var(--cyan);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #mobile-menu {
-            display: none;
-            padding: 15px 25px 22px;
-            background: white;
-            border-top: 1px solid rgba(8,127,156,.15);
-        }
-
-        #mobile-menu.open {
-            display: grid;
-            gap: 18px;
-        }
-
-        #mobile-menu a {
-            font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: var(--dark);
         }
 
         /* HERO */
@@ -850,14 +815,6 @@
         }
 
         @media(max-width: 760px) {
-            .nav-links {
-                display: none;
-            }
-
-            #menu-btn {
-                display: block;
-            }
-
             .hero {
                 grid-template-columns: 1fr;
                 padding-top: 75px;
@@ -954,41 +911,10 @@
             Marco Scatassi
         </a>
 
-        <nav class="nav-links">
-            <a href="#about">About</a>
-            <a href="#experience">Logs</a>
-            <a href="#projects">Projects</a>
-            <a href="#skills">Stack</a>
-            <a href="#certifications">Certs</a>
-            <a href="#contact">Uplink</a>
-            <a href="personal.html" class="nav-special">
-                <i class="fa-solid fa-satellite-dish"></i>
-                Netrunner Mode
-            </a>
-            <a href="https://marco-scatassi.github.io/hub/index.html" class="nav-special">
-                <i class="fa-solid fa-lock"></i>
-                Personal Hub
-            </a>
-        </nav>
-
-        <button id="menu-btn" aria-label="Open navigation menu" aria-expanded="false">
-            <i class="fa-solid fa-bars-staggered"></i>
-        </button>
-    </div>
-
-    <nav id="mobile-menu">
-        <a href="#about">About</a>
-        <a href="#experience">Logs</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Stack</a>
-        <a href="#certifications">Certs</a>
-        <a href="#contact">Uplink</a>
-        <a href="https://marco-scatassi.github.io/hub/index.html">
-            <i class="fa-solid fa-lock"></i>
-            Personal Hub
+        <a class="hub-return" href="index.html" aria-label="Torna alla selezione dei chip" title="Torna alla selezione dei chip">
+            <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
         </a>
-        <a href="personal.html">Netrunner Mode</a>
-    </nav>
+    </div>
 </header>
 
 <!-- HERO -->
@@ -1522,29 +1448,6 @@
 <!-- INTERACTIVITY -->
 
 <script>
-    // MOBILE NAVIGATION
-
-    const menuButton = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    menuButton.addEventListener('click', () => {
-        const isOpen = mobileMenu.classList.toggle('open');
-
-        menuButton.setAttribute('aria-expanded', isOpen);
-        menuButton.innerHTML = isOpen
-            ? '<i class="fa-solid fa-xmark"></i>'
-            : '<i class="fa-solid fa-bars-staggered"></i>';
-    });
-
-    mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            menuButton.setAttribute('aria-expanded', 'false');
-            menuButton.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
-        });
-    });
-
-
     // SCROLL REVEAL ANIMATIONS
 
     const revealElements = document.querySelectorAll('.reveal');
