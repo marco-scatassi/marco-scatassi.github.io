@@ -94,7 +94,7 @@
       background:var(--pink);
       box-shadow:0 0 18px rgba(232,62,145,.38);
     }
-    .chip-option:hover {
+    .chip-option:hover,.chip-option:focus-visible {
       transform:translateY(-5px);
       border-color:rgba(8,127,156,.25);
       box-shadow:0 20px 42px rgba(23,40,59,.11),0 0 26px rgba(0,174,202,.07);
@@ -103,15 +103,27 @@
       border-color:rgba(217,54,112,.24);
       box-shadow:0 20px 42px rgba(23,40,59,.11),0 0 26px rgba(232,62,145,.07);
     }
-    .chip-option::after {
-      content:"Competenze, progetti e contatti";
-      color:var(--muted);
+    .chip-hint { color:var(--muted); font-size:11px; line-height:1.4; }
+    .chip-action {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      margin-top:3px;
+      padding:10px 15px;
+      border:1px solid rgba(8,127,156,.2);
+      border-radius:999px;
+      color:#076d86;
+      background:rgba(0,174,202,.07);
       font-size:11px;
-      line-height:1.4;
-      text-align:center;
+      font-weight:750;
+      letter-spacing:.025em;
+      transition:background .2s ease,transform .2s ease;
     }
-    .chip-option:nth-child(2)::after { content:"Musica, natura e diario"; }
-    .chip { --accent:var(--cyan); position:relative; display:block; width:86px; height:176px; padding:0; border:0; border-radius:0; color:inherit; background:transparent; cursor:pointer; transition:transform .22s ease,filter .22s ease; }
+    .chip-option:nth-child(2) .chip-action { color:#b82b60; border-color:rgba(217,54,112,.2); background:rgba(232,62,145,.07); }
+    .chip-option:hover .chip-action,.chip-option:focus-visible .chip-action { transform:translateY(-1px); background:rgba(0,174,202,.13); }
+    .chip-option:nth-child(2):hover .chip-action,.chip-option:nth-child(2):focus-visible .chip-action { background:rgba(232,62,145,.13); }
+    .chip { --accent:var(--cyan); position:relative; display:block; width:86px; height:176px; padding:0; border:0; border-radius:0; color:inherit; background:transparent; transition:transform .22s ease,filter .22s ease; pointer-events:none; }
     .chip.personal { --accent:var(--pink); }
     .chip:hover,.chip:focus-visible { transform:translateY(-5px) rotate(-2deg); filter:drop-shadow(0 12px 12px rgba(23,40,59,.2)); outline:none; }
     .chip:focus-visible { outline:2px solid var(--accent); outline-offset:9px; border-radius:7px; }
@@ -151,7 +163,7 @@
       .intro { margin:22px 0 26px; }
       h1 { font-size:clamp(18px,6.1vw,30px); letter-spacing:-.045em; }
       .subtitle { margin-top:10px; font-size:13px; }
-      .chip-stage { flex-direction:row; gap:12px; padding:2px 0 5px; }\n      .chip-option { flex:1 1 0; padding:18px 9px 15px; gap:9px; border-radius:18px; }\n      .chip-option::after { max-width:150px; font-size:10px; }
+      .chip-stage { flex-direction:row; gap:12px; padding:2px 0 5px; }\n      .chip-option { flex:1 1 0; padding:18px 9px 15px; gap:9px; border-radius:18px; }\n      .chip-hint { max-width:150px; font-size:10px; }\n      .chip-action { padding:9px 12px; font-size:10px; }
       .chip-option { gap:10px; }
       .chip { width:76px; height:154px; }
       .usb-drive { inset:23px 5px 0; }
@@ -186,20 +198,20 @@
     </section>
     <section aria-label="Scegli una sezione">
       <div class="chip-stage" aria-label="Seleziona un chip da inserire nel proprio lettore">
-        <div class="chip-option">
+        <button class="chip-option" type="button" data-target="portfolio.html" data-reader="portfolio" aria-label="Apri la sezione Portfolio">
           <div class="mini-reader" id="reader-portfolio" aria-hidden="true"><span class="reader-label">PORT 01</span><span class="reader-slot" id="slot-portfolio"></span><span class="reader-led"></span></div>
-          <button class="chip professional" type="button" data-target="portfolio.html" data-reader="portfolio" aria-label="Inserisci il chip Portfolio e apri il portfolio">
-            <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span>
-          </button>
+          <span class="chip professional" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-terminal"></i></span><span class="chip-code">PH / 01</span><span class="usb-led"></span></span></span></span>
           <span class="chip-label">Portfolio</span>
-        </div>
-        <div class="chip-option">
+          <span class="chip-hint">Competenze, progetti e contatti</span>
+          <span class="chip-action">Esplora il portfolio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </button>
+        <button class="chip-option" type="button" data-target="personal.html" data-reader="personal" aria-label="Apri lo spazio Personal">
           <div class="mini-reader personal" id="reader-personal" aria-hidden="true"><span class="reader-label">PORT 02</span><span class="reader-slot" id="slot-personal"></span><span class="reader-led"></span></div>
-          <button class="chip personal" type="button" data-target="personal.html" data-reader="personal" aria-label="Inserisci il chip Personal e apri lo spazio personale">
-            <span class="usb-drive" aria-hidden="true"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span>
-          </button>
+          <span class="chip personal" aria-hidden="true"><span class="usb-drive"><span class="usb-inlay"><span class="usb-mark"><i class="fa-solid fa-compass"></i></span><span class="chip-code">PH / 02</span><span class="usb-led"></span></span></span></span>
           <span class="chip-label">Personal</span>
-        </div>
+          <span class="chip-hint">Musica, natura e diario</span>
+          <span class="chip-action">Entra nello spazio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </button>
       </div>
     </section>
     <footer class="bottomline"><span>© Marco Scatassi</span><span>Personal Hub</span></footer>
@@ -212,21 +224,21 @@ function resizeCanvas(){const dpr=Math.min(window.devicePixelRatio||1,1.5);width
 function drawNetwork(){ctx.clearRect(0,0,width,height);particles.forEach((p,i)=>{if(!reducedMotion){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>width)p.vx*=-1;if(p.y<0||p.y>height)p.vy*=-1;}ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fillStyle='rgba(8,127,156,.48)';ctx.fill();for(let j=i+1;j<particles.length;j++){const q=particles[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<112){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(8,127,156,${(1-d/112)*.12})`;ctx.lineWidth=1;ctx.stroke();}}});if(!reducedMotion)animationFrame=requestAnimationFrame(drawNetwork);}
 resizeCanvas();drawNetwork();window.addEventListener('resize',()=>{cancelAnimationFrame(animationFrame);resizeCanvas();drawNetwork();},{passive:true});
 
-const chips=[...document.querySelectorAll('.chip')];
+const cards=[...document.querySelectorAll('.chip-option')];
 let loadingChip=false;
-chips.forEach(chip=>chip.addEventListener('click',()=>{
+cards.forEach(card=>card.addEventListener('click',()=>{
   if(loadingChip)return;
   loadingChip=true;
-  chips.forEach(item=>item.disabled=true);
-  const target=chip.dataset.target;
-  const reader=document.getElementById('reader-'+chip.dataset.reader);
-  const slot=document.getElementById('slot-'+chip.dataset.reader);
+  cards.forEach(item=>item.disabled=true);
+  const target=card.dataset.target;
+  const reader=document.getElementById('reader-'+card.dataset.reader);
+  const slot=document.getElementById('slot-'+card.dataset.reader);
+  const chip=card.querySelector('.chip');
   const from=chip.getBoundingClientRect(),to=slot.getBoundingClientRect();
   reader.classList.add('is-active');
   if(reducedMotion){window.location.assign(target);return;}
   const flight=chip.cloneNode(true);
   flight.classList.add('chip-flight');
-  flight.removeAttribute('data-target');
   flight.setAttribute('aria-hidden','true');
   Object.assign(flight.style,{left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px'});
   document.body.appendChild(flight);
@@ -243,7 +255,7 @@ chips.forEach(chip=>chip.addEventListener('click',()=>{
 }));
 function resetChipInterface(){
   document.querySelectorAll('.chip-flight').forEach(element=>element.remove());
-  chips.forEach(chip=>{chip.disabled=false;chip.style.visibility='';});
+  cards.forEach(card=>{card.disabled=false;card.querySelector('.chip').style.visibility='';});
   document.querySelectorAll('.mini-reader').forEach(reader=>reader.classList.remove('is-active'));
   loadingChip=false;
 }
