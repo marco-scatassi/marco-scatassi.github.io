@@ -349,8 +349,8 @@
     
     .hub-chip-destination { --hub-accent:var(--ph-color-cyan); position:relative; display:inline-flex; align-items:center; justify-content:center; width:clamp(76px,8vw,104px); height:clamp(124px,13vw,158px); flex:0 0 auto; filter:drop-shadow(0 16px 16px rgba(23,40,59,.16)); }
     .hub-chip-destination.personal { --hub-accent:var(--ph-color-pink); }
-    .passion-title-wrap { position:relative; display:inline-block; white-space:nowrap; }
-    .passion-title-wrap .title-chip { position:absolute; left:calc(100% + clamp(8px,1.8vw,20px)); top:50%; width:clamp(54px,6vw,78px); height:clamp(90px,10vw,130px); transform:translateY(-50%) rotate(18deg); transform-origin:center; z-index:4; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
+    .passion-title-wrap { position:relative; display:inline-block; white-space:nowrap; padding-right:clamp(76px,9vw,108px); }
+    .passion-title-wrap .title-chip { position:absolute; left:calc(100% - clamp(76px,9vw,108px) + clamp(8px,1.8vw,20px)); top:50%; width:clamp(54px,6vw,78px); height:clamp(90px,10vw,130px); transform:translateY(-50%) rotate(18deg); transform-origin:center; z-index:4; filter:drop-shadow(0 12px 14px rgba(23,40,59,.16)); }
     .passion-title-wrap .title-chip .hub-usb-drive { inset:13px 6px 0; }
     .passion-title-wrap .title-chip .hub-usb-drive::before { top:-13px; width:26px; height:14px; }
     .passion-title-wrap .title-chip .hub-usb-drive::after { top:-10px; left:calc(50% - 4px); width:8px; height:9px; }
@@ -698,19 +698,26 @@
   const flight = target.cloneNode(true);
   flight.classList.add('hub-chip-arrival-flight');
   flight.setAttribute('aria-hidden', 'true');
+  const targetStyle = getComputedStyle(target);
   Object.assign(flight.style, {
     left: transition.left + 'px',
     top: transition.top + 'px',
     width: transition.width + 'px',
     height: transition.height + 'px',
     boxSizing: 'border-box',
-    transformOrigin: 'top left'
+    transformOrigin: 'center center',
+    // Il clone vive sotto document.body: copia le variabili ereditate dal chip
+    // originale per evitare cambi di colore durante l'ultimo fotogramma.
+    '--accent': targetStyle.getPropertyValue('--accent').trim(),
+    color: targetStyle.color
   });
   document.body.appendChild(flight);
   wrapper.style.visibility = 'hidden';
 
   const startCenterX = transition.left + transition.width / 2;
   const startCenterY = transition.top + transition.height / 2;
+  // getBoundingClientRect restituisce il centro corretto anche per il chip
+  // inclinato in Personal: il clone termina sullo stesso centro visivo.
   const endCenterX = destination.left + destination.width / 2;
   const endCenterY = destination.top + destination.height / 2;
   const dx = endCenterX - startCenterX;
