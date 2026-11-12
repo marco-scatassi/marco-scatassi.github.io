@@ -1707,19 +1707,26 @@
   const flight = target.cloneNode(true);
   flight.classList.add('hub-chip-arrival-flight');
   flight.setAttribute('aria-hidden', 'true');
+  const targetStyle = getComputedStyle(target);
   Object.assign(flight.style, {
     left: transition.left + 'px',
     top: transition.top + 'px',
     width: transition.width + 'px',
     height: transition.height + 'px',
     boxSizing: 'border-box',
-    transformOrigin: 'top left'
+    transformOrigin: 'center center',
+    // Il clone vive sotto document.body: copia le variabili ereditate dal chip
+    // originale per evitare cambi di colore durante l'ultimo fotogramma.
+    '--accent': targetStyle.getPropertyValue('--accent').trim(),
+    color: targetStyle.color
   });
   document.body.appendChild(flight);
   wrapper.style.visibility = 'hidden';
 
   const startCenterX = transition.left + transition.width / 2;
   const startCenterY = transition.top + transition.height / 2;
+  // getBoundingClientRect restituisce il centro corretto anche per il chip
+  // inclinato in Personal: il clone termina sullo stesso centro visivo.
   const endCenterX = destination.left + destination.width / 2;
   const endCenterY = destination.top + destination.height / 2;
   const dx = endCenterX - startCenterX;
