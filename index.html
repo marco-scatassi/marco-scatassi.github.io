@@ -11,6 +11,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/design-system.css">
   <style>
+    @view-transition { navigation: auto; }
+    ::view-transition-group(hub-chip-flight) { animation-duration: 1.7s; animation-timing-function: cubic-bezier(.22,.8,.25,1); }
+    ::view-transition-old(hub-chip-flight), ::view-transition-new(hub-chip-flight) { animation: none; mix-blend-mode: normal; }
+
     :root {
       --paper: var(--ph-color-bg);
       --ink: var(--ph-color-ink);
@@ -97,7 +101,6 @@
     .bottom-note { letter-spacing: .11em; }
     .status { display: flex; align-items: center; gap: 8px; color: #718096; font: 600 9px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing: .12em; text-transform: uppercase; }
     .status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-    .chip-flight { position: fixed !important; z-index: 120 !important; margin: 0 !important; pointer-events: none !important; transform-origin: center center; transition: none !important; }
     @media (max-width: 700px) {
       body { overflow: auto; }
       .viewport { min-height: 100svh; padding: 22px 18px 18px; }
@@ -234,24 +237,18 @@
       choices.forEach(item => item.disabled = true);
       const target = choice.dataset.target;
       const chip = choice.querySelector('.chip');
-      const origin = chip.getBoundingClientRect();
       try {
-        sessionStorage.setItem('ph-chip-transition', JSON.stringify({
-          target: target.split('/').pop(),
-          left: origin.left, top: origin.top, width: origin.width, height: origin.height
-        }));
+        sessionStorage.setItem('ph-chip-transition', JSON.stringify({ target: target.split('/').pop() }));
       } catch (_) {}
-      // La navigazione parte subito: il chip viene animato una sola volta
-      // nella pagina di destinazione, dalla posizione salvata a quella finale.
+      // Il browser abbina il chip sorgente a quello della pagina di arrivo
+      // e interpola posizione e dimensioni durante la navigazione cross-document.
+      if (!reducedMotion) chip.style.viewTransitionName = 'hub-chip-flight';
       window.location.assign(target);
     }));
-    function resetInterface() {
-      document.querySelectorAll('.chip-flight').forEach(element => element.remove());
-      choices.forEach(choice => { choice.disabled = false; choice.querySelector('.chip').style.visibility = ''; });
+    window.addEventListener('pageshow', () => {
+      choices.forEach(choice => { choice.disabled = false; });
       navigating = false;
-    }
-    window.addEventListener('pageshow', resetInterface);
-    window.addEventListener('pagehide', () => document.querySelectorAll('.chip-flight').forEach(element => element.remove()));
+    });
   </script>
 </body>
 </html>
