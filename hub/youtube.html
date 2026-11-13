@@ -642,6 +642,11 @@ function studioRenderTracks() {
       checkbox.setAttribute("aria-label", "Seleziona " + (track.title || "brano"));
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
+          if (studioSelection.length >= 500 && !studioSelection.includes(track.id)) {
+            checkbox.checked = false;
+            studioStatus.textContent = "Puoi selezionare al massimo 500 brani per playlist.";
+            return;
+          }
           if (!studioSelection.includes(track.id)) studioSelection.push(track.id);
         } else {
           studioSelection = studioSelection.filter(id => id !== track.id);
@@ -663,7 +668,7 @@ function studioRenderTracks() {
   studioUpdateSelectionStatus(matches.length);
 }
 function studioUpdateSelectionStatus(visibleCount) {
-  studioStatus.textContent = studioSelection.length + " brani selezionati su " + studioLibrary.length
+  studioStatus.textContent = studioSelection.length + " brani selezionati (massimo 500) su " + studioLibrary.length
     + " disponibili (" + visibleCount + " visibili con i filtri correnti).";
   studioCreate.disabled = studioSelection.length === 0;
 }
@@ -675,7 +680,9 @@ document.getElementById("studio-select-all").addEventListener("click", () => {
     const query = document.getElementById(filter.id).value.trim().toLocaleLowerCase("it");
     return !query || studioValuesFor(track, filter.key).some(value => String(value || "").toLocaleLowerCase("it").includes(query));
   }));
-  visible.forEach(track => { if (!studioSelection.includes(track.id)) studioSelection.push(track.id); });
+  visible.forEach(track => {
+    if (studioSelection.length < 500 && !studioSelection.includes(track.id)) studioSelection.push(track.id);
+  });
   studioRenderTracks();
 });
 document.getElementById("studio-clear-all").addEventListener("click", () => {
