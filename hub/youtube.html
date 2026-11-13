@@ -802,7 +802,7 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
   }
 });
 document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
-document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
+document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
 studioCreate.addEventListener("click",async()=>{
   if(!studioSource||!studioSelection.length)return;
   const title=studioTitle.value.trim();if(!title){studioStatus.textContent="Inserisci il nome della playlist.";return}
