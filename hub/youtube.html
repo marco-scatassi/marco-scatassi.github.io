@@ -589,10 +589,25 @@ const studioTitle=document.getElementById("studio-title"),studioTracks=document.
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSources=[],studioLibrary=[],studioSelection=[];
 function mergeStudioLibrary(rows){
-  const score=track=>[track.artist,track.album,track.release_year,track.genre?.length,track.mood?.length,track.lastfm_tags?.length,track.freqblog_tags?.length,track.manual_genre?.length,track.manual_mood?.length].reduce((sum,value)=>sum+(Array.isArray(value)?value.length:value?1:0),0);
+  const arrayFields=["genre","mood","lastfm_tags","lastfm_genre","lastfm_mood","freqblog_genre","freqblog_mood","manual_genre","manual_mood"];
+  const score=track=>arrayFields.reduce((sum,field)=>sum+(Array.isArray(track[field])?track[field].length:0),0)
+    +["artist","album","release_year","lastfm_lookup_at","freqblog_lookup_at"].filter(field=>Boolean(track[field])).length;
   const mergeArray=(a,b)=>[...new Map([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])].filter(value=>typeof value==="string"&&value.trim()).map(value=>[value.trim().toLocaleLowerCase("it"),value.trim()])).values()];
   const byVideo=new Map();
-  for(const row of rows){const key=row.video_id||row.id;if(!key)continue;const current=byVideo.get(key);if(!current){byVideo.set(key,{...row});continue;}const preferred=score(row)>score(current)?row:current;const secondary=preferred===row?current:row;const merged={...secondary,...preferred};for(const field of ["genre","mood","lastfm_tags","lastfm_genre","lastfm_mood","freqblog_genre","freqblog_mood","manual_genre","manual_mood"])merged[field]=mergeArray(preferred[field],secondary[field]);merged.freqblog_tags=[...(preferred.freqblog_tags||[]),...(secondary.freqblog_tags||[])];byVideo.set(key,merged);}
+  for(const row of rows){
+    const key=row.video_id;
+    if(!key)continue;
+    const current=byVideo.get(key);
+    if(!current){byVideo.set(key,{...row});continue;}
+    const preferred=score(row)>score(current)?row:current,secondary=preferred===row?current:row;
+    const merged={...secondary,...preferred};
+    for(const field of arrayFields)merged[field]=mergeArray(preferred[field],secondary[field]);
+    merged.freqblog_tags=[...new Map([...(preferred.freqblog_tags||[]),...(secondary.freqblog_tags||[])].map(tag=>[JSON.stringify(tag),tag])).values()];
+    merged.lastfm_lookup_at=preferred.lastfm_lookup_at||secondary.lastfm_lookup_at||null;
+    merged.freqblog_lookup_at=preferred.freqblog_lookup_at||secondary.freqblog_lookup_at||null;
+    merged.freqblog_status=preferred.freqblog_status||secondary.freqblog_status||null;
+    byVideo.set(key,merged);
+  }
   return [...byVideo.values()].sort((a,b)=>(a.title||"").localeCompare(b.title||"","it"));
 }
 async function loadStudioLibrary(){
