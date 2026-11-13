@@ -123,15 +123,16 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <button class="action" id="open-playlist-studio" type="button" aria-pressed="false">Crea nuova playlist</button>
 <button class="nav-link" id="show-edit-playlist" type="button" aria-pressed="false">Modifica playlist</button>
 <button class="nav-link" id="show-mapping-tools" type="button" aria-pressed="false">Importa mapping</button></div></section>
-<div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
-  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
   <section class="panel" id="favorite-migration-panel" style="margin:0 0 18px;padding:16px">
-    <div class="eyebrow">// Migrazione archivio storico</div>
-    <p class="small-note">Trasferisce i video della vecchia raccolta Favorite Songs nei Video piaciuti ufficiali di YouTube. La raccolta storica e i suoi record non verranno eliminati. Operazione esplicita, riprendibile e soggetta alla quota API.</p>
+    <div class="eyebrow">// Trasferimento archivio storico</div>
+    <p class="small-note">Aggiunge alla playlist ufficiale YouTube Video piaciuti tutti i video presenti in Favorite Songs che non sono già tra i Like. Favorite Songs resta conservata come archivio storico. Video piaciuti è una playlist di sistema: dopo il trasferimento rimane consultabile e utilizzabile come sorgente per creare nuove playlist, ma non è modificabile manualmente da Personal Hub.</p>
     <p class="small-note">Stima per 524 inserimenti: circa 26.200 unità (50 per video), oltre alle letture. La quota standard documentata è 10.000 unità al giorno.</p>
-    <div class="search-row"><button class="nav-link" id="favorite-migration-start" type="button">Migra Favorite Songs nei Video piaciuti</button></div>
+    <div class="search-row"><button class="nav-link" id="favorite-migration-start" type="button">Trasferisci Favorite Songs nei Video piaciuti</button></div>
     <p class="search-feedback" id="favorite-migration-status" role="status" aria-live="polite"></p>
   </section>
+<div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
+  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
+
   <p class="small-note">La raccolta sorgente è Video piaciuti. Filtra per titolo, artista, album, mood o genere e seleziona i brani da includere. I metadati manuali si gestiscono nell'apposita sezione, non durante la creazione.</p>
   <div class="studio-filter-grid" style="margin:14px 0">
     <input id="studio-filter-title" class="search-input" type="search" list="studio-title-options" placeholder="Titolo…" autocomplete="off">
