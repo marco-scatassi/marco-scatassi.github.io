@@ -92,14 +92,18 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 }
 .track-check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin:12px 0}
 .track-check-item{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid #e5eaf0;border-radius:10px;background:#fff;min-width:0}
-.track-check-item input{margin-top:4px;flex:0 0 auto}
+.track-check-item input{margin-top:4px;flex:0 0 auto;accent-color:#00aeca}
+.studio-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.track-check-item{cursor:pointer;transition:border-color .15s,background .15s}
+.track-check-item:has(input:checked){border-color:#00aeca;background:#eefbfe}
+.track-check-item input{width:16px;height:16px;accent-color:#00aeca}
 .track-check-copy{min-width:0}
 .track-check-copy strong{display:block;font-size:.9rem;line-height:1.35;overflow-wrap:anywhere}
 .track-check-copy small{display:block;color:#667487;font-size:.78rem;margin-top:3px;overflow-wrap:anywhere}
 .track-picker{position:relative;margin:12px 0}
 .track-picker-results{display:grid;gap:6px;max-height:260px;overflow:auto;margin-top:8px}
 .track-picker-result{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 12px;border:1px solid #e5eaf0;border-radius:9px;background:#fff}
-@media(max-width:600px){.track-check-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.track-check-grid{grid-template-columns:1fr}.studio-filter-grid{grid-template-columns:1fr}}
 /* La regola .video-row{display:grid} non deve annullare l'attributo hidden */
 .video-row[hidden]{display:none!important}
 
@@ -121,10 +125,25 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <button class="nav-link" id="show-mapping-tools" type="button" aria-pressed="false">Importa mapping</button></div></section>
 <div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
-  <p class="small-note">I gruppi sono generati dai tag realmente assegnati ai brani di Favorite songs. Puoi modificare i tag, selezionare i brani e cambiare il titolo. YouTube viene modificato solo dopo la conferma finale.</p>
-  <div class="search-row" style="margin:14px 0">
-    <label for="studio-group">Raggruppa per</label><select id="studio-group" class="search-input"><option value="mood">Mood</option><option value="genre">Genere</option></select>
-    <label for="studio-value">Valore</label><select id="studio-value" class="search-input"><option value="">Caricamento…</option></select>
+  <section class="panel" id="favorite-migration-panel" style="margin:0 0 18px;padding:16px">
+    <div class="eyebrow">// Migrazione archivio storico</div>
+    <p class="small-note">Trasferisce i video della vecchia raccolta Favorite Songs nei Video piaciuti ufficiali di YouTube. La raccolta storica e i suoi record non verranno eliminati. Operazione esplicita, riprendibile e soggetta alla quota API.</p>
+    <p class="small-note">Stima per 524 inserimenti: circa 26.200 unità (50 per video), oltre alle letture. La quota standard documentata è 10.000 unità al giorno.</p>
+    <div class="search-row"><button class="nav-link" id="favorite-migration-start" type="button">Migra Favorite Songs nei Video piaciuti</button></div>
+    <p class="search-feedback" id="favorite-migration-status" role="status" aria-live="polite"></p>
+  </section>
+  <p class="small-note">La raccolta sorgente è Video piaciuti. Filtra per titolo, artista, album, mood o genere e seleziona i brani da includere. I metadati manuali si gestiscono nell'apposita sezione, non durante la creazione.</p>
+  <div class="studio-filter-grid" style="margin:14px 0">
+    <input id="studio-filter-title" class="search-input" type="search" list="studio-title-options" placeholder="Titolo…" autocomplete="off">
+    <input id="studio-filter-artist" class="search-input" type="search" list="studio-artist-options" placeholder="Artista…" autocomplete="off">
+    <input id="studio-filter-album" class="search-input" type="search" list="studio-album-options" placeholder="Album…" autocomplete="off">
+    <input id="studio-filter-mood" class="search-input" type="search" list="studio-mood-options" placeholder="Mood…" autocomplete="off">
+    <input id="studio-filter-genre" class="search-input" type="search" list="studio-genre-options" placeholder="Genere…" autocomplete="off">
+  </div>
+  <datalist id="studio-title-options"></datalist><datalist id="studio-artist-options"></datalist><datalist id="studio-album-options"></datalist><datalist id="studio-mood-options"></datalist><datalist id="studio-genre-options"></datalist>
+  <div class="search-row" style="margin:10px 0">
+    <button class="nav-link" id="studio-select-all" type="button">Seleziona tutti</button>
+    <button class="nav-link" id="studio-clear-all" type="button">Deseleziona tutti</button>
   </div>
   <div class="search-row" style="margin:12px 0"><label for="studio-title">Nome playlist</label><input id="studio-title" class="search-input" maxlength="150" placeholder="Nome playlist"></div>
   <div class="search-row" style="margin:12px 0"><button class="nav-link" id="studio-authorize" type="button">Autorizza gestione playlist YouTube</button><span class="small-note" id="studio-auth-status">Verifica permessi…</span></div>
@@ -134,7 +153,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="search-row" style="margin-top:16px"><button class="nav-link" id="studio-rebuild" type="button">Aggiorna proposta</button><button class="action" id="studio-create" type="button" disabled>Crea playlist su YouTube</button></div>
 </section></div><div id="playlist-tool-edit" hidden><div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
 <section class="panel" id="edit-playlist-panel" style="margin:0 0 24px;padding:20px;background:#fff">
-  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi.</p>
+  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi. La raccolta di sistema Video piaciuti è una sorgente in sola lettura e non compare in questo elenco.</p>
   <div class="search-row"><label for="edit-playlist-select">Playlist</label><select id="edit-playlist-select" class="search-input"><option value="">Seleziona una playlist…</option></select></div>
   <div id="edit-playlist-form" hidden>
     <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
@@ -327,8 +346,8 @@ async function loadEditPlaylist(id){
 function populateEditPlaylists(){
   const selected=editSelect.value;editSelect.replaceChildren();
   const first=document.createElement("option");first.value="";first.textContent="Seleziona una playlist…";editSelect.append(first);
-  allPlaylists.forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
-  if(allPlaylists.some(p=>p.id===selected))editSelect.value=selected;
+  allPlaylists.filter(p=>p.youtube_playlist_id!=="LL"&&(p.title||"").trim().toLowerCase()!=="video piaciuti").forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
+  if(allPlaylists.some(p=>p.id===selected&&p.youtube_playlist_id!=="LL"&&(p.title||"").trim().toLowerCase()!=="video piaciuti"))editSelect.value=selected;
 }
 const mappingFile=document.getElementById("mapping-file"),mappingExport=document.getElementById("mapping-export"),mappingImport=document.getElementById("mapping-import"),mappingStatus=document.getElementById("mapping-status"),mappingPreview=document.getElementById("mapping-preview");
 let mappingPayload=null;
@@ -572,62 +591,109 @@ syncButton.addEventListener("click",async()=>{
 });
 
 const studio=document.getElementById("playlist-studio");
-const studioGroup=document.getElementById("studio-group"),studioValue=document.getElementById("studio-value");
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
 let studioSource=null,studioLibrary=[],studioSelection=[];
-const studioTagNames={mood:"Mood",genre:"Genere"};
-const studioTagsFor=(track,field)=>{return [...new Set((Array.isArray(track[field])?track[field]:[]).map(value=>String(value).trim()).filter(Boolean))]};
-const studioUniqueTags=field=>[...new Set(studioLibrary.flatMap(track=>studioTagsFor(track,field)))].sort((a,b)=>a.localeCompare(b,"it"));
-function studioRenderValues(){
-  const old=studioValue.value,values=studioUniqueTags(studioGroup.value);studioValue.replaceChildren();
-  const first=document.createElement("option");first.value="";first.textContent=values.length?"Scegli un valore":"Nessun tag assegnato";studioValue.append(first);
-  values.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;studioValue.append(o)});
-  if(values.includes(old))studioValue.value=old;
-  studioRenderTracks();
+const studioFilterFields = [
+  { key: "title", id: "studio-filter-title", list: "studio-title-options" },
+  { key: "artist", id: "studio-filter-artist", list: "studio-artist-options" },
+  { key: "album", id: "studio-filter-album", list: "studio-album-options" },
+  { key: "mood", id: "studio-filter-mood", list: "studio-mood-options" },
+  { key: "genre", id: "studio-filter-genre", list: "studio-genre-options" }
+];
+const studioValuesFor = (track, field) => {
+  const value = track[field];
+  return Array.isArray(value) ? value : (typeof value === "string" ? [value] : []);
+};
+function studioRenderFilterOptions() {
+  for (const filter of studioFilterFields) {
+    const values = [...new Set(studioLibrary.flatMap(track => studioValuesFor(track, filter.key))
+      .map(value => String(value || "").trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b,"it"));
+    const list = document.getElementById(filter.list);
+    list.replaceChildren();
+    values.slice(0, 500).forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      list.append(option);
+    });
+  }
 }
-function studioRenderTracks(){
-  const field=studioGroup.value,value=studioValue.value;
-  const matches=studioLibrary.filter(track=>!value||studioTagsFor(track,field).includes(value));
-  studioSelection=studioSelection.filter(id=>matches.some(t=>t.id===id));
+function studioRenderTracks() {
+  const matches = studioLibrary.filter(track => studioFilterFields.every(filter => {
+    const query = document.getElementById(filter.id).value.trim().toLocaleLowerCase("it");
+    if (!query) return true;
+    return studioValuesFor(track, filter.key).some(value => String(value || "").toLocaleLowerCase("it").includes(query));
+  }));
   studioTracks.replaceChildren();
-  const toolbar=document.createElement("div");toolbar.className="search-row";
-  const search=document.createElement("input");search.className="search-input";search.placeholder="Cerca un brano per titolo o artista…";search.type="search";
-  const selectAll=document.createElement("button");selectAll.type="button";selectAll.className="nav-link";selectAll.textContent="Seleziona tutti";
-  selectAll.addEventListener("click",()=>{matches.forEach(t=>{if(!studioSelection.includes(t.id))studioSelection.push(t.id)});studioRenderTracks()});
-  const clearAll=document.createElement("button");clearAll.type="button";clearAll.className="nav-link";clearAll.textContent="Deseleziona tutti";
-  clearAll.addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});toolbar.append(search,selectAll,clearAll);studioTracks.append(toolbar);
-  const rows=document.createElement("div");rows.className="video-list";studioTracks.append(rows);
-  matches.forEach((track,index)=>{
-    const row=document.createElement("article");row.className="video-row";row.style.gridTemplateColumns="minmax(0,1fr)";
-    const title=document.createElement("h3");title.className="video-name";title.textContent=track.title||"Brano senza titolo";
-    const meta=document.createElement("p");meta.className="video-sub";meta.textContent=[track.artist,track.album].filter(Boolean).join(" · ");
-
-    const tagEdit=document.createElement("div");tagEdit.className="search-row";
-    const mood=document.createElement("input");mood.className="search-input";mood.setAttribute("list","known-moods");mood.placeholder="Mood: scegli o scrivine uno nuovo";mood.value=(track.manual_mood||[]).join(", ");
-    const genre=document.createElement("input");genre.className="search-input";genre.setAttribute("list","known-genres");genre.placeholder="Generi: scegli o scrivine uno nuovo";genre.value=(track.manual_genre||[]).join(", ");
-    const save=document.createElement("button");save.type="button";save.className="nav-link";save.textContent="Salva tag";
-    save.addEventListener("click",async()=>{save.disabled=true;try{
-      const parse=s=>[...new Set(s.split(",").map(x=>x.trim()).filter(Boolean))];
-      const data=await workerRequest("/api/youtube/library/item-metadata","PATCH",{itemId:track.id,mood:parse(mood.value),genre:parse(genre.value)});
-      track.mood=data.item.mood||[];track.genre=data.item.genre||[];track.manual_mood=data.item.manual_mood||[];track.manual_genre=data.item.manual_genre||[];studioStatus.textContent="Metadati aggiornati per: "+track.title+". Aggiorna la proposta per ricalcolare i gruppi.";
-    }catch(error){studioStatus.textContent=error.message}finally{save.disabled=false}});
-    tagEdit.append(mood,genre,save);
-    const actions=document.createElement("div");actions.className="search-row";
-    const remove=document.createElement("button");remove.type="button";remove.className="nav-link";remove.textContent="Rimuovi";
-    remove.addEventListener("click",()=>{studioSelection=studioSelection.filter(id=>id!==track.id);studioRenderTracks()});
-    const choose=document.createElement("input");choose.type="checkbox";choose.checked=studioSelection.includes(track.id);choose.setAttribute("aria-label","Seleziona "+(track.title||"brano"));choose.addEventListener("change",()=>{if(choose.checked){if(!studioSelection.includes(track.id))studioSelection.push(track.id)}else studioSelection=studioSelection.filter(id=>id!==track.id);studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";studioCreate.disabled=!studioSelection.length});
-    actions.append(choose,remove);row.append(title,meta,tagEdit,actions);rows.append(row);
-  });
-  search.addEventListener("input",()=>{const q=search.value.trim().toLocaleLowerCase("it");rows.querySelectorAll(".video-row").forEach((row,i)=>{const t=matches[i];row.hidden=!!q&&!([t.title,t.artist,t.channel_title].filter(Boolean).join(" ").toLocaleLowerCase("it").includes(q))})});
-  studioStatus.textContent=studioSelection.length+" brani selezionati su "+matches.length+" disponibili.";
-  studioCreate.disabled=studioSelection.length===0;
+  const grid = document.createElement("div");
+  grid.className = "track-check-grid";
+  if (!matches.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "Nessun brano corrisponde ai filtri impostati.";
+    studioTracks.append(empty);
+  } else {
+    matches.forEach(track => {
+      const label = document.createElement("label");
+      label.className = "track-check-item";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = studioSelection.includes(track.id);
+      checkbox.setAttribute("aria-label", "Seleziona " + (track.title || "brano"));
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) {
+          if (studioSelection.length >= 500 && !studioSelection.includes(track.id)) {
+            checkbox.checked = false;
+            studioStatus.textContent = "Puoi selezionare al massimo 500 brani per playlist.";
+            return;
+          }
+          if (!studioSelection.includes(track.id)) studioSelection.push(track.id);
+        } else {
+          studioSelection = studioSelection.filter(id => id !== track.id);
+        }
+        studioUpdateSelectionStatus(matches.length);
+      });
+      const copy = document.createElement("span");
+      copy.className = "track-check-copy";
+      const title = document.createElement("strong");
+      title.textContent = track.title || "Brano senza titolo";
+      const meta = document.createElement("small");
+      meta.textContent = [track.artist, track.album].filter(Boolean).join(" · ") || "Artista non disponibile";
+      copy.append(title, meta);
+      label.append(checkbox, copy);
+      grid.append(label);
+    });
+    studioTracks.append(grid);
+  }
+  studioUpdateSelectionStatus(matches.length);
 }
+function studioUpdateSelectionStatus(visibleCount) {
+  studioStatus.textContent = studioSelection.length + " brani selezionati (massimo 500) su " + studioLibrary.length
+    + " disponibili (" + visibleCount + " visibili con i filtri correnti).";
+  studioCreate.disabled = studioSelection.length === 0;
+}
+studioFilterFields.forEach(filter => {
+  document.getElementById(filter.id).addEventListener("input", studioRenderTracks);
+});
+document.getElementById("studio-select-all").addEventListener("click", () => {
+  const visible = studioLibrary.filter(track => studioFilterFields.every(filter => {
+    const query = document.getElementById(filter.id).value.trim().toLocaleLowerCase("it");
+    return !query || studioValuesFor(track, filter.key).some(value => String(value || "").toLocaleLowerCase("it").includes(query));
+  }));
+  visible.forEach(track => {
+    if (studioSelection.length < 500 && !studioSelection.includes(track.id)) studioSelection.push(track.id);
+  });
+  studioRenderTracks();
+});
+document.getElementById("studio-clear-all").addEventListener("click", () => {
+  studioSelection = [];
+  studioRenderTracks();
+});
 document.getElementById("open-playlist-studio").addEventListener("click",openStudio);
 document.getElementById("show-edit-playlist").addEventListener("click",()=>{document.getElementById("playlist-tool-create").hidden=true;document.getElementById("playlist-tool-edit").hidden=false;document.getElementById("playlist-tool-mapping").hidden=true;studio.hidden=true;document.getElementById("open-playlist-studio").setAttribute("aria-pressed","false");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","true");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","false")});
 document.getElementById("show-mapping-tools").addEventListener("click",()=>{document.getElementById("playlist-tool-create").hidden=true;document.getElementById("playlist-tool-edit").hidden=true;document.getElementById("playlist-tool-mapping").hidden=false;studio.hidden=true;document.getElementById("open-playlist-studio").setAttribute("aria-pressed","false");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","false");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","true")});
 document.getElementById("close-playlist-studio").addEventListener("click",()=>{studio.hidden=true});
-document.getElementById("studio-group").addEventListener("change",studioRenderValues);document.getElementById("studio-value").addEventListener("change",studioRenderTracks);
+
 document.getElementById("studio-authorize").addEventListener("click",async()=>{
   const button=document.getElementById("studio-authorize");button.disabled=true;
   try{const result=await workerGet("/api/youtube/connect");if(!result.authorizationUrl)throw new Error("URL di autorizzazione non restituito.");window.location.assign(result.authorizationUrl)}
@@ -636,16 +702,16 @@ document.getElementById("studio-authorize").addEventListener("click",async()=>{
 async function openStudio(){
   document.getElementById("playlist-tool-create").hidden=false;document.getElementById("playlist-tool-edit").hidden=true;document.getElementById("playlist-tool-mapping").hidden=true;
   document.getElementById("open-playlist-studio").setAttribute("aria-pressed","true");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","false");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","false");
-  studio.hidden=false;studioStatus.textContent="Caricamento Favorite songs dall’archivio…";
+  studio.hidden=false;studioStatus.textContent="Caricamento Video piaciuti dall’archivio…";
   try{
     const playlists=await workerGet("/api/youtube/library/playlists");
-    studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="favorite songs");
-    if(!studioSource)throw new Error("La raccolta Favorite songs non risulta nell'archivio Supabase. Premi Aggiorna da YouTube per importarla.");
+    studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="video piaciuti" || p.youtube_playlist_id==="LL");
+    if(!studioSource)throw new Error("La raccolta Video piaciuti non è ancora nell'archivio. Premi Aggiorna da YouTube per sincronizzare la playlist di sistema.");
     studioLibrary=[];let offset=0,hasMore=true;
     while(hasMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+offset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);offset+=rows.length;hasMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
-    if(!studioLibrary.length)throw new Error("Favorite songs non contiene brani archiviati. Premi Aggiorna da YouTube per aggiornarla.");
-    studioSelection=[];studioRenderValues();
-    studioStatus.textContent=studioLibrary.length+" brani caricati. Scegli un mood o un genere.";
+    if(!studioLibrary.length)throw new Error("Video piaciuti non contiene ancora brani archiviati. Premi Aggiorna da YouTube per sincronizzarli.");
+    studioSelection=[];studioRenderFilterOptions();studioRenderTracks();
+    studioStatus.textContent=studioLibrary.length+" brani caricati da Video piaciuti. Filtra e seleziona quelli da includere.";
     document.getElementById("studio-auth-status").textContent="Archivio caricato da Supabase. I permessi YouTube saranno verificati solo quando crei o modifichi una playlist.";
   }catch(error){studioStatus.textContent=error.message}
 }
@@ -656,7 +722,7 @@ async function runUnifiedMetadataSync(){
   button.disabled=true;
   try{
     if(!studioSource||!studioLibrary.length){await openStudio();studio.hidden=true;}
-    if(!studioSource||!studioLibrary.length)throw new Error("Favorite songs non disponibile.");
+    if(!studioSource||!studioLibrary.length)throw new Error("Video piaciuti non disponibile.");
     status.textContent="Verifica e ricostruzione dei generi e mood aggregati…";
     const reconciliation=await workerPost("/api/youtube/library/reconcile-metadata",{});
     studioLibrary=[];let reconcileOffset=0,reconcileMore=true;
@@ -685,14 +751,69 @@ async function runUnifiedMetadataSync(){
     }
     studioLibrary=[];let refreshOffset=0,refreshMore=true;
     while(refreshMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+refreshOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);refreshOffset+=rows.length;refreshMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
-    studioSelection=[];studioRenderValues();
+    studioSelection=[];studioRenderFilterOptions();studioRenderTracks();
     const warning=lastfmLimited?"Limite Last.fm raggiunto: i brani rimanenti sono stati saltati. ":freqLimited?"Limite FreqBlog raggiunto: i brani rimanenti sono stati saltati. ":"";
     status.textContent=warning+"Aggregati verificati su "+(reconciliation.updatedRows||0)+" righe. Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
   }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
   finally{button.disabled=false}
 }
+let favoriteMigrationOffset = 0;
+document.getElementById("favorite-migration-start").addEventListener("click", async () => {
+  const button = document.getElementById("favorite-migration-start");
+  const status = document.getElementById("favorite-migration-status");
+  if (button.disabled) return;
+  try {
+    const library = await workerGet("/api/youtube/library/playlists");
+    const source = (library.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("en") === "favorite songs");
+    if (!source) throw new Error("La raccolta Favorite Songs non è presente nell'archivio Hub.");
+    const youtubeStatus = await workerGet("/api/youtube/status");
+    if (!youtubeStatus.canManagePlaylists) throw new Error("Prima autorizza la gestione delle playlist YouTube con il pulsante dedicato nello Studio.");
+    const expected = Number.isSafeInteger(source.item_count) ? source.item_count : 524;
+    if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. La procedura non elimina la raccolta storica e si può riprendere dopo un errore o quota esaurita.")) return;
+    button.disabled = true;
+    let offset = favoriteMigrationOffset, inserted = 0, alreadyLiked = 0, unavailable = 0, total = expected;
+    while (true) {
+      status.textContent = "Migrazione in corso: controllo e trasferimento da " + offset + " / " + total + "…";
+      const result = await workerPost("/api/youtube/library/migrate-favorite-songs", {
+        sourcePlaylistId: source.id, offset, limit: 10
+      });
+      offset = result.nextOffset;
+      favoriteMigrationOffset = offset;
+      total = Number.isSafeInteger(result.total) ? result.total : total;
+      inserted += result.inserted || 0;
+      alreadyLiked += result.alreadyLiked || 0;
+      unavailable += result.unavailable || 0;
+      status.textContent = "Avanzamento: " + offset + " / " + total + ". Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ".";
+      if (result.done) break;
+    }
+    const refreshed = await workerGet("/api/youtube/library/playlists");
+    const liked = (refreshed.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("it") === "video piaciuti" || p.youtube_playlist_id === "LL");
+    if (!liked) throw new Error("Trasferimento completato, ma la raccolta Video piaciuti non è stata registrata nell'archivio. Premi Aggiorna da YouTube.");
+    const likedSync = await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
+    favoriteMigrationOffset = 0;
+    status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". " + (likedSync.itemsSynced || 0) + " video sincronizzati nell'archivio Hub.";
+    studioSource = liked;
+    studioLibrary = [];
+    let pageOffset = 0, hasMore = true;
+    while (hasMore) {
+      const page = await workerGet("/api/youtube/library/playlist-items?playlistId=" + encodeURIComponent(liked.id) + "&offset=" + pageOffset + "&limit=500");
+      const rows = Array.isArray(page.items) ? page.items : [];
+      studioLibrary.push(...rows);
+      pageOffset += rows.length;
+      hasMore = page.hasMore === true && rows.length > 0;
+      if (!rows.length) break;
+    }
+    studioSelection = [];
+    studioRenderFilterOptions();
+    studioRenderTracks();
+  } catch (error) {
+    status.textContent = "Migrazione interrotta: " + error.message + " Puoi avviare di nuovo la procedura: gli elementi già trasferiti verranno saltati.";
+  } finally {
+    button.disabled = false;
+  }
+});
 document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
-document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderValues()});
+document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
 studioCreate.addEventListener("click",async()=>{
   if(!studioSource||!studioSelection.length)return;
   const title=studioTitle.value.trim();if(!title){studioStatus.textContent="Inserisci il nome della playlist.";return}
