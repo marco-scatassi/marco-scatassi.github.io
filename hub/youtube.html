@@ -746,7 +746,7 @@ async function runUnifiedMetadataSync(){
 document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
 document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
 studioCreate.addEventListener("click",async()=>{
-  if(!studioSource||!studioSelection.length)return;
+  if(!studioSources.length||!studioSelection.length)return;
   const title=studioTitle.value.trim();if(!title){studioStatus.textContent="Inserisci il nome della playlist.";return}
   const count=studioSelection.length;
   if(!window.confirm('Confermi la creazione della playlist "'+title+'" su YouTube con '+count+' brani? La playlist sarà creata con privacy '+document.getElementById("studio-privacy").selectedOptions[0].textContent+'.'))return;
@@ -758,7 +758,7 @@ studioCreate.addEventListener("click",async()=>{
     for(let i=0;i<created.itemIds.length;i+=12){
       const batch=created.itemIds.slice(i,i+12);
       studioStatus.textContent="Aggiunta brani "+Math.min(i+batch.length,count)+" di "+count+"…";
-      const result=await workerPost("/api/youtube/library/playlists/add-items",{playlistId:playlist.id,sourcePlaylistId:studioSource.id,itemIds:batch});
+      const result=await workerPost("/api/youtube/library/playlists/add-items",{playlistId:playlist.id,itemIds:batch});
       added+=result.added||0;
       if(!result.done)throw new Error("Playlist creata, ma inserimento interrotto dopo "+added+" brani. "+(result.error||"Riapri la procedura per completare."));
     }
