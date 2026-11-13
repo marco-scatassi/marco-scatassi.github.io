@@ -123,17 +123,10 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 <button class="action" id="open-playlist-studio" type="button" aria-pressed="false">Crea nuova playlist</button>
 <button class="nav-link" id="show-edit-playlist" type="button" aria-pressed="false">Modifica playlist</button>
 <button class="nav-link" id="show-mapping-tools" type="button" aria-pressed="false">Importa mapping</button></div></section>
-  <section class="panel" id="favorite-migration-panel" style="margin:0 0 18px;padding:16px">
-    <div class="eyebrow">// Trasferimento archivio storico</div>
-    <p class="small-note">Aggiunge alla playlist ufficiale YouTube Video piaciuti tutti i video presenti in Favorite Songs che non sono già tra i Like. Favorite Songs resta conservata come archivio storico. Video piaciuti è una playlist di sistema: dopo il trasferimento rimane consultabile e utilizzabile come sorgente per creare nuove playlist, ma non è modificabile manualmente da Personal Hub.</p>
-    <p class="small-note">Stima per 524 inserimenti: circa 26.200 unità (50 per video), oltre alle letture. La quota standard documentata è 10.000 unità al giorno.</p>
-    <div class="search-row"><button class="nav-link" id="favorite-migration-start" type="button">Trasferisci Favorite Songs nei Video piaciuti</button></div>
-    <p class="search-feedback" id="favorite-migration-status" role="status" aria-live="polite"></p>
-  </section>
 <div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
   <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
 
-  <p class="small-note">La raccolta sorgente è Video piaciuti. Filtra per titolo, artista, album, mood o genere e seleziona i brani da includere. I metadati manuali si gestiscono nell'apposita sezione, non durante la creazione.</p>
+  <p class="small-note">I brani vengono raccolti da Favorite Songs e Video piaciuti. Se un video è presente in entrambe le raccolte compare una sola volta. Filtra per titolo, artista, album, mood o genere e seleziona i brani da includere. I metadati manuali si gestiscono nell'apposita sezione, non durante la creazione.</p>
   <div class="studio-filter-grid" style="margin:14px 0">
     <input id="studio-filter-title" class="search-input" type="search" list="studio-title-options" placeholder="Titolo…" autocomplete="off">
     <input id="studio-filter-artist" class="search-input" type="search" list="studio-artist-options" placeholder="Artista…" autocomplete="off">
@@ -594,7 +587,24 @@ syncButton.addEventListener("click",async()=>{
 const studio=document.getElementById("playlist-studio");
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
-let studioSource=null,studioLibrary=[],studioSelection=[];
+let studioSource=null,studioSources=[],studioLibrary=[],studioSelection=[];
+function mergeStudioLibrary(rows){
+  const score=track=>[track.artist,track.album,track.release_year,track.genre?.length,track.mood?.length,track.lastfm_tags?.length,track.freqblog_tags?.length,track.manual_genre?.length,track.manual_mood?.length].reduce((sum,value)=>sum+(Array.isArray(value)?value.length:value?1:0),0);
+  const mergeArray=(a,b)=>[...new Map([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])].filter(value=>typeof value==="string"&&value.trim()).map(value=>[value.trim().toLocaleLowerCase("it"),value.trim()])).values()];
+  const byVideo=new Map();
+  for(const row of rows){const key=row.video_id||row.id;if(!key)continue;const current=byVideo.get(key);if(!current){byVideo.set(key,{...row});continue;}const preferred=score(row)>score(current)?row:current;const secondary=preferred===row?current:row;const merged={...secondary,...preferred};for(const field of ["genre","mood","lastfm_tags","lastfm_genre","lastfm_mood","freqblog_genre","freqblog_mood","manual_genre","manual_mood"])merged[field]=mergeArray(preferred[field],secondary[field]);merged.freqblog_tags=[...(preferred.freqblog_tags||[]),...(secondary.freqblog_tags||[])];byVideo.set(key,merged);}
+  return [...byVideo.values()].sort((a,b)=>(a.title||"").localeCompare(b.title||"","it"));
+}
+async function loadStudioLibrary(){
+  const result=await workerGet("/api/youtube/library/playlists"),all=result.items||[];
+  studioSources=["favorite songs","video piaciuti"].map(name=>all.find(p=>(p.title||"").trim().toLocaleLowerCase("it")===name||(name==="video piaciuti"&&p.youtube_playlist_id==="LL"))).filter(Boolean);
+  if(!studioSources.length)throw new Error("Né Favorite Songs né Video piaciuti sono presenti nell'archivio Hub. Premi Aggiorna da YouTube per sincronizzare le raccolte.");
+  studioSource=studioSources.find(p=>(p.title||"").trim().toLocaleLowerCase("it")==="video piaciuti")||studioSources[0];
+  const rows=[];
+  for(const source of studioSources){let offset=0,hasMore=true;while(hasMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+offset+"&limit=500");const items=Array.isArray(page.items)?page.items:[];rows.push(...items);offset+=items.length;hasMore=page.hasMore===true&&items.length>0;if(!items.length)break;}}
+  studioLibrary=mergeStudioLibrary(rows);
+  if(!studioLibrary.length)throw new Error("Favorite Songs e Video piaciuti non contengono brani archiviati. Premi Aggiorna da YouTube per sincronizzarli.");
+}
 const studioFilterFields = [
   { key: "title", id: "studio-filter-title", list: "studio-title-options" },
   { key: "artist", id: "studio-filter-artist", list: "studio-artist-options" },
@@ -703,127 +713,36 @@ document.getElementById("studio-authorize").addEventListener("click",async()=>{
 async function openStudio(){
   document.getElementById("playlist-tool-create").hidden=false;document.getElementById("playlist-tool-edit").hidden=true;document.getElementById("playlist-tool-mapping").hidden=true;
   document.getElementById("open-playlist-studio").setAttribute("aria-pressed","true");document.getElementById("show-edit-playlist").setAttribute("aria-pressed","false");document.getElementById("show-mapping-tools").setAttribute("aria-pressed","false");
-  studio.hidden=false;studioStatus.textContent="Caricamento Video piaciuti dall’archivio…";
-  try{
-    const playlists=await workerGet("/api/youtube/library/playlists");
-    studioSource=(playlists.items||[]).find(p=>(p.title||"").trim().toLowerCase()==="video piaciuti" || p.youtube_playlist_id==="LL");
-    if(!studioSource)throw new Error("La raccolta Video piaciuti non è ancora nell'archivio. Premi Aggiorna da YouTube per sincronizzare la playlist di sistema.");
-    studioLibrary=[];let offset=0,hasMore=true;
-    while(hasMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+offset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);offset+=rows.length;hasMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
-    if(!studioLibrary.length)throw new Error("Video piaciuti non contiene ancora brani archiviati. Premi Aggiorna da YouTube per sincronizzarli.");
-    studioSelection=[];studioRenderFilterOptions();studioRenderTracks();
-    studioStatus.textContent=studioLibrary.length+" brani caricati da Video piaciuti. Filtra e seleziona quelli da includere.";
-    document.getElementById("studio-auth-status").textContent="Archivio caricato da Supabase. I permessi YouTube saranno verificati solo quando crei o modifichi una playlist.";
-  }catch(error){studioStatus.textContent=error.message}
+  studio.hidden=false;studioStatus.textContent="Caricamento Favorite Songs e Video piaciuti dall’archivio…";
+  try{await loadStudioLibrary();studioSelection=[];studioRenderFilterOptions();studioRenderTracks();studioStatus.textContent=studioLibrary.length+" brani unici caricati da "+studioSources.map(p=>p.title).join(" e ")+". Filtra e seleziona quelli da includere.";document.getElementById("studio-auth-status").textContent="Archivio caricato da Supabase. I permessi YouTube saranno verificati solo quando crei o modifichi una playlist."}
+  catch(error){studioStatus.textContent=error.message}
 }
 async function runUnifiedMetadataSync(){
-  const button=document.getElementById("header-metadata-sync");
-  const status=document.getElementById("metadata-sync-status");
-  if(button.disabled)return;
-  button.disabled=true;
+  const button=document.getElementById("header-metadata-sync"),status=document.getElementById("metadata-sync-status");
+  if(button.disabled)return;button.disabled=true;
   try{
-    if(!studioSource||!studioLibrary.length){await openStudio();studio.hidden=true;}
-    if(!studioSource||!studioLibrary.length)throw new Error("Video piaciuti non disponibile.");
+    if(!studioSources.length||!studioLibrary.length)await loadStudioLibrary();
     status.textContent="Verifica e ricostruzione dei generi e mood aggregati…";
     const reconciliation=await workerPost("/api/youtube/library/reconcile-metadata",{});
-    studioLibrary=[];let reconcileOffset=0,reconcileMore=true;
-    while(reconcileMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+reconcileOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);reconcileOffset+=rows.length;reconcileMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
+    await loadStudioLibrary();
     const pending=studioLibrary.filter(t=>(!Array.isArray(t.genre)||!t.genre.length||!Array.isArray(t.mood)||!t.mood.length)&&(!t.lastfm_lookup_at||!t.freqblog_lookup_at));
     if(!pending.length){status.textContent="Tutti i brani hanno già genere e mood, oppure entrambe le fonti sono già state interrogate. Nessuna chiamata API necessaria.";return}
-    let lastfmQueried=0,freqQueried=0,lastfmLimited=false,freqLimited=false;
-    const errors=[];
-    const lastfmPending=pending.filter(t=>!t.lastfm_lookup_at);
-    for(let i=0;i<lastfmPending.length;i+=10){
-      const batch=lastfmPending.slice(i,i+10);
-      status.textContent="Last.fm: "+Math.min(i+batch.length,lastfmPending.length)+" / "+lastfmPending.length+"…";
-      const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
-      lastfmQueried+=result.lookedUp||0;
-      if(result.rateLimited){lastfmLimited=true;break}
-      if(result.errors?.length)errors.push(...result.errors);
+    let lastfmQueried=0,freqQueried=0,lastfmLimited=false,freqLimited=false;const errors=[];
+    for(const sourceId of [...new Set(pending.map(t=>t.playlist_id).filter(Boolean))]){
+      const sourcePending=pending.filter(t=>t.playlist_id===sourceId),batchPending=sourcePending.filter(t=>!t.lastfm_lookup_at);
+      for(let i=0;i<batchPending.length;i+=10){const batch=batchPending.slice(i,i+10);status.textContent="Last.fm: "+Math.min(i+batch.length,batchPending.length)+" / "+batchPending.length+"…";const result=await workerPost("/api/youtube/library/enrich-lastfm",{sourcePlaylistId:sourceId,itemIds:batch.map(t=>t.id),mode:"incremental"});lastfmQueried+=result.lookedUp||0;if(result.rateLimited){lastfmLimited=true;break}if(result.errors?.length)errors.push(...result.errors)}
+      if(lastfmLimited)break;
     }
-    const freqPending=pending.filter(t=>!t.freqblog_lookup_at);
-    for(let i=0;i<freqPending.length;i+=10){
-        const batch=freqPending.slice(i,i+10);
-        status.textContent="FreqBlog: "+Math.min(i+batch.length,freqPending.length)+" / "+freqPending.length+"…";
-        const result=await workerPost("/api/youtube/library/enrich-freqblog",{sourcePlaylistId:studioSource.id,itemIds:batch.map(t=>t.id),mode:"incremental"});
-        freqQueried+=result.queried||0;
-        if(result.rateLimited){freqLimited=true;break}
-        if(result.errors?.length)errors.push(...result.errors);
+    for(const sourceId of [...new Set(pending.map(t=>t.playlist_id).filter(Boolean))]){
+      const sourcePending=pending.filter(t=>t.playlist_id===sourceId),batchPending=sourcePending.filter(t=>!t.freqblog_lookup_at);
+      for(let i=0;i<batchPending.length;i+=10){const batch=batchPending.slice(i,i+10);status.textContent="FreqBlog: "+Math.min(i+batch.length,batchPending.length)+" / "+batchPending.length+"…";const result=await workerPost("/api/youtube/library/enrich-freqblog",{sourcePlaylistId:sourceId,itemIds:batch.map(t=>t.id),mode:"incremental"});freqQueried+=result.queried||0;if(result.rateLimited){freqLimited=true;break}if(result.errors?.length)errors.push(...result.errors)}
+      if(freqLimited)break;
     }
-    studioLibrary=[];let refreshOffset=0,refreshMore=true;
-    while(refreshMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(studioSource.id)+"&offset="+refreshOffset+"&limit=500");const rows=Array.isArray(page.items)?page.items:[];studioLibrary.push(...rows);refreshOffset+=rows.length;refreshMore=page.hasMore===true&&rows.length>0;if(!rows.length)break;}
-    studioSelection=[];studioRenderFilterOptions();studioRenderTracks();
+    await loadStudioLibrary();studioSelection=[];studioRenderFilterOptions();studioRenderTracks();
     const warning=lastfmLimited?"Limite Last.fm raggiunto: i brani rimanenti sono stati saltati. ":freqLimited?"Limite FreqBlog raggiunto: i brani rimanenti sono stati saltati. ":"";
     status.textContent=warning+"Aggregati verificati su "+(reconciliation.updatedRows||0)+" righe. Sincronizzazione completata. Last.fm: "+lastfmQueried+" ricerche; FreqBlog: "+freqQueried+" ricerche; "+studioLibrary.filter(t=>!t.genre?.length||!t.mood?.length).length+" brani ancora incompleti."+(errors.length?" Errori: "+errors.slice(0,3).join(" · "):"");
-  }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
-  finally{button.disabled=false}
+  }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}finally{button.disabled=false}
 }
-let favoriteMigrationOffset = 0;
-let favoriteMigrationSessionId = null;
-document.getElementById("favorite-migration-start").addEventListener("click", async () => {
-  const button = document.getElementById("favorite-migration-start");
-  const status = document.getElementById("favorite-migration-status");
-  if (button.disabled) return;
-  try {
-    const library = await workerGet("/api/youtube/library/playlists");
-    const source = (library.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("en") === "favorite songs");
-    if (!source) throw new Error("La raccolta Favorite Songs non è presente nell'archivio Hub.");
-    const youtubeStatus = await workerGet("/api/youtube/status");
-    if (!youtubeStatus.canManagePlaylists) throw new Error("Prima autorizza la gestione delle playlist YouTube con il pulsante dedicato nello Studio.");
-    const expected = Number.isSafeInteger(source.item_count) ? source.item_count : 524;
-    if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota massima: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. Il controllo dei duplicati viene eseguito una volta e riutilizzato per i batch. La raccolta storica non verrà eliminata.")) return;
-    button.disabled = true;
-    let offset = favoriteMigrationOffset, inserted = 0, alreadyLiked = 0, unavailable = 0, total = expected;
-    if (!favoriteMigrationSessionId) {
-      status.textContent = "Controllo preliminare: lettura dei Video piaciuti una sola volta…";
-      const prepared = await workerPost("/api/youtube/library/migrate-favorite-songs", {
-        action: "prepare", sourcePlaylistId: source.id
-      });
-      favoriteMigrationSessionId = prepared.migrationId;
-      if (!favoriteMigrationSessionId) throw new Error("Il server non ha creato la sessione di preflight.");
-      status.textContent = "Controllo completato: " + (prepared.alreadyLikedCount || 0) + " video già presenti. Avvio trasferimento…";
-    }
-    while (true) {
-      status.textContent = "Migrazione in corso: " + offset + " / " + total + "…";
-      const result = await workerPost("/api/youtube/library/migrate-favorite-songs", {
-        sourcePlaylistId: source.id, migrationId: favoriteMigrationSessionId, offset, limit: 10
-      });
-      offset = result.nextOffset;
-      favoriteMigrationOffset = offset;
-      total = Number.isSafeInteger(result.total) ? result.total : total;
-      inserted += result.inserted || 0;
-      alreadyLiked += result.alreadyLiked || 0;
-      unavailable += result.unavailable || 0;
-      status.textContent = "Avanzamento: " + offset + " / " + total + ". Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ".";
-      if (result.done) break;
-    }
-    const refreshed = await workerGet("/api/youtube/library/playlists");
-    const liked = (refreshed.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("it") === "video piaciuti" || p.youtube_playlist_id === "LL");
-    if (!liked) throw new Error("Trasferimento completato, ma la raccolta Video piaciuti non è stata registrata nell'archivio. Premi Aggiorna da YouTube.");
-    const likedSync = await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
-    favoriteMigrationOffset = 0;
-    favoriteMigrationSessionId = null;
-    status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". " + (likedSync.itemsSynced || 0) + " video sincronizzati nell'archivio Hub.";
-    studioSource = liked;
-    studioLibrary = [];
-    let pageOffset = 0, hasMore = true;
-    while (hasMore) {
-      const page = await workerGet("/api/youtube/library/playlist-items?playlistId=" + encodeURIComponent(liked.id) + "&offset=" + pageOffset + "&limit=500");
-      const rows = Array.isArray(page.items) ? page.items : [];
-      studioLibrary.push(...rows);
-      pageOffset += rows.length;
-      hasMore = page.hasMore === true && rows.length > 0;
-      if (!rows.length) break;
-    }
-    studioSelection = [];
-    studioRenderFilterOptions();
-    studioRenderTracks();
-  } catch (error) {
-    status.textContent = "Migrazione interrotta: " + error.message + " Puoi riprovare: la sessione di controllo resta valida per un'ora e gli elementi già trasferiti verranno saltati.";
-  } finally {
-    button.disabled = false;
-  }
-});
 document.getElementById("header-metadata-sync").addEventListener("click",()=>{runUnifiedMetadataSync()});
 document.getElementById("studio-rebuild").addEventListener("click",()=>{studioSelection=[];studioRenderTracks()});
 studioCreate.addEventListener("click",async()=>{
@@ -833,7 +752,7 @@ studioCreate.addEventListener("click",async()=>{
   if(!window.confirm('Confermi la creazione della playlist "'+title+'" su YouTube con '+count+' brani? La playlist sarà creata con privacy '+document.getElementById("studio-privacy").selectedOptions[0].textContent+'.'))return;
   studioCreate.disabled=true;studioCreate.textContent="CREAZIONE…";studioStatus.textContent="Creazione playlist su YouTube…";
   try{
-    const created=await workerPost("/api/youtube/library/playlists/create",{title,sourcePlaylistId:studioSource.id,itemIds:studioSelection,privacyStatus:document.getElementById("studio-privacy").value});
+    const created=await workerPost("/api/youtube/library/playlists/create",{title,itemIds:studioSelection,privacyStatus:document.getElementById("studio-privacy").value});
     if(created.partial)throw new Error(created.error||"Creazione parziale.");
     const playlist=created.playlist;let added=0;
     for(let i=0;i<created.itemIds.length;i+=12){
