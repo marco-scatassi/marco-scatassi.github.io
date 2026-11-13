@@ -587,7 +587,7 @@ syncButton.addEventListener("click",async()=>{
 const studio=document.getElementById("playlist-studio");
 const studioTitle=document.getElementById("studio-title"),studioTracks=document.getElementById("studio-track-list");
 const studioStatus=document.getElementById("studio-status"),studioCreate=document.getElementById("studio-create");
-let studioSource=null,studioSources=[],studioLibrary=[],studioSelection=[];
+let studioSources=[],studioLibrary=[],studioSelection=[];
 function mergeStudioLibrary(rows){
   const score=track=>[track.artist,track.album,track.release_year,track.genre?.length,track.mood?.length,track.lastfm_tags?.length,track.freqblog_tags?.length,track.manual_genre?.length,track.manual_mood?.length].reduce((sum,value)=>sum+(Array.isArray(value)?value.length:value?1:0),0);
   const mergeArray=(a,b)=>[...new Map([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])].filter(value=>typeof value==="string"&&value.trim()).map(value=>[value.trim().toLocaleLowerCase("it"),value.trim()])).values()];
@@ -599,7 +599,6 @@ async function loadStudioLibrary(){
   const result=await workerGet("/api/youtube/library/playlists"),all=result.items||[];
   studioSources=["favorite songs","video piaciuti"].map(name=>all.find(p=>(p.title||"").trim().toLocaleLowerCase("it")===name||(name==="video piaciuti"&&p.youtube_playlist_id==="LL"))).filter(Boolean);
   if(!studioSources.length)throw new Error("Né Favorite Songs né Video piaciuti sono presenti nell'archivio Hub. Premi Aggiorna da YouTube per sincronizzare le raccolte.");
-  studioSource=studioSources.find(p=>(p.title||"").trim().toLocaleLowerCase("it")==="video piaciuti")||studioSources[0];
   const rows=[];
   for(const source of studioSources){let offset=0,hasMore=true;while(hasMore){const page=await workerGet("/api/youtube/library/playlist-items?playlistId="+encodeURIComponent(source.id)+"&offset="+offset+"&limit=500");const items=Array.isArray(page.items)?page.items:[];rows.push(...items);offset+=items.length;hasMore=page.hasMore===true&&items.length>0;if(!items.length)break;}}
   studioLibrary=mergeStudioLibrary(rows);
