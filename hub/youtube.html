@@ -153,7 +153,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div class="search-row" style="margin-top:16px"><button class="nav-link" id="studio-rebuild" type="button">Aggiorna proposta</button><button class="action" id="studio-create" type="button" disabled>Crea playlist su YouTube</button></div>
 </section></div><div id="playlist-tool-edit" hidden><div class="section-head"><h2>Modifica playlist</h2><span class="count">GESTIONE ESISTENTI</span></div>
 <section class="panel" id="edit-playlist-panel" style="margin:0 0 24px;padding:20px;background:#fff">
-  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi.</p>
+  <p class="small-note">Seleziona una playlist esistente per modificarne titolo, descrizione, privacy e brani. Puoi togliere brani e cambiare l'ordine; le modifiche vengono applicate su YouTube solo quando salvi. La raccolta di sistema Video piaciuti è una sorgente in sola lettura e non compare in questo elenco.</p>
   <div class="search-row"><label for="edit-playlist-select">Playlist</label><select id="edit-playlist-select" class="search-input"><option value="">Seleziona una playlist…</option></select></div>
   <div id="edit-playlist-form" hidden>
     <div class="search-row" style="margin-top:12px"><label for="edit-playlist-title">Titolo</label><input id="edit-playlist-title" class="search-input" maxlength="150"></div>
@@ -346,8 +346,8 @@ async function loadEditPlaylist(id){
 function populateEditPlaylists(){
   const selected=editSelect.value;editSelect.replaceChildren();
   const first=document.createElement("option");first.value="";first.textContent="Seleziona una playlist…";editSelect.append(first);
-  allPlaylists.forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
-  if(allPlaylists.some(p=>p.id===selected))editSelect.value=selected;
+  allPlaylists.filter(p=>p.youtube_playlist_id!=="LL"&&(p.title||"").trim().toLowerCase()!=="video piaciuti").forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.title||"Playlist senza titolo";editSelect.append(o)});
+  if(allPlaylists.some(p=>p.id===selected&&p.youtube_playlist_id!=="LL"&&(p.title||"").trim().toLowerCase()!=="video piaciuti"))editSelect.value=selected;
 }
 const mappingFile=document.getElementById("mapping-file"),mappingExport=document.getElementById("mapping-export"),mappingImport=document.getElementById("mapping-import"),mappingStatus=document.getElementById("mapping-status"),mappingPreview=document.getElementById("mapping-preview");
 let mappingPayload=null;
@@ -758,6 +758,8 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     const library = await workerGet("/api/youtube/library/playlists");
     const source = (library.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("en") === "favorite songs");
     if (!source) throw new Error("La raccolta Favorite Songs non è presente nell'archivio Hub.");
+    const youtubeStatus = await workerGet("/api/youtube/status");
+    if (!youtubeStatus.canManagePlaylists) throw new Error("Prima autorizza la gestione delle playlist YouTube con il pulsante dedicato nello Studio.");
     const expected = Number.isSafeInteger(source.item_count) ? source.item_count : 524;
     if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. La procedura non elimina la raccolta storica e si può riprendere dopo un errore o quota esaurita.")) return;
     button.disabled = true;
