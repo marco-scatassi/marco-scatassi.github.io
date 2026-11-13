@@ -758,6 +758,7 @@ async function runUnifiedMetadataSync(){
   finally{button.disabled=false}
 }
 let favoriteMigrationOffset = 0;
+let favoriteMigrationSessionId = null;
 document.getElementById("favorite-migration-start").addEventListener("click", async () => {
   const button = document.getElementById("favorite-migration-start");
   const status = document.getElementById("favorite-migration-status");
@@ -769,13 +770,22 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     const youtubeStatus = await workerGet("/api/youtube/status");
     if (!youtubeStatus.canManagePlaylists) throw new Error("Prima autorizza la gestione delle playlist YouTube con il pulsante dedicato nello Studio.");
     const expected = Number.isSafeInteger(source.item_count) ? source.item_count : 524;
-    if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. La procedura non elimina la raccolta storica e si può riprendere dopo un errore o quota esaurita.")) return;
+    if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota massima: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. Il controllo dei duplicati viene eseguito una volta e riutilizzato per i batch. La raccolta storica non verrà eliminata.")) return;
     button.disabled = true;
     let offset = favoriteMigrationOffset, inserted = 0, alreadyLiked = 0, unavailable = 0, total = expected;
+    if (!favoriteMigrationSessionId) {
+      status.textContent = "Controllo preliminare: lettura dei Video piaciuti una sola volta…";
+      const prepared = await workerPost("/api/youtube/library/migrate-favorite-songs", {
+        action: "prepare", sourcePlaylistId: source.id
+      });
+      favoriteMigrationSessionId = prepared.migrationId;
+      if (!favoriteMigrationSessionId) throw new Error("Il server non ha creato la sessione di preflight.");
+      status.textContent = "Controllo completato: " + (prepared.alreadyLikedCount || 0) + " video già presenti. Avvio trasferimento…";
+    }
     while (true) {
-      status.textContent = "Migrazione in corso: controllo e trasferimento da " + offset + " / " + total + "…";
+      status.textContent = "Migrazione in corso: " + offset + " / " + total + "…";
       const result = await workerPost("/api/youtube/library/migrate-favorite-songs", {
-        sourcePlaylistId: source.id, offset, limit: 10
+        sourcePlaylistId: source.id, migrationId: favoriteMigrationSessionId, offset, limit: 10
       });
       offset = result.nextOffset;
       favoriteMigrationOffset = offset;
@@ -791,6 +801,7 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     if (!liked) throw new Error("Trasferimento completato, ma la raccolta Video piaciuti non è stata registrata nell'archivio. Premi Aggiorna da YouTube.");
     const likedSync = await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
     favoriteMigrationOffset = 0;
+    favoriteMigrationSessionId = null;
     status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". " + (likedSync.itemsSynced || 0) + " video sincronizzati nell'archivio Hub.";
     studioSource = liked;
     studioLibrary = [];
@@ -807,7 +818,7 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     studioRenderFilterOptions();
     studioRenderTracks();
   } catch (error) {
-    status.textContent = "Migrazione interrotta: " + error.message + " Puoi avviare di nuovo la procedura: gli elementi già trasferiti verranno saltati.";
+    status.textContent = "Migrazione interrotta: " + error.message + " Puoi riprovare: la sessione di controllo resta valida per un'ora e gli elementi già trasferiti verranno saltati.";
   } finally {
     button.disabled = false;
   }
