@@ -750,6 +750,7 @@ async function runUnifiedMetadataSync(){
   }catch(error){status.textContent="Sincronizzazione interrotta: "+error.message}
   finally{button.disabled=false}
 }
+let favoriteMigrationOffset = 0;
 document.getElementById("favorite-migration-start").addEventListener("click", async () => {
   const button = document.getElementById("favorite-migration-start");
   const status = document.getElementById("favorite-migration-status");
@@ -763,13 +764,14 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     const expected = Number.isSafeInteger(source.item_count) ? source.item_count : 524;
     if (!window.confirm("Trasferire i video di Favorite Songs nei Video piaciuti ufficiali?\n\nBrani storici: circa " + expected + ". Stima quota: " + (expected * 50).toLocaleString("it-IT") + " unità, oltre alle letture. La procedura non elimina la raccolta storica e si può riprendere dopo un errore o quota esaurita.")) return;
     button.disabled = true;
-    let offset = 0, inserted = 0, alreadyLiked = 0, unavailable = 0, total = expected;
+    let offset = favoriteMigrationOffset, inserted = 0, alreadyLiked = 0, unavailable = 0, total = expected;
     while (true) {
       status.textContent = "Migrazione in corso: controllo e trasferimento da " + offset + " / " + total + "…";
       const result = await workerPost("/api/youtube/library/migrate-favorite-songs", {
         sourcePlaylistId: source.id, offset, limit: 10
       });
       offset = result.nextOffset;
+      favoriteMigrationOffset = offset;
       total = Number.isSafeInteger(result.total) ? result.total : total;
       inserted += result.inserted || 0;
       alreadyLiked += result.alreadyLiked || 0;
@@ -781,6 +783,7 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
     const liked = (refreshed.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("it") === "video piaciuti" || p.youtube_playlist_id === "LL");
     if (!liked) throw new Error("Trasferimento completato, ma la raccolta Video piaciuti non è stata registrata nell'archivio. Premi Aggiorna da YouTube.");
     const likedSync = await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
+    favoriteMigrationOffset = 0;
     status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". " + (likedSync.itemsSynced || 0) + " video sincronizzati nell'archivio Hub.";
     studioSource = liked;
     studioLibrary = [];
