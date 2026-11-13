@@ -775,12 +775,11 @@ document.getElementById("favorite-migration-start").addEventListener("click", as
       status.textContent = "Avanzamento: " + offset + " / " + total + ". Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ".";
       if (result.done) break;
     }
-    await workerPost("/api/youtube/sync");
     const refreshed = await workerGet("/api/youtube/library/playlists");
     const liked = (refreshed.items || []).find(p => (p.title || "").trim().toLocaleLowerCase("it") === "video piaciuti" || p.youtube_playlist_id === "LL");
     if (!liked) throw new Error("Trasferimento completato, ma la raccolta Video piaciuti non è stata registrata nell'archivio. Premi Aggiorna da YouTube.");
-    await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
-    status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". La raccolta Video piaciuti è stata sincronizzata.";
+    const likedSync = await workerPost("/api/youtube/sync/playlist?playlistId=" + encodeURIComponent(liked.id));
+    status.textContent = "Migrazione completata. Inseriti: " + inserted + "; già presenti: " + alreadyLiked + "; non disponibili: " + unavailable + ". " + (likedSync.itemsSynced || 0) + " video sincronizzati nell'archivio Hub.";
     studioSource = liked;
     studioLibrary = [];
     let pageOffset = 0, hasMore = true;
