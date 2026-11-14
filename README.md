@@ -263,3 +263,15 @@ Ultimo aggiornamento: 2026-11-12.
 La Home iniziale resta volutamente senza navbar per preservare la scelta immersiva Portfolio / Personal e la transizione dei chip USB.
 
 Questa fase modifica solo presentazione e navigazione: non cambia API, autenticazione, sincronizzazioni, playlist o logica del player. I test eseguiti finora sono controlli statici sul markup e sui collegamenti; non è stato eseguito un test browser visuale né verificato il deploy GitHub Pages.
+
+
+### Seconda fase — refresh Portfolio e Personal
+
+Il refresh visuale è stato applicato a Portfolio e alla landing Personal tramite `assets/css/page-redesign.css`, mantenendo separati i layout e riutilizzando i token condivisi.
+
+- Portfolio: hero più leggibile e proporzionata, CTA uniformi, ritratto valorizzato, gerarchia delle intestazioni, card, timeline, certificazioni, progetti e form rifiniti.
+- Personal: hero editoriale, card delle tre aree più strutturate e differenziate per accento, spaziature e tipografia riviste.
+- Navigazione: il chip Portfolio nella landing Personal usa ora l'accento ciano, coerente con il chip Portfolio.
+- Ridotti gli effetti decorativi continui nella landing Personal; mantenuti i contenuti, i link, il form e le interazioni già presenti.
+
+Il lavoro è esclusivamente frontend. Le verifiche effettuate sono statiche su markup, classi, collegamenti e caricamento dei fogli CSS. Non sono stati eseguiti test visuali browser né verifiche del deploy GitHub Pages.
