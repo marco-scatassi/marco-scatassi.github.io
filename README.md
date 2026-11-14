@@ -248,3 +248,18 @@ Aggiornare il README quando:
 Le preferenze estetiche non devono essere considerate immutabili: possono evolvere, ma ogni cambiamento deve essere intenzionale e coerente con l'identità cyberpunk del progetto.
 
 Ultimo aggiornamento: 2026-11-12.
+
+
+### Navigazione condivisa — prima fase
+
+È stata introdotta una navigazione HTML semantica condivisa per Portfolio, Personal e le tre sezioni personali. Gli stili sono isolati in `assets/css/navigation.css`; la navigazione rimane leggibile su desktop e diventa una striscia orizzontale scorrevole su mobile, senza dipendere da JavaScript.
+
+- Portfolio: collegamenti alle sezioni Esperienza, Competenze, Progetti e Contatti, con accesso a Personal e Home.
+- Personal: accesso diretto a Musica, Memories e Journal, con ritorno a Portfolio e Home.
+- Music, Nature e Journal: panoramica personale, sezioni sorelle e collegamenti alle aree principali; la pagina corrente è indicata con `aria-current`.
+- La pagina Music mantiene il proprio indice interno; il suo offset sticky mobile è stato adeguato all'altezza della nuova navigazione.
+- `assets/css/design-system.css` include ora token di spaziatura, tipografia monospaziata, altezza header e primitive opt-in per container, eyebrow, titoli, card e testo secondario.
+
+La Home iniziale resta volutamente senza navbar per preservare la scelta immersiva Portfolio / Personal e la transizione dei chip USB.
+
+Questa fase modifica solo presentazione e navigazione: non cambia API, autenticazione, sincronizzazioni, playlist o logica del player. I test eseguiti finora sono controlli statici sul markup e sui collegamenti; non è stato eseguito un test browser visuale né verificato il deploy GitHub Pages.
