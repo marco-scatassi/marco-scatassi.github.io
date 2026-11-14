@@ -321,3 +321,14 @@ Verifica eseguita: controlli statici su markup, classi aggiunte, riferimenti agl
 La hero introduttiva non è più racchiusa in una card: mantiene titolo, descrizione e tag direttamente sul fondo pagina. La sezione del contenuto Instagram ha una composizione esplicita a due colonne su desktop e impilata su mobile, evitando che il pulsante venga compresso o sovrapposto.
 
 Nelle card playlist, “Visualizza brani” ha recuperato una tipografia sans-serif e una gerarchia più vicine alla versione precedente. L'azione “Apri su YouTube Music” è affiancata al comando di apertura dell'elenco, allineata sul lato destro; sui viewport molto stretti può passare a una riga dedicata, sempre allineata a destra. Non sono stati modificati i flussi di caricamento playlist, player o ricerca.
+
+
+### Revisione leggibilità e nuova direzione Music — 2026-11-14
+
+È stata aumentata la scala tipografica delle schermate Portfolio e Personal, includendo titoli, descrizioni, intestazioni e contenuti delle card. I valori sono fluidi e hanno regole dedicate per mobile e desktop con altezza ridotta, così da mantenere la composizione del primo viewport.
+
+Music ha una gerarchia editoriale più marcata: titolo allineato a sinistra, navigazione interna più leggibile e contenuto Instagram presentato come momento in evidenza con pannello scuro, accenti rosa e CTA ad alto contrasto. Le playlist mantengono player, ricerca e azioni esistenti.
+
+Le regole sono state aggiunte in coda a `assets/css/design-system.css`, già caricato dalle tre pagine, evitando modifiche a markup e JavaScript. Le note di dettaglio sono in `docs/UI_REDESIGN_NOTES.md`.
+
+Verifica: lettura e aggiornamento dei file su GitHub. Non è stato eseguito un test browser né verificato il deploy GitHub Pages; restano da controllare i viewport 360, 390, 768, 1440 px e desktop basso.
