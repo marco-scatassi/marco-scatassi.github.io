@@ -300,3 +300,8 @@ Su schermi piccoli le hero tornano a un'altezza naturale e l'indicatore resta ne
 La hero Portfolio è stata ulteriormente compattata per il desktop: larghezza delle colonne, dimensioni del ritratto, titolo, descrizione, spazi e pulsanti sono ora dimensionati per lasciare più margine nel primo viewport, con una variante dedicata agli schermi desktop bassi.
 
 Portfolio e Personal usano lo stesso indicatore grafico circolare con chevron, centrato e ancorato al bordo inferiore della hero. Sono state rimosse le etichette testuali e il separatore a tre barre della landing Personal, così l'invito allo scroll è uniforme e non compete con gli altri elementi.
+
+
+### Allineamento inclinazione chip Portfolio
+
+Il chip USB di arrivo nella hero Portfolio è inclinato di 18 gradi, come il chip presente nella hero Personal. Gli indicatori di scorrimento delle due pagine restano esclusivamente grafici; le etichette accessibili sono mantenute solo per gli screen reader.
