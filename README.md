@@ -293,3 +293,10 @@ Entrambe le pagine includono ora un indicatore esplicito e accessibile che porta
 - Personal: “Scopri cosa c'è più sotto”, collegato a I miei universi.
 
 Su schermi piccoli le hero tornano a un'altezza naturale e l'indicatore resta nel flusso visivo senza sovrapporsi ai contenuti. L'animazione dell'indicatore rispetta `prefers-reduced-motion`.
+
+
+### Ulteriore revisione delle hero
+
+La hero Portfolio è stata ulteriormente compattata per il desktop: larghezza delle colonne, dimensioni del ritratto, titolo, descrizione, spazi e pulsanti sono ora dimensionati per lasciare più margine nel primo viewport, con una variante dedicata agli schermi desktop bassi.
+
+Portfolio e Personal usano lo stesso indicatore grafico circolare con chevron, centrato e ancorato al bordo inferiore della hero. Sono state rimosse le etichette testuali e il separatore a tre barre della landing Personal, così l'invito allo scroll è uniforme e non compete con gli altri elementi.
