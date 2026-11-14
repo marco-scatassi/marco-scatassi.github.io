@@ -36,6 +36,15 @@
   --ph-radius-lg: 22px;
   --ph-radius-pill: 999px;
   --ph-content-width: 1152px;
+  --ph-header-height: 76px;
+  --ph-space-1: 4px;
+  --ph-space-2: 8px;
+  --ph-space-3: 12px;
+  --ph-space-4: 16px;
+  --ph-space-6: 24px;
+  --ph-space-8: 32px;
+  --ph-space-12: 48px;
+  --ph-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --ph-transition-fast: 180ms ease;
   --ph-transition-base: 260ms ease;
 }
@@ -84,4 +93,48 @@
   .ph-interactive {
     transition: none;
   }
+}
+
+/* Shared content primitives — adopt progressively on new and revised sections. */
+.ph-container {
+  width: min(calc(100% - 48px), var(--ph-content-width));
+  margin-inline: auto;
+}
+.ph-eyebrow {
+  color: var(--ph-color-cyan);
+  font: 800 10px/1.4 var(--ph-font-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.ph-section-title {
+  margin: 0;
+  color: var(--ph-color-ink);
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  font-weight: 850;
+  letter-spacing: -.045em;
+  line-height: 1.12;
+}
+.ph-muted { color: var(--ph-color-muted); }
+.ph-card {
+  color: var(--ph-color-ink);
+  background: rgba(255,255,255,.86);
+  border: 1px solid var(--ph-color-line);
+  border-radius: var(--ph-radius-lg);
+  box-shadow: var(--ph-shadow-card);
+}
+.ph-card--interactive {
+  transition: transform var(--ph-transition-base), box-shadow var(--ph-transition-base), border-color var(--ph-transition-base);
+}
+@media (hover:hover) and (pointer:fine) {
+  .ph-card--interactive:hover {
+    transform: translateY(-4px);
+    border-color: rgba(8,127,156,.25);
+    box-shadow: var(--ph-shadow-card-hover);
+  }
+}
+@media (max-width: 600px) {
+  .ph-container { width: min(calc(100% - 32px), var(--ph-content-width)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ph-card--interactive { transition: none; }
 }
