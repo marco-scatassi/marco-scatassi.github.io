@@ -153,8 +153,9 @@
       .reveal { opacity:1; transform:none }
     }
   </style>
+  <link rel="stylesheet" href="../assets/css/music.css">
 </head>
-<body class="antialiased">
+<body class="music-page antialiased">
   <div class="glow" style="background:var(--cyan);top:80px;left:-150px"></div>
   <div class="glow" style="background:var(--pink);right:-160px;top:400px"></div>
 
@@ -177,10 +178,10 @@
   </nav>
 </header>
 
-  <main class="max-w-6xl mx-auto px-6 py-12 md:py-20">
+  <main class="music-main max-w-6xl mx-auto px-6 py-12 md:py-20">
     <div class="music-page-layout">
       <div class="music-page-content space-y-12">
-        <section id="music-intro" class="scroll-mt-36 text-center max-w-3xl mx-auto">
+        <section id="music-intro" class="music-hero scroll-mt-36 text-center max-w-3xl mx-auto">
       <div class="reveal">
         <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
           Personal frequency / 001
@@ -213,7 +214,7 @@
       <span class="music-index-caption">NOW PLAYING<br><strong>MY MUSIC</strong></span>
     </nav>
           <div class="music-sections-content space-y-12">
-<section id="featured-video-section" class="glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
+<section id="featured-video-section" class="music-featured-card glass rounded-[2rem] p-7 md:p-10 reveal scroll-mt-36">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 grid place-items-center">
           <i class="fa-solid fa-video text-lg"></i>
@@ -224,7 +225,7 @@
         </div>
       </div>
 
-      <div class="rounded-2xl bg-gradient-to-br from-cyan-50 via-white to-pink-50 border border-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-7">
+      <div class="music-featured-panel rounded-2xl bg-gradient-to-br from-cyan-50 via-white to-pink-50 border border-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-7">
         <div>
           <span class="text-xs font-bold text-pink-600 tracking-widest uppercase">Street session</span>
           <h3 class="text-xl md:text-2xl font-extrabold mt-2">Esibizione per strada con un amico</h3>
@@ -241,12 +242,12 @@
     </section>
 
 
-    <section id="public-playlists-section" class="glass rounded-[2rem] p-7 md:p-10 scroll-mt-28" hidden aria-labelledby="public-playlists-heading">
+    <section id="public-playlists-section" class="music-playlists-section glass rounded-[2rem] p-7 md:p-10 scroll-mt-28" hidden aria-labelledby="public-playlists-heading">
       <div class="flex items-center gap-3 mb-7">
         <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 grid place-items-center"><i class="fa-solid fa-headphones text-lg"></i></div>
         <div><p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Personal collection</p><h2 id="public-playlists-heading" class="text-2xl font-black">Le mie playlist</h2></div>
       </div>
-      <div id="public-playlists-list" class="grid md:grid-cols-2 gap-6"></div>
+      <div id="public-playlists-list" class="music-playlists-grid grid md:grid-cols-2 gap-6"></div>
       <p id="public-playlists-status" class="text-xs text-slate-500 mt-5" role="status" aria-live="polite"></p>
     </section>
 
@@ -466,11 +467,11 @@
           if (typeof item.youtube_playlist_id !== 'string' || !/^[A-Za-z0-9_-]{10,80}$/.test(item.youtube_playlist_id)) return;
 
           const card = document.createElement('article');
-          card.className = 'rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
+          card.className = 'music-playlist-card rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
 
           const toggle = document.createElement('button');
           toggle.type = 'button';
-          toggle.className = 'playlist-toggle';
+          toggle.className = 'playlist-toggle music-playlist-toggle';
           toggle.setAttribute('aria-expanded', 'false');
 
           const playlistPlayer = createPublicPlaylistPlayer(item);
@@ -478,7 +479,7 @@
           card.appendChild(playlistPlayer.section);
 
           const copy = document.createElement('div');
-          copy.className = 'p-5';
+          copy.className = 'p-5 music-playlist-copy';
           const title = document.createElement('h3');
           title.className = 'font-extrabold text-lg text-slate-900';
           title.textContent = item.title || 'Playlist musicale';
@@ -492,7 +493,7 @@
           toggle.appendChild(copy);
           card.appendChild(toggle);
           const playlistLinks = document.createElement('div');
-          playlistLinks.className = 'playlist-links';
+          playlistLinks.className = 'playlist-links music-playlist-links';
 
           const youtubeMusicLink = document.createElement('a');
           youtubeMusicLink.className = 'playlist-youtube-link';
@@ -505,7 +506,7 @@
           card.appendChild(playlistLinks);
 
           const details = document.createElement('div');
-          details.className = 'playlist-details p-5';
+          details.className = 'playlist-details music-playlist-details p-5';
           details.hidden = true;
           const detailStatus = document.createElement('p');
           detailStatus.className = 'text-xs text-slate-500 mb-3';
