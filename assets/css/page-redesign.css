@@ -626,3 +626,104 @@
   transform: rotate(18deg);
   transform-origin: center;
 }
+
+/* 2026-11-14 — controlled scale-up for the primary Portfolio and Personal screens.
+   Keep the hero viewport-bound on desktop; increase readable content, not empty spacing. */
+@media (min-width: 761px) {
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2.55rem, 3.8vw, 3.8rem);
+    line-height: 1.08;
+    margin-block: 16px;
+  }
+  .portfolio-page .portfolio-hero .hero-description {
+    font-size: clamp(14px, 1.1vw, 15.5px);
+    line-height: 1.62;
+  }
+  .portfolio-page .portfolio-hero .status {
+    padding: 9px 13px;
+    font-size: 10px;
+  }
+  .portfolio-page .portfolio-hero .hero-buttons .btn {
+    min-height: 46px;
+    padding-inline: 15px;
+    font-size: 11px;
+  }
+  .portfolio-page .portfolio-hero .profile-frame {
+    width: clamp(230px, 21vw, 285px);
+    height: clamp(250px, 36vh, 300px);
+  }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(3rem, 5.1vw, 4.6rem);
+    line-height: 1.06;
+  }
+  .personal-page .personal-hero > p {
+    font-size: clamp(17px, 1.45vw, 20px);
+    line-height: 1.7;
+  }
+  .personal-page .personal-hero .eyebrow {
+    font-size: 11px;
+    padding: 11px 17px;
+  }
+}
+.portfolio-page .section-heading h2 { font-size: clamp(1.9rem, 3vw, 2.45rem); }
+.portfolio-page .section-heading p { font-size: 12px; }
+.portfolio-page .card-title { font-size: 17px; }
+.portfolio-page .timeline-item h4,
+.portfolio-page .project-card h3 { font-size: 18px; }
+.portfolio-page .timeline-description,
+.portfolio-page .project-card p,
+.portfolio-page .cert-card p:last-child { font-size: 13.5px; }
+.portfolio-page .timeline-date,
+.portfolio-page .timeline-company { font-size: 12px; }
+.portfolio-page .tag { font-size: 11px; }
+.portfolio-page .cert-card h3 { font-size: 14.5px; }
+.portfolio-page .contact-item a,
+.portfolio-page .contact-item p { font-size: 13.5px; }
+
+.personal-page .personal-discover h2 { font-size: clamp(1.85rem, 3vw, 2.35rem); }
+.personal-page .personal-card {
+  min-height: 390px;
+  padding: clamp(28px, 3vw, 38px);
+}
+.personal-page .personal-card .card-icon {
+  width: 72px;
+  height: 72px;
+  font-size: 27px;
+}
+.personal-page .personal-card h2 { font-size: 1.9rem; }
+.personal-page .personal-card p { font-size: 16px; line-height: 1.75; }
+.personal-page .personal-card .text-xs { font-size: 11px; }
+.personal-page .personal-card .card-footer span { font-size: 15px; }
+
+@media (max-height: 820px) and (min-width: 761px) {
+  .portfolio-page .portfolio-hero h1 { font-size: clamp(2.45rem, 3.55vw, 3.45rem); }
+  .portfolio-page .portfolio-hero .hero-description { font-size: 14px; line-height: 1.52; }
+  .portfolio-page .portfolio-hero .profile-frame {
+    width: clamp(220px, 20vw, 270px);
+    height: clamp(230px, 33vh, 270px);
+  }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(2.8rem, 4.6vw, 4rem);
+  }
+  .personal-page .personal-hero > p { font-size: 17px; line-height: 1.55; }
+}
+@media (max-width: 760px) {
+  .portfolio-page .portfolio-hero h1 { font-size: clamp(2.4rem, 7.2vw, 3.3rem); }
+  .portfolio-page .portfolio-hero .hero-description { font-size: 15px; line-height: 1.65; }
+  .portfolio-page .portfolio-hero .hero-buttons .btn { min-height: 46px; font-size: 11.5px; }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(2.35rem, 7.3vw, 3.15rem);
+  }
+  .personal-page .personal-hero > p { font-size: 16px; line-height: 1.65; }
+  .personal-page .personal-card { min-height: 340px; }
+}
+@media (max-width: 520px) {
+  .portfolio-page .portfolio-hero h1 { font-size: clamp(2.2rem, 8.4vw, 2.75rem); }
+  .portfolio-page .portfolio-hero .hero-description { font-size: 14px; }
+  .personal-page .personal-hero .hero-title-layout .hero-title { font-size: clamp(2.05rem, 8vw, 2.55rem); }
+  .personal-page .personal-hero > p { font-size: 15px; }
+  .personal-page .personal-card { min-height: 320px; padding: 25px; }
+  .personal-page .personal-card h2 { font-size: 1.7rem; }
+  .personal-page .personal-card p { font-size: 14.5px; }
+}
+
