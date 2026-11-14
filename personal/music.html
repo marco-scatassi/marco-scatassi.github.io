@@ -90,8 +90,15 @@
       width:56px; height:38px; flex:0 0 56px; object-fit:cover;
       border-radius:7px; background:#e2e8f0;
     }
-    .playlist-track-link { color:inherit; text-decoration:none; }
-    .playlist-track-link:hover .playlist-track-title { color:#078da7; }
+    .playlist-track-link {
+      display:flex; flex:1; min-width:0; padding:0; border:0;
+      background:transparent; color:inherit; text-align:left; cursor:pointer;
+    }
+    .playlist-track-link:hover .playlist-track-title,
+    .playlist-track-link[aria-pressed="true"] .playlist-track-title { color:#078da7; }
+    .playlist-track-link[aria-pressed="true"] .playlist-track-title::before {
+      content:"▶"; margin-right:7px; color:#e83e91; font-size:10px;
+    }
     .playlist-track-title { font-weight:750; color:#17243a; }
     .playlist-track-meta { font-size:11px; color:#64748b; margin-top:2px; }
     .playlist-player-section { width:100%; }
@@ -100,6 +107,7 @@
       overflow:hidden; border-radius:12px; background:#17243a;
       box-shadow:0 10px 25px rgba(23,36,58,.14);
     }
+    .playlist-player-frame > .playlist-player-mount,
     .playlist-player-frame iframe {
       position:absolute; inset:0; width:100%; height:100%; border:0;
     }
@@ -264,22 +272,87 @@
     }, {threshold:.12});
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    let youtubeIframeApiPromise;
+    let publicPlaylistPlayerSequence = 0;
+
+    function loadYouTubeIframeAPI() {
+      if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
+      if (youtubeIframeApiPromise) return youtubeIframeApiPromise;
+
+      youtubeIframeApiPromise = new Promise((resolve, reject) => {
+        const previousCallback = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+          if (typeof previousCallback === 'function') previousCallback();
+          resolve(window.YT);
+        };
+
+        let script = document.getElementById('youtube-iframe-api');
+        if (!script) {
+          script = document.createElement('script');
+          script.id = 'youtube-iframe-api';
+          script.src = 'https://www.youtube.com/iframe_api';
+          script.onerror = () => reject(new Error('YouTube IFrame API non disponibile.'));
+          document.head.appendChild(script);
+        }
+      });
+      return youtubeIframeApiPromise;
+    }
+
     function createPublicPlaylistPlayer(playlist) {
       const section = document.createElement('section');
       section.className = 'playlist-player-section';
       const frame = document.createElement('div');
       frame.className = 'playlist-player-frame';
-      const iframe = document.createElement('iframe');
-      iframe.src = 'https://www.youtube.com/embed/videoseries?list=' +
-        encodeURIComponent(playlist.youtube_playlist_id);
-      iframe.title = 'Player YouTube per la playlist ' + (playlist.title || 'musicale');
-      iframe.loading = 'lazy';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.allowFullscreen = true;
-      frame.appendChild(iframe);
+      const mount = document.createElement('div');
+      mount.className = 'playlist-player-mount';
+      mount.id = 'youtube-playlist-player-' + (++publicPlaylistPlayerSequence);
+      mount.setAttribute('role', 'region');
+      mount.setAttribute('aria-label', 'Player YouTube per la playlist ' + (playlist.title || 'musicale'));
+      frame.appendChild(mount);
       section.appendChild(frame);
-      return section;
+      return { section, mount };
+    }
+
+    function initializePublicPlaylistPlayer(playlist, mount) {
+      loadYouTubeIframeAPI().then(YT => {
+        if (mount._youtubePlayer || mount.dataset.initializing === 'true') return;
+        mount.dataset.initializing = 'true';
+        new YT.Player(mount.id, {
+          width: '100%',
+          height: '100%',
+          playerVars: {
+            listType: 'playlist',
+            list: playlist.youtube_playlist_id,
+            autoplay: 0,
+            playsinline: 1,
+            rel: 0
+          },
+          events: {
+            onReady: event => {
+              mount._youtubePlayer = event.target;
+              const pendingVideoId = mount.dataset.pendingVideoId;
+              if (pendingVideoId) {
+                event.target.loadVideoById(pendingVideoId);
+                delete mount.dataset.pendingVideoId;
+              }
+            }
+          }
+        });
+      }).catch(() => {
+        mount.dataset.playerError = 'true';
+      });
+    }
+
+    function playPublicPlaylistTrack(mount, videoId) {
+      if (mount._youtubePlayer && typeof mount._youtubePlayer.loadVideoById === 'function') {
+        mount._youtubePlayer.loadVideoById(videoId);
+        return;
+      }
+      mount.dataset.pendingVideoId = videoId;
+      initializePublicPlaylistPlayer(
+        { youtube_playlist_id: mount.dataset.playlistId },
+        mount
+      );
     }
 
     function filterPublicPlaylistTracks(searchInput, status, trackList) {
@@ -296,7 +369,7 @@
         : rows.length + ' brani nella playlist.';
     }
 
-    async function loadPublicPlaylistTracks(playlist, status, trackList, searchInput) {
+    async function loadPublicPlaylistTracks(playlist, status, trackList, searchInput, playerMount) {
       status.textContent = 'Caricamento dei brani…';
       searchInput.value = '';
       searchInput.disabled = true;
@@ -337,13 +410,20 @@
         meta.textContent = (Number.isInteger(track.position) ? track.position + 1 : index + 1) + (artist ? ' · ' + artist : '');
         copy.append(title, meta);
         if (typeof track.video_id === 'string' && /^[A-Za-z0-9_-]{6,20}$/.test(track.video_id)) {
-          const link = document.createElement('a');
-          link.className = 'playlist-track-link min-w-0 flex-1';
-          link.href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(track.video_id) + '&list=' + encodeURIComponent(playlist.youtube_playlist_id);
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          link.appendChild(copy);
-          row.appendChild(link);
+          const playButton = document.createElement('button');
+          playButton.type = 'button';
+          playButton.className = 'playlist-track-link min-w-0 flex-1';
+          playButton.setAttribute('aria-label', 'Riproduci ' + (track.title || 'questo brano') + ' nel player');
+          playButton.setAttribute('aria-pressed', 'false');
+          playButton.appendChild(copy);
+          playButton.addEventListener('click', () => {
+            trackList.querySelectorAll('.playlist-track-link[aria-pressed="true"]').forEach(button => {
+              button.setAttribute('aria-pressed', 'false');
+            });
+            playButton.setAttribute('aria-pressed', 'true');
+            playPublicPlaylistTrack(playerMount, track.video_id);
+          });
+          row.appendChild(playButton);
         } else {
           row.appendChild(copy);
           const unavailable = document.createElement('span');
@@ -382,7 +462,9 @@
           toggle.className = 'playlist-toggle';
           toggle.setAttribute('aria-expanded', 'false');
 
-          card.appendChild(createPublicPlaylistPlayer(item));
+          const playlistPlayer = createPublicPlaylistPlayer(item);
+          playlistPlayer.mount.dataset.playlistId = item.youtube_playlist_id;
+          card.appendChild(playlistPlayer.section);
 
           const copy = document.createElement('div');
           copy.className = 'p-5';
@@ -438,7 +520,7 @@
             hint.textContent = opening ? 'NASCONDI I BRANI  ↑' : 'VISUALIZZA I BRANI  ↓';
             if (opening && details.dataset.loaded !== 'true') {
               try {
-                await loadPublicPlaylistTracks(item, detailStatus, trackList, searchInput);
+                await loadPublicPlaylistTracks(item, detailStatus, trackList, searchInput, playlistPlayer.mount);
                 details.dataset.loaded = 'true';
               } catch (error) {
                 detailStatus.textContent = 'Non è stato possibile caricare i brani. Riprova tra poco.';
@@ -446,6 +528,7 @@
             }
           });
           list.appendChild(card);
+          initializePublicPlaylistPlayer(item, playlistPlayer.mount);
         });
 
         if (list.childElementCount) {
@@ -490,6 +573,7 @@
       musicSections.forEach(section => sectionObserver.observe(section));
     }
 
+    loadYouTubeIframeAPI().catch(() => {});
     loadPublicMusicPlaylists();
   </script>
 </body>
