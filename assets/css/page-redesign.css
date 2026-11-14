@@ -619,3 +619,10 @@
     min-height: 40px;
   }
 }
+
+
+/* Match the Portfolio arrival USB angle to the Personal hero chip. */
+.portfolio-page .profile-frame .hub-chip-destination {
+  transform: rotate(18deg);
+  transform-origin: center;
+}
