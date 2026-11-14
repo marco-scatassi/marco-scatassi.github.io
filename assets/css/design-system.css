@@ -138,3 +138,11 @@
 @media (prefers-reduced-motion: reduce) {
   .ph-card--interactive { transition: none; }
 }
+
+
+/* Shared display typography for the main pages. */
+:root {
+  --ph-font-display: Inter, ui-sans-serif, system-ui, sans-serif;
+  --ph-font-weight-display: 800;
+  --ph-letter-spacing-display: -.035em;
+}
