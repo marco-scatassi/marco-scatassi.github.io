@@ -59,13 +59,6 @@
     }
     @keyframes spin { to { transform:rotate(360deg) } }
 
-    .playlist-cover {
-      position:relative; aspect-ratio:16/9; overflow:hidden;
-      display:grid; place-items:center;
-      background:linear-gradient(125deg,#dff8fc,#fce7f3);
-    }
-    .playlist-cover img { width:100%; height:100%; object-fit:cover; display:block; }
-    .playlist-cover-fallback i { color:#087e99; font-size:3rem; }
     .playlist-toggle {
       display:block; width:100%; text-align:left; cursor:pointer;
       background:rgba(255,255,255,.9); border:0;
@@ -101,11 +94,7 @@
     .playlist-track-link:hover .playlist-track-title { color:#078da7; }
     .playlist-track-title { font-weight:750; color:#17243a; }
     .playlist-track-meta { font-size:11px; color:#64748b; margin-top:2px; }
-    .playlist-player-section { margin-bottom:18px; }
-    .playlist-player-heading {
-      margin-bottom:10px; color:#087e99; font-size:11px;
-      font-weight:900; letter-spacing:.14em; text-transform:uppercase;
-    }
+    .playlist-player-section { width:100%; }
     .playlist-player-frame {
       position:relative; width:100%; aspect-ratio:16 / 9; max-height:380px;
       overflow:hidden; border-radius:12px; background:#17243a;
@@ -278,9 +267,6 @@
     function createPublicPlaylistPlayer(playlist) {
       const section = document.createElement('section');
       section.className = 'playlist-player-section';
-      const heading = document.createElement('p');
-      heading.className = 'playlist-player-heading';
-      heading.textContent = 'Ascolta la playlist';
       const frame = document.createElement('div');
       frame.className = 'playlist-player-frame';
       const iframe = document.createElement('iframe');
@@ -292,7 +278,7 @@
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';
       iframe.allowFullscreen = true;
       frame.appendChild(iframe);
-      section.append(heading, frame);
+      section.appendChild(frame);
       return section;
     }
 
@@ -396,27 +382,7 @@
           toggle.className = 'playlist-toggle';
           toggle.setAttribute('aria-expanded', 'false');
 
-          const cover = document.createElement('div');
-          cover.className = 'playlist-cover';
-          if (typeof item.thumbnail_url === 'string' && /^https:\/\//i.test(item.thumbnail_url)) {
-            const image = document.createElement('img');
-            image.src = item.thumbnail_url;
-            image.alt = 'Copertina della playlist ' + (item.title || '');
-            image.loading = 'lazy';
-            image.onerror = () => {
-              image.remove();
-              cover.classList.add('playlist-cover-fallback');
-              const fallbackIcon = document.createElement('i');
-              fallbackIcon.className = 'fa-solid fa-music';
-              cover.appendChild(fallbackIcon);
-            };
-            cover.appendChild(image);
-          } else {
-            cover.classList.add('playlist-cover-fallback');
-            const fallbackIcon = document.createElement('i');
-            fallbackIcon.className = 'fa-solid fa-music';
-            cover.appendChild(fallbackIcon);
-          }
+          card.appendChild(createPublicPlaylistPlayer(item));
 
           const copy = document.createElement('div');
           copy.className = 'p-5';
@@ -430,17 +396,10 @@
           hint.className = 'text-xs font-bold text-cyan-700 mt-4';
           hint.textContent = 'VISUALIZZA I BRANI  ↓';
           copy.append(title, meta, hint);
-          toggle.append(cover, copy);
+          toggle.appendChild(copy);
           card.appendChild(toggle);
           const playlistLinks = document.createElement('div');
           playlistLinks.className = 'playlist-links';
-
-          const youtubeLink = document.createElement('a');
-          youtubeLink.className = 'playlist-youtube-link';
-          youtubeLink.href = 'https://www.youtube.com/playlist?list=' + encodeURIComponent(item.youtube_playlist_id);
-          youtubeLink.target = '_blank';
-          youtubeLink.rel = 'noopener noreferrer';
-          youtubeLink.innerHTML = '<i class="fa-brands fa-youtube" aria-hidden="true"></i> Apri su YouTube ↗';
 
           const youtubeMusicLink = document.createElement('a');
           youtubeMusicLink.className = 'playlist-youtube-link';
@@ -449,7 +408,7 @@
           youtubeMusicLink.rel = 'noopener noreferrer';
           youtubeMusicLink.innerHTML = '<i class="fa-solid fa-headphones" aria-hidden="true"></i> Apri su YouTube Music ↗';
 
-          playlistLinks.append(youtubeLink, youtubeMusicLink);
+          playlistLinks.appendChild(youtubeMusicLink);
           card.appendChild(playlistLinks);
 
           const details = document.createElement('div');
@@ -477,14 +436,6 @@
             details.hidden = !opening;
             toggle.setAttribute('aria-expanded', String(opening));
             hint.textContent = opening ? 'NASCONDI I BRANI  ↑' : 'VISUALIZZA I BRANI  ↓';
-            if (opening) {
-              if (!details.querySelector('.playlist-player-frame')) {
-                details.insertBefore(createPublicPlaylistPlayer(item), detailStatus);
-              }
-            } else {
-              const player = details.querySelector('.playlist-player-section');
-              if (player) player.remove();
-            }
             if (opening && details.dataset.loaded !== 'true') {
               try {
                 await loadPublicPlaylistTracks(item, detailStatus, trackList, searchInput);
