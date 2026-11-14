@@ -334,3 +334,28 @@ Il markup e l'aspetto della sezione sono stati riportati alla versione precedent
 
 Verifica: confronto del markup con la versione storica pre-refresh e controllo statico dei selettori CSS e delle classi rimosse. Non è stato eseguito un test browser/screenshot; il fit va confermato a 1366×768, 1440×900, 390×844 e 360×800.
 
+### Correzione overflow titoli e gerarchia tipografica — 2026-11-14
+
+La landing Personal aveva il titolo principale in un layout flex affiancato al chip USB, con una larghezza minima forzata sui viewport piccoli. Questa combinazione poteva comprimere la riga “Esplora le mie” e tagliare visivamente il testo. Sotto i 520 px il titolo ora occupa tutta la larghezza disponibile e il chip passa sotto, centrato; la hero usa altezza naturale per non ritagliare contenuti.
+
+Anche le hero Portfolio e Personal non hanno più un'altezza rigida che possa tagliare contenuti quando la tipografia cresce: usano un'altezza automatica con min-height pari allo spazio disponibile sul desktop e altezza naturale su mobile.
+
+La gerarchia è esplicita: il titolo principale di Personal e il titolo Portfolio restano più grandi dei titoli delle sezioni e delle card, anche sui desktop bassi. Le dimensioni delle sottosezioni sono state contenute e rese coerenti tra breakpoint. Modifica CSS-only in assets/css/page-redesign.css; nessun markup o comportamento applicativo modificato.
+
+Verifica: controllati staticamente i selettori e l'ordine delle media query nel foglio CSS aggiornato. Non è stato eseguito un browser test né acquisito uno screenshot; resta necessaria la verifica visiva a 360, 390, 768, 1366×768 e 1440×900.
+
+
+### Seconda correzione titoli Personal e coerenza tipografica — 2026-11-14
+
+La verifica del CSS effettivamente presente nella branch ha evidenziato che il titolo Personal conservava ancora un tracking molto negativo e che il layout affiancato al chip poteva restare attivo tra 521 e 760 px. È stato quindi aggiunto un override finale: titolo e chip si impilano fino a 760 px, il titolo usa larghezza piena, padding laterale minimo e spaziatura lettere meno aggressiva per evitare il taglio della “e” finale in “mie”.
+
+È stata inoltre introdotta una scala condivisa per i titoli principali Portfolio, Personal e Music e per i titoli delle rispettive sezioni, usando gli stessi font token, peso, line-height e tracking. Le modifiche sono limitate ai fogli CSS e non alterano markup o logica applicativa.
+
+Verifica eseguita: controllo statico di selettori, breakpoint e ordine degli override sulla branch. Non è stato possibile eseguire rendering browser o screenshot: il risultato visivo a 390, 768 e 1440 px resta da confermare.
+
+
+### Allineamento hero Personal e posizione chip — 2026-11-14
+
+Dalla verifica dello screenshot desktop è emerso che `margin-inline: auto` sul titolo, figlio di un contenitore flex, assorbiva lo spazio libero e spingeva il chip USB verso il margine destro. Il titolo ora viene centrato indipendentemente dal chip; quest'ultimo è posizionato in modo assoluto all'interno del contenitore della hero, con un distacco dal bordo proporzionale al viewport. Sotto i 760 px il chip torna nel flusso normale e viene disposto sotto il titolo, centrato.
+
+Verifica: causa individuata tramite ispezione del CSS e confronto con lo screenshot fornito. Modifica CSS-only sulla branch `feature/ui-readability-music`. Non è stato eseguito un browser test; il rendering va confermato sui breakpoint desktop, tablet e mobile.
