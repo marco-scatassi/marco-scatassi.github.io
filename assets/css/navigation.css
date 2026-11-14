@@ -133,3 +133,15 @@
   .ph-nav-link { transition: none; }
   .ph-nav-link:hover { transform: none; }
 }
+
+/* Primary cross-area action: keep Portfolio aligned with the cyan chip language. */
+.ph-nav-link--primary {
+  color: var(--ph-color-cyan);
+  background: rgba(8,127,156,.07);
+  border-color: rgba(8,127,156,.2);
+}
+.ph-nav-link--primary:hover {
+  color: #fff;
+  background: var(--ph-color-cyan);
+  border-color: var(--ph-color-cyan);
+}
