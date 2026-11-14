@@ -1,0 +1,272 @@
+/* Personal Hub — editorial refresh for Portfolio and Personal.
+   Layouts remain page-specific; shared tokens keep the visual language coherent. */
+
+/* ------------------------------ Portfolio ------------------------------ */
+.portfolio-page {
+  --portfolio-gutter: clamp(20px, 4vw, 48px);
+}
+.portfolio-page .hero {
+  width: min(100% - 48px, 1152px);
+  min-height: min(720px, calc(100svh - 76px));
+  padding: clamp(76px, 9vw, 126px) 0 clamp(76px, 9vw, 118px);
+  gap: clamp(42px, 7vw, 92px);
+}
+.portfolio-page .hero-content { max-width: 690px; }
+.portfolio-page .status {
+  border-radius: 999px;
+  padding: 10px 15px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.portfolio-page .hero h1 {
+  max-width: 760px;
+  margin: 28px 0 24px;
+  font-size: clamp(2.7rem, 5.3vw, 5rem);
+  line-height: 1.06;
+  letter-spacing: -.065em;
+  font-weight: 850;
+}
+.portfolio-page .hero-description {
+  max-width: 610px;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.85;
+}
+.portfolio-page .hero-buttons { gap: 10px; margin-top: 34px; }
+.portfolio-page .hero-buttons .btn {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .015em;
+}
+.portfolio-page .profile-frame {
+  width: clamp(260px, 28vw, 340px);
+  height: clamp(320px, 34vw, 410px);
+  padding: 8px;
+  border: 1px solid rgba(8,127,156,.42);
+  border-radius: 24px;
+  background: rgba(255,255,255,.9);
+  box-shadow: 16px 16px 0 rgba(217,54,112,.10), 0 24px 65px rgba(23,40,59,.12);
+}
+.portfolio-page .profile-frame img {
+  border-radius: 17px;
+  filter: grayscale(12%);
+}
+.portfolio-page .profile-label {
+  bottom: 26px;
+  left: -28px;
+  padding: 11px 15px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.portfolio-page .section { padding: clamp(70px, 8vw, 104px) 24px; }
+.portfolio-page .section-alt {
+  background: rgba(255,255,255,.68);
+  border-color: rgba(23,40,59,.08);
+}
+.portfolio-page .container { max-width: 1152px; }
+.portfolio-page .section-heading { margin-bottom: 42px; }
+.portfolio-page .section-heading h2 {
+  margin-bottom: 13px;
+  font-size: clamp(1.8rem, 3.2vw, 2.55rem);
+  font-weight: 850;
+  letter-spacing: -.055em;
+  text-transform: none;
+}
+.portfolio-page .section-heading p {
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .15em;
+}
+.portfolio-page .card {
+  padding: clamp(22px, 2.6vw, 32px);
+  border-color: rgba(23,40,59,.11);
+  border-radius: 20px;
+  box-shadow: 0 12px 36px rgba(23,40,59,.055);
+}
+.portfolio-page .card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(8,127,156,.3);
+  box-shadow: 0 20px 44px rgba(23,40,59,.09);
+}
+.portfolio-page .card-title {
+  gap: 14px;
+  margin-bottom: 28px;
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: .035em;
+}
+.portfolio-page .card-icon,
+.portfolio-page .cert-icon,
+.portfolio-page .contact-icon {
+  border-radius: 13px;
+}
+.portfolio-page .timeline { gap: 30px; }
+.portfolio-page .timeline-item h4 { font-size: 16px; }
+.portfolio-page .timeline-description { font-size: 12px; line-height: 1.85; }
+.portfolio-page .skills-grid,
+.portfolio-page .projects-grid { gap: 18px; }
+.portfolio-page .project-card { min-height: 250px; }
+.portfolio-page .project-card h3 { font-size: 17px; font-weight: 850; letter-spacing: -.025em; }
+.portfolio-page .project-card p { font-size: 12px; line-height: 1.75; }
+.portfolio-page .tag {
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.portfolio-page .cert-card { align-items: center; gap: 20px; }
+.portfolio-page .cert-card h3 { font-size: 13px; line-height: 1.5; }
+.portfolio-page .cert-card p:last-child { font-size: 12px; line-height: 1.75; }
+.portfolio-page .contact-grid { gap: 20px; }
+.portfolio-page .form-group input,
+.portfolio-page .form-group textarea {
+  border-radius: 10px;
+  padding: 14px 15px;
+}
+.portfolio-page footer { background: #17283b; border-top-color: rgba(255,255,255,.12); }
+.portfolio-page .reveal { transition-duration: .55s; }
+.portfolio-page .project-card { will-change: auto; }
+
+@media (max-width: 760px) {
+  .portfolio-page .hero {
+    width: min(100% - 40px, 620px);
+    min-height: 0;
+    padding: 70px 0 82px;
+    gap: 58px;
+  }
+  .portfolio-page .hero h1 { font-size: clamp(2.55rem, 8.5vw, 3.8rem); }
+  .portfolio-page .profile-frame { width: 250px; height: 310px; }
+  .portfolio-page .profile-label { left: -18px; }
+}
+@media (max-width: 520px) {
+  .portfolio-page .hero { width: min(100% - 32px, 460px); padding-top: 54px; gap: 48px; }
+  .portfolio-page .hero h1 { font-size: clamp(2.35rem, 10vw, 3rem); letter-spacing: -.055em; }
+  .portfolio-page .hero-buttons .btn { width: 100%; }
+  .portfolio-page .section { padding: 66px 16px; }
+  .portfolio-page .section-heading { margin-bottom: 32px; }
+  .portfolio-page .card { padding: 22px; }
+  .portfolio-page .cert-card { align-items: flex-start; }
+}
+
+/* ------------------------------- Personal -------------------------------- */
+.personal-page .cyber-grid { opacity: .62; }
+.personal-page .ambient { opacity: .11; }
+.personal-page .particle { opacity: .12; animation: none; }
+.personal-page .eyebrow {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  box-shadow: 0 8px 24px rgba(23,40,59,.045);
+  font-size: 10px;
+  letter-spacing: .14em;
+}
+.personal-page .eyebrow i { animation: none; }
+.personal-page .personal-hero {
+  width: min(100% - 48px, 1152px);
+  max-width: 1152px;
+  padding: clamp(74px, 9vw, 116px) 0 clamp(64px, 7vw, 88px);
+}
+.personal-page .hero-title-layout { gap: clamp(24px, 4vw, 54px); }
+.personal-page .hero-title {
+  font-size: clamp(3rem, 6.2vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -.065em;
+}
+.personal-page .personal-hero > p {
+  max-width: 650px;
+  font-size: clamp(15px, 1.45vw, 19px);
+  line-height: 1.8;
+}
+.personal-page .personal-discover {
+  width: min(100% - 48px, 1152px);
+  max-width: 1152px;
+  padding-bottom: clamp(88px, 10vw, 132px);
+}
+.personal-page .personal-discover > .flex:first-child { margin-bottom: 30px; }
+.personal-page .personal-discover h2 {
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  letter-spacing: -.045em;
+}
+.personal-page .personal-card {
+  min-height: 380px;
+  padding: clamp(26px, 3vw, 36px);
+  border: 1px solid rgba(23,40,59,.10);
+  border-radius: 26px;
+  background: rgba(255,255,255,.91);
+  box-shadow: 0 14px 38px rgba(23,40,59,.055);
+  backdrop-filter: blur(14px);
+}
+.personal-page .personal-card::before {
+  opacity: 1;
+  background: linear-gradient(145deg, rgba(8,127,156,.035), transparent 48%, rgba(217,54,112,.025));
+}
+.personal-page .personal-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--card-accent, var(--ph-color-cyan));
+  opacity: .85;
+}
+.personal-page .personal-card:nth-child(1) { --card-accent: var(--ph-color-pink); }
+.personal-page .personal-card:nth-child(2) { --card-accent: var(--ph-color-cyan); }
+.personal-page .personal-card:nth-child(3) { --card-accent: var(--ph-color-yellow); }
+.personal-page .personal-card:hover {
+  transform: translateY(-7px);
+  border-color: color-mix(in srgb, var(--card-accent) 34%, white);
+  box-shadow: 0 24px 54px rgba(23,40,59,.10);
+}
+.personal-page .card-number {
+  top: 22px;
+  right: 26px;
+  color: rgba(23,40,59,.055);
+  font-size: 66px;
+  letter-spacing: -.07em;
+}
+.personal-page .card-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 21px;
+  font-size: 25px;
+}
+.personal-page .personal-card h2 { letter-spacing: -.035em; }
+.personal-page .personal-card p { line-height: 1.8; }
+.personal-page .card-footer {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(23,40,59,.08);
+}
+.personal-page footer { background: #17283b; }
+.personal-page .reveal { transition-duration: .55s; }
+
+@media (max-width: 760px) {
+  .personal-page .personal-hero,
+  .personal-page .personal-discover {
+    width: min(100% - 40px, 620px);
+  }
+  .personal-page .personal-hero { padding-top: 66px; }
+  .personal-page .hero-title { font-size: clamp(2.65rem, 9vw, 3.8rem); }
+  .personal-page .personal-card { min-height: 330px; }
+}
+@media (max-width: 520px) {
+  .personal-page .personal-hero,
+  .personal-page .personal-discover { width: min(100% - 32px, 460px); }
+  .personal-page .hero-title-layout { gap: 12px; }
+  .personal-page .hero-title { font-size: clamp(2.2rem, 9vw, 2.8rem); }
+  .personal-page .personal-hero > p { font-size: 15px; }
+  .personal-page .personal-card { min-height: 310px; padding: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .personal-page .personal-card,
+  .personal-page .personal-card::before,
+  .personal-page .card-icon,
+  .personal-page .reveal {
+    transition: none !important;
+  }
+  .personal-page .particle { display: none; }
+}
