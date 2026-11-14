@@ -305,3 +305,12 @@ Portfolio e Personal usano lo stesso indicatore grafico circolare con chevron, c
 ### Allineamento inclinazione chip Portfolio
 
 Il chip USB di arrivo nella hero Portfolio è inclinato di 18 gradi, come il chip presente nella hero Personal. Gli indicatori di scorrimento delle due pagine restano esclusivamente grafici; le etichette accessibili sono mantenute solo per gli screen reader.
+
+
+### Revisione visuale Music
+
+La pagina Music adotta un'impostazione editoriale audio-visuale più ordinata: hero dedicata, contenuto in evidenza separato dalle playlist e card dinamiche con player incorporato in primo piano. La navigazione interna laterale è stata alleggerita e le card playlist hanno gerarchia più chiara per player, titolo, numero di brani, accesso a YouTube Music e apertura dell'elenco.
+
+La revisione è solo frontend e non modifica endpoint, payload, autenticazione o sincronizzazione. Sono stati mantenuti il caricamento differito del player, la selezione e riproduzione del brano nell'iframe, la ricerca nella lista, il link YouTube Music e gli stati di caricamento/errore. Gli stili sono isolati in `assets/css/music.css`.
+
+Verifica eseguita: controlli statici su markup, classi aggiunte, riferimenti agli script e struttura CSS. Non è stato eseguito un test browser o una prova end-to-end con playlist reali; layout responsive e riproduzione devono essere verificati visivamente e funzionalmente dopo il commit.
