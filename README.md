@@ -364,3 +364,8 @@ Verifica: causa individuata tramite ispezione del CSS e confronto con lo screens
 ### Modulo contatti senza action non sicuro — 2026-11-14
 
 Il form HTML con `action="mailto:..."` è stato rimosso: `mailto:` non è un endpoint HTTPS e Chrome lo segnalava come destinazione non sicura del form. La card contatti ora presenta un normale link `mailto:marco.scatassi.99@gmail.com`, che apre il client email dell'utente. Anche il collegamento email nel footer usa il nuovo indirizzo. Questa soluzione non invia dati al server e dipende dalla configurazione email del visitatore.
+
+
+### Playlist cards: titolo sopra il player e CTA leggibile — 2026-11-14
+
+Nella pagina `personal/music.html` il titolo e il conteggio della playlist vengono ora renderizzati prima dell'iframe YouTube. La riga delle azioni resta sotto il player. Il controllo `Visualizza brani` usa la tipografia Inter/display condivisa, dimensione e peso più leggibili, senza trasformazioni uppercase o tracking decorativo. Nessuna modifica alla logica di caricamento playlist, player o API.
