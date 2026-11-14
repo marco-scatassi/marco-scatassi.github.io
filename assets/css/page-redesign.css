@@ -900,3 +900,36 @@
     text-align: center;
   }
 }
+
+
+/* 2026-11-14 — center the Personal title independently from its decorative chip.
+   The title's previous auto inline margins consumed flex space and pushed the chip
+   to the far edge of the hero. */
+.personal-page .personal-hero .hero-title-layout {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.personal-page .personal-hero .hero-title-layout .hero-title {
+  margin-inline: 0;
+}
+.personal-page .personal-hero .hero-title-layout .title-chip {
+  position: absolute;
+  top: 50%;
+  right: clamp(24px, 6vw, 88px);
+  transform: translateY(-50%) rotate(18deg);
+}
+@media (max-width: 760px) {
+  .personal-page .personal-hero .hero-title-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .personal-page .personal-hero .hero-title-layout .title-chip {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: rotate(18deg);
+  }
+}
