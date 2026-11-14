@@ -334,3 +334,13 @@ Il markup e l'aspetto della sezione sono stati riportati alla versione precedent
 
 Verifica: confronto del markup con la versione storica pre-refresh e controllo statico dei selettori CSS e delle classi rimosse. Non è stato eseguito un test browser/screenshot; il fit va confermato a 1366×768, 1440×900, 390×844 e 360×800.
 
+### Correzione overflow titoli e gerarchia tipografica — 2026-11-14
+
+La landing Personal aveva il titolo principale in un layout flex affiancato al chip USB, con una larghezza minima forzata sui viewport piccoli. Questa combinazione poteva comprimere la riga “Esplora le mie” e tagliare visivamente il testo. Sotto i 520 px il titolo ora occupa tutta la larghezza disponibile e il chip passa sotto, centrato; la hero usa altezza naturale per non ritagliare contenuti.
+
+Anche le hero Portfolio e Personal non hanno più un'altezza rigida che possa tagliare contenuti quando la tipografia cresce: usano un'altezza automatica con min-height pari allo spazio disponibile sul desktop e altezza naturale su mobile.
+
+La gerarchia è esplicita: il titolo principale di Personal e il titolo Portfolio restano più grandi dei titoli delle sezioni e delle card, anche sui desktop bassi. Le dimensioni delle sottosezioni sono state contenute e rese coerenti tra breakpoint. Modifica CSS-only in assets/css/page-redesign.css; nessun markup o comportamento applicativo modificato.
+
+Verifica: controllati staticamente i selettori e l'ordine delle media query nel foglio CSS aggiornato. Non è stato eseguito un browser test né acquisito uno screenshot; resta necessaria la verifica visiva a 360, 390, 768, 1366×768 e 1440×900.
+
