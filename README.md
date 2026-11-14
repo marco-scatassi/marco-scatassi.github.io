@@ -344,3 +344,11 @@ La gerarchia è esplicita: il titolo principale di Personal e il titolo Portfoli
 
 Verifica: controllati staticamente i selettori e l'ordine delle media query nel foglio CSS aggiornato. Non è stato eseguito un browser test né acquisito uno screenshot; resta necessaria la verifica visiva a 360, 390, 768, 1366×768 e 1440×900.
 
+
+### Seconda correzione titoli Personal e coerenza tipografica — 2026-11-14
+
+La verifica del CSS effettivamente presente nella branch ha evidenziato che il titolo Personal conservava ancora un tracking molto negativo e che il layout affiancato al chip poteva restare attivo tra 521 e 760 px. È stato quindi aggiunto un override finale: titolo e chip si impilano fino a 760 px, il titolo usa larghezza piena, padding laterale minimo e spaziatura lettere meno aggressiva per evitare il taglio della “e” finale in “mie”.
+
+È stata inoltre introdotta una scala condivisa per i titoli principali Portfolio, Personal e Music e per i titoli delle rispettive sezioni, usando gli stessi font token, peso, line-height e tracking. Le modifiche sono limitate ai fogli CSS e non alterano markup o logica applicativa.
+
+Verifica eseguita: controllo statico di selettori, breakpoint e ordine degli override sulla branch. Non è stato possibile eseguire rendering browser o screenshot: il risultato visivo a 390, 768 e 1440 px resta da confermare.
