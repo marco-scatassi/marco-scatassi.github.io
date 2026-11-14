@@ -347,3 +347,141 @@
     height: 76px;
   }
 }
+
+
+/* First-screen composition and explicit scroll affordance. */
+.portfolio-page .portfolio-hero {
+  position: relative;
+  min-height: calc(100svh - var(--ph-header-height, 76px));
+  padding: clamp(28px, 4.2vh, 54px) 0 clamp(68px, 8vh, 88px);
+  grid-template-columns: minmax(0, 1.3fr) minmax(240px, .7fr);
+  align-items: center;
+  gap: clamp(28px, 4.5vw, 68px);
+}
+.portfolio-page .portfolio-hero .hero-content { min-width: 0; }
+.portfolio-page .portfolio-hero h1 {
+  margin: 18px 0 16px;
+  font-size: clamp(2.25rem, 4vw, 3.75rem);
+  line-height: 1.1;
+}
+.portfolio-page .portfolio-hero .hero-description {
+  max-width: 570px;
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.68;
+}
+.portfolio-page .portfolio-hero .hero-buttons {
+  margin-top: 23px;
+  gap: 9px;
+}
+.portfolio-page .portfolio-hero .hero-buttons .btn {
+  min-height: 44px;
+  padding-inline: 16px;
+}
+.portfolio-page .portfolio-hero .profile-frame {
+  width: clamp(230px, 25vw, 310px);
+  height: clamp(260px, 39vh, 350px);
+}
+.personal-page .personal-hero {
+  position: relative;
+  min-height: calc(100svh - var(--ph-header-height, 76px));
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(34px, 5vh, 60px) 0 clamp(78px, 9vh, 96px);
+}
+.personal-page .personal-hero .hero-title-layout {
+  justify-content: center;
+}
+.personal-page .personal-hero > p {
+  margin-top: clamp(18px, 3vh, 30px);
+}
+.personal-page .personal-hero > .flex.justify-center.items-center {
+  margin-top: clamp(22px, 3vh, 34px);
+}
+.hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 13px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(8,127,156,.17);
+  border-radius: 999px;
+  color: var(--ph-color-muted);
+  background: rgba(255,255,255,.72);
+  font: 750 9px/1.2 var(--ph-font-mono, ui-monospace, monospace);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color var(--ph-transition-fast), border-color var(--ph-transition-fast), background var(--ph-transition-fast);
+}
+.hero-scroll-cue i {
+  color: var(--ph-color-cyan);
+  animation: hero-scroll-nudge 1.8s ease-in-out infinite;
+}
+.hero-scroll-cue:hover {
+  color: var(--ph-color-cyan);
+  border-color: rgba(8,127,156,.36);
+  background: #fff;
+}
+.hero-scroll-cue:focus-visible {
+  outline: 3px solid var(--ph-color-cyan);
+  outline-offset: 3px;
+}
+@keyframes hero-scroll-nudge {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(3px); }
+}
+@media (max-height: 820px) and (min-width: 761px) {
+  .portfolio-page .portfolio-hero {
+    padding-top: 22px;
+    padding-bottom: 66px;
+    gap: 30px;
+  }
+  .portfolio-page .portfolio-hero .profile-frame {
+    height: clamp(220px, 34vh, 285px);
+  }
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2.15rem, 3.5vw, 3.2rem);
+    margin-block: 14px;
+  }
+  .portfolio-page .portfolio-hero .hero-description { line-height: 1.55; }
+  .portfolio-page .portfolio-hero .hero-buttons { margin-top: 17px; }
+  .personal-page .personal-hero {
+    padding-top: 26px;
+    padding-bottom: 76px;
+  }
+  .personal-page .personal-hero .eyebrow { margin-bottom: 18px; }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  }
+  .personal-page .personal-hero > p { margin-top: 18px; }
+}
+@media (max-width: 760px) {
+  .portfolio-page .portfolio-hero {
+    min-height: 0;
+    padding: 56px 0 82px;
+    grid-template-columns: 1fr;
+  }
+  .portfolio-page .portfolio-hero .profile-frame {
+    width: 250px;
+    height: 310px;
+  }
+  .personal-page .personal-hero {
+    min-height: 0;
+    padding: 62px 0 76px;
+  }
+  .hero-scroll-cue {
+    bottom: 18px;
+    font-size: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue i { animation: none; }
+}
