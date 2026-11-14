@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="../assets/css/design-system.css">
+  <link rel="stylesheet" href="../assets/css/navigation.css">
   <style>
     :root {
       --bg:var(--ph-color-bg); --cyan:var(--ph-color-cyan-glow); --pink:var(--ph-color-pink-glow);
@@ -68,14 +69,24 @@
   <div class="glow" style="background:var(--cyan);top:80px;left:-150px"></div>
   <div class="glow" style="background:var(--pink);right:-160px;top:450px"></div>
 
-  <header class="sticky top-0 z-50 glass border-b border-white/70">
-    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-      <a href="../personal.html" class="font-semibold text-sm flex items-center gap-2 hover:text-cyan-600 transition">
-        <i class="fa-solid fa-arrow-left"></i> Spazio Personale
-      </a>
-      <span class="font-black tracking-wide">PHOTO<span class="gradient-text">BOOK</span></span>
+  <header class="ph-site-header">
+  <nav class="ph-nav-shell" aria-label="Navigazione principale">
+    <a class="ph-brand" href="../personal.html">
+      <span class="ph-brand-mark" aria-hidden="true"></span>
+      <span>Personal Hub</span>
+      <span class="ph-brand-context">Memories</span>
+    </a>
+    <div class="ph-nav-links">
+      <a class="ph-nav-link" href="../personal.html">Panoramica</a>
+      <a class="ph-nav-link" href="music.html">Musica</a>
+      <a class="ph-nav-link" aria-current="page" href="nature.html">Memories</a>
+      <a class="ph-nav-link" href="journal.html">Journal</a>
+      <span class="ph-nav-divider" aria-hidden="true"></span>
+      <a class="ph-nav-link ph-nav-link--accent" href="../portfolio.html">Portfolio</a>
+      <a class="ph-nav-link" href="../index.html">Home</a>
     </div>
-  </header>
+  </nav>
+</header>
 
   <main class="max-w-6xl mx-auto px-6 py-16 md:py-24 space-y-14">
     <section class="text-center max-w-3xl mx-auto reveal">
