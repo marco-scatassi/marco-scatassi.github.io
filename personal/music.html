@@ -528,7 +528,8 @@
             }
           });
           list.appendChild(card);
-          initializePublicPlaylistPlayer(item, playlistPlayer.mount);
+          if (playlistPlayerObserver) playlistPlayerObserver.observe(playlistPlayer.mount);
+          else initializePublicPlaylistPlayer(item, playlistPlayer.mount);
         });
 
         if (list.childElementCount) {
@@ -573,7 +574,18 @@
       musicSections.forEach(section => sectionObserver.observe(section));
     }
 
-    loadYouTubeIframeAPI().catch(() => {});
+    const playlistPlayerObserver = 'IntersectionObserver' in window
+      ? new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const mount = entry.target;
+            const playlistId = mount.dataset.playlistId;
+            initializePublicPlaylistPlayer({ youtube_playlist_id: playlistId }, mount);
+            playlistPlayerObserver.unobserve(mount);
+          });
+        }, { rootMargin: '250px 0px' })
+      : null;
+
     loadPublicMusicPlaylists();
   </script>
 </body>
