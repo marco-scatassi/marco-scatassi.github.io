@@ -352,3 +352,10 @@ La verifica del CSS effettivamente presente nella branch ha evidenziato che il t
 È stata inoltre introdotta una scala condivisa per i titoli principali Portfolio, Personal e Music e per i titoli delle rispettive sezioni, usando gli stessi font token, peso, line-height e tracking. Le modifiche sono limitate ai fogli CSS e non alterano markup o logica applicativa.
 
 Verifica eseguita: controllo statico di selettori, breakpoint e ordine degli override sulla branch. Non è stato possibile eseguire rendering browser o screenshot: il risultato visivo a 390, 768 e 1440 px resta da confermare.
+
+
+### Allineamento hero Personal e posizione chip — 2026-11-14
+
+Dalla verifica dello screenshot desktop è emerso che `margin-inline: auto` sul titolo, figlio di un contenitore flex, assorbiva lo spazio libero e spingeva il chip USB verso il margine destro. Il titolo ora viene centrato indipendentemente dal chip; quest'ultimo è posizionato in modo assoluto all'interno del contenitore della hero, con un distacco dal bordo proporzionale al viewport. Sotto i 760 px il chip torna nel flusso normale e viene disposto sotto il titolo, centrato.
+
+Verifica: causa individuata tramite ispezione del CSS e confronto con lo screenshot fornito. Modifica CSS-only sulla branch `feature/ui-readability-music`. Non è stato eseguito un browser test; il rendering va confermato sui breakpoint desktop, tablet e mobile.
