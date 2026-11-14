@@ -663,6 +663,9 @@
         .contact-channels-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-areas:
+                "email linkedin"
+                "location github";
             column-gap: clamp(28px, 6vw, 80px);
             row-gap: 8px;
         }
@@ -673,23 +676,40 @@
             min-height: 64px;
         }
 
-        .contact-email-link {
+        .channel-email { grid-area: email; }
+        .channel-location { grid-area: location; }
+        .channel-linkedin { grid-area: linkedin; }
+        .channel-github { grid-area: github; }
+
+        .contact-channel-link {
             display: inline-flex;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
+            color: var(--cyan);
             font-weight: 650;
-            transition: color .2s, gap .2s;
+            text-decoration: underline;
+            text-decoration-color: rgba(0,174,202,.38);
+            text-underline-offset: 4px;
+            transition: color .2s, gap .2s, text-decoration-color .2s;
         }
 
-        .contact-email-link i {
+        .contact-channel-link i {
             color: var(--cyan);
             font-size: 10px;
-            opacity: .7;
+            opacity: .8;
         }
 
-        .contact-email-link:hover {
+        .contact-channel-link:hover {
+            color: var(--pink);
             gap: 11px;
+            text-decoration-color: currentColor;
+        }
+
+        .contact-channel-link:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+            border-radius: 3px;
         }
 
         @media (max-width: 600px) {
@@ -1452,10 +1472,10 @@
                 </h3>
 
                 <div class="contact-channels-grid">
-                    <div class="contact-item">
+                    <div class="contact-item channel-email">
                         <div>
                             <small>Secure Email</small>
-                            <a class="contact-email-link"
+                            <a class="contact-channel-link"
                                href="https://mail.google.com/mail/?view=cm&fs=1&to=marco.scatassi.99%40gmail.com"
                                target="_blank" rel="noopener noreferrer"
                                aria-label="Scrivi un'email a marco.scatassi.99@gmail.com">
@@ -1465,7 +1485,7 @@
                         </div>
                     </div>
 
-                    <div class="contact-item">
+                    <div class="contact-item channel-location">
                         <div class="contact-icon" style="color:var(--pink)">
                             <i class="fa-solid fa-location-dot"></i>
                         </div>
@@ -1475,28 +1495,32 @@
                         </div>
                     </div>
 
-                    <div class="contact-item">
+                    <div class="contact-item channel-linkedin">
                         <div class="contact-icon" style="color:#0a66c2">
                             <i class="fa-brands fa-linkedin-in"></i>
                         </div>
                         <div>
                             <small>LinkedIn Profile</small>
-                            <a href="https://www.linkedin.com/in/marco-scatassi/"
+                            <a class="contact-channel-link"
+                               href="https://www.linkedin.com/in/marco-scatassi/"
                                target="_blank" rel="noopener noreferrer">
                                 linkedin.com/in/marco-scatassi
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
 
-                    <div class="contact-item">
+                    <div class="contact-item channel-github">
                         <div class="contact-icon" style="color:var(--yellow)">
                             <i class="fa-brands fa-github"></i>
                         </div>
                         <div>
                             <small>GitHub Source</small>
-                            <a href="https://github.com/marco-scatassi"
+                            <a class="contact-channel-link"
+                               href="https://github.com/marco-scatassi"
                                target="_blank" rel="noopener noreferrer">
                                 github.com/marco-scatassi
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
