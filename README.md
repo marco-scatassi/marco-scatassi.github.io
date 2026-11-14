@@ -282,3 +282,14 @@ Il lavoro è esclusivamente frontend. Le verifiche effettuate sono statiche su m
 Dopo il feedback sul refresh, sono stati ridimensionati i titoli principali e le intestazioni delle pagine Portfolio e Personal, con limiti più conservativi e regole di wrapping per evitare che il testo venga tagliato o esca dai contenitori, in particolare sui viewport stretti.
 
 La navbar adotta ora un criterio uniforme senza icone: rimosse le sole icone presenti nei link Musica, Memories e Journal della landing Personal. Le icone nei contenuti e nelle card restano invariate.
+
+
+### Hero a schermo intero e indicatore di scorrimento
+
+Le hero di Portfolio e Personal sono state riorganizzate per mostrare i contenuti introduttivi completi nel primo viewport desktop, tenendo conto dell'altezza della navigazione. Sono stati compattati gli spazi verticali e ridimensionati gli elementi principali dove necessario.
+
+Entrambe le pagine includono ora un indicatore esplicito e accessibile che porta alla prima sezione successiva:
+- Portfolio: “Scorri per esplorare”, collegato a Esperienza.
+- Personal: “Scopri cosa c'è più sotto”, collegato a I miei universi.
+
+Su schermi piccoli le hero tornano a un'altezza naturale e l'indicatore resta nel flusso visivo senza sovrapporsi ai contenuti. L'animazione dell'indicatore rispetta `prefers-reduced-motion`.
