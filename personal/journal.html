@@ -51,6 +51,17 @@
       box-shadow:0 15px 35px rgba(0,174,202,.15);
       transform:rotate(-6deg);
     }
+
+    /* Typography aligned with the Music page hero */
+    .page-hero-eyebrow { font-size: .75rem; line-height: 1rem; }
+    .page-hero-title { font-size: 2.25rem; line-height: 2.5rem; }
+    .page-hero-description { font-size: 1.125rem; line-height: 1.75rem; }
+    @media (min-width: 640px) {
+      .page-hero-title { font-size: 3rem; line-height: 1; }
+    }
+    @media (min-width: 768px) {
+      .page-hero-title { font-size: 3.75rem; line-height: 1; }
+    }
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -81,14 +92,14 @@
 </header>
 
   <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
-    <section class="reveal text-center max-w-3xl mx-auto">
-      <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
+    <section class="reveal text-center max-w-3xl mx-auto page-hero">
+      <p class="page-hero-eyebrow text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
         Personal logs / 003
       </p>
-      <h1 class="text-4xl sm:text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+      <h1 class="page-hero-title text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
         Note <span class="gradient-text">&</span> Riflessioni
       </h1>
-      <p class="text-slate-600 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
+      <p class="page-hero-description text-slate-600 text-lg mt-6 max-w-xl mx-auto leading-relaxed">
         Uno spazio pronto ad accogliere i futuri articoli e thoughts personali.
       </p>
     </section>
