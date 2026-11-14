@@ -359,3 +359,8 @@ Verifica eseguita: controllo statico di selettori, breakpoint e ordine degli ove
 Dalla verifica dello screenshot desktop è emerso che `margin-inline: auto` sul titolo, figlio di un contenitore flex, assorbiva lo spazio libero e spingeva il chip USB verso il margine destro. Il titolo ora viene centrato indipendentemente dal chip; quest'ultimo è posizionato in modo assoluto all'interno del contenitore della hero, con un distacco dal bordo proporzionale al viewport. Sotto i 760 px il chip torna nel flusso normale e viene disposto sotto il titolo, centrato.
 
 Verifica: causa individuata tramite ispezione del CSS e confronto con lo screenshot fornito. Modifica CSS-only sulla branch `feature/ui-readability-music`. Non è stato eseguito un browser test; il rendering va confermato sui breakpoint desktop, tablet e mobile.
+
+
+### Modulo contatti senza action non sicuro — 2026-11-14
+
+Il form HTML con `action="mailto:..."` è stato rimosso: `mailto:` non è un endpoint HTTPS e Chrome lo segnalava come destinazione non sicura del form. La card contatti ora presenta un normale link `mailto:marco.scatassi.99@gmail.com`, che apre il client email dell'utente. Anche il collegamento email nel footer usa il nuovo indirizzo. Questa soluzione non invia dati al server e dipende dalla configurazione email del visitatore.
