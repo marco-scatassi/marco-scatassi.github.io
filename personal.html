@@ -25,6 +25,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/design-system.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
 
     <style>
     ::view-transition-group(hub-chip-flight) { animation-duration: 1.7s; animation-timing-function: cubic-bezier(.22,.8,.25,1); }
@@ -412,17 +413,25 @@
     <div class="particle" style="top:12%;left:72%"></div>
 
     <!-- Header -->
-    <header class="navbar sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
-            <a href="personal.html" class="text-lg md:text-xl font-extrabold tracking-tight flex items-center gap-3"><span class="logo-dot"></span><span>Marco Scatassi <span class="text-xs font-medium text-slate-400 hidden sm:inline">| Spazio Personale</span></span></a>
-            <div class="flex items-center gap-3">
-                <a href="portfolio.html" class="section-chip" aria-label="Vai al portfolio professionale">Portfolio</a>
-                <a href="index.html" class="section-chip" aria-label="Torna alla scelta iniziale">Scelta iniziale</a>
-            </div>
-        </div>
-    </header>
+    <header class="ph-site-header">
+  <nav class="ph-nav-shell" aria-label="Navigazione principale">
+    <a class="ph-brand" href="#top" aria-label="Marco Scatassi, inizio spazio personale">
+      <span class="ph-brand-mark" aria-hidden="true"></span>
+      <span>Marco Scatassi</span>
+      <span class="ph-brand-context">Personal Hub</span>
+    </a>
+    <div class="ph-nav-links">
+      <a class="ph-nav-link" href="personal/music.html"><i class="fa-solid fa-music" aria-hidden="true"></i> Musica</a>
+      <a class="ph-nav-link" href="personal/nature.html"><i class="fa-solid fa-camera" aria-hidden="true"></i> Memories</a>
+      <a class="ph-nav-link" href="personal/journal.html"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Journal</a>
+      <span class="ph-nav-divider" aria-hidden="true"></span>
+      <a class="ph-nav-link ph-nav-link--accent" href="portfolio.html">Portfolio</a>
+      <a class="ph-nav-link" href="index.html">Home</a>
+    </div>
+  </nav>
+</header>
 
-    <main>
+    <main id="top">
 
         <!-- Hero -->
         <section class="max-w-5xl mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24 text-center">
