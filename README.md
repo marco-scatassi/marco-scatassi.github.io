@@ -314,3 +314,10 @@ La pagina Music adotta un'impostazione editoriale audio-visuale più ordinata: h
 La revisione è solo frontend e non modifica endpoint, payload, autenticazione o sincronizzazione. Sono stati mantenuti il caricamento differito del player, la selezione e riproduzione del brano nell'iframe, la ricerca nella lista, il link YouTube Music e gli stati di caricamento/errore. Gli stili sono isolati in `assets/css/music.css`.
 
 Verifica eseguita: controlli statici su markup, classi aggiunte, riferimenti agli script e struttura CSS. Non è stato eseguito un test browser o una prova end-to-end con playlist reali; layout responsive e riproduzione devono essere verificati visivamente e funzionalmente dopo il commit.
+
+
+### Correzione della prima revisione Music
+
+La hero introduttiva non è più racchiusa in una card: mantiene titolo, descrizione e tag direttamente sul fondo pagina. La sezione del contenuto Instagram ha una composizione esplicita a due colonne su desktop e impilata su mobile, evitando che il pulsante venga compresso o sovrapposto.
+
+Nelle card playlist, “Visualizza brani” ha recuperato una tipografia sans-serif e una gerarchia più vicine alla versione precedente. L'azione “Apri su YouTube Music” è affiancata al comando di apertura dell'elenco, allineata sul lato destro; sui viewport molto stretti può passare a una riga dedicata, sempre allineata a destra. Non sono stati modificati i flussi di caricamento playlist, player o ricerca.
