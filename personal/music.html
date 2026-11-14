@@ -469,29 +469,30 @@
           const card = document.createElement('article');
           card.className = 'music-playlist-card rounded-2xl overflow-hidden bg-white/80 border border-slate-200 shadow-sm';
 
-          const toggle = document.createElement('button');
-          toggle.type = 'button';
-          toggle.className = 'playlist-toggle music-playlist-toggle';
-          toggle.setAttribute('aria-expanded', 'false');
+          const copy = document.createElement('div');
+          copy.className = 'music-playlist-copy';
+          const title = document.createElement('h3');
+          title.className = 'music-playlist-title';
+          title.textContent = item.title || 'Playlist musicale';
+          const meta = document.createElement('p');
+          meta.className = 'music-playlist-meta';
+          meta.textContent = Number.isInteger(item.item_count) ? item.item_count + ' brani/video' : 'Playlist YouTube';
+          copy.append(title, meta);
+          card.appendChild(copy);
 
           const playlistPlayer = createPublicPlaylistPlayer(item);
           playlistPlayer.mount.dataset.playlistId = item.youtube_playlist_id;
           card.appendChild(playlistPlayer.section);
 
-          const copy = document.createElement('div');
-          copy.className = 'p-5 music-playlist-copy';
-          const title = document.createElement('h3');
-          title.className = 'font-extrabold text-lg text-slate-900';
-          title.textContent = item.title || 'Playlist musicale';
-          const meta = document.createElement('p');
-          meta.className = 'text-xs text-slate-500 mt-2';
-          meta.textContent = Number.isInteger(item.item_count) ? item.item_count + ' brani/video' : 'Playlist YouTube';
-          const hint = document.createElement('p');
-          hint.className = 'music-playlist-view-hint text-xs font-bold text-cyan-700 mt-4';
+          const toggle = document.createElement('button');
+          toggle.type = 'button';
+          toggle.className = 'playlist-toggle music-playlist-toggle';
+          toggle.setAttribute('aria-expanded', 'false');
+          const hint = document.createElement('span');
+          hint.className = 'music-playlist-view-hint';
           hint.textContent = 'Visualizza brani';
-          copy.append(title, meta, hint);
-          toggle.appendChild(copy);
-          card.appendChild(toggle);
+          toggle.appendChild(hint);
+
           const playlistLinks = document.createElement('div');
           playlistLinks.className = 'playlist-links music-playlist-links';
 
