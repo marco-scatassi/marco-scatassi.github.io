@@ -51,6 +51,33 @@
       box-shadow:0 15px 35px rgba(0,174,202,.15);
       transform:rotate(-6deg);
     }
+
+    /* Match the Music hero typography exactly. */
+    .page-hero .page-hero-eyebrow {
+      color: var(--ph-color-cyan);
+      font: 800 10px/1.4 var(--ph-font-mono);
+      letter-spacing: .2em;
+    }
+    .page-hero .page-hero-title {
+      font-family: var(--ph-font-display, Inter, ui-sans-serif, system-ui, sans-serif);
+      font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+      font-weight: var(--ph-font-weight-display, 800);
+      line-height: 1.08;
+      letter-spacing: var(--ph-letter-spacing-display, -.035em);
+      text-rendering: geometricPrecision;
+    }
+    .page-hero .page-hero-description {
+      max-width: 610px;
+      color: var(--music-muted, var(--ph-color-muted));
+      font-size: clamp(15px, 1.3vw, 17px);
+      line-height: 1.8;
+    }
+    @media (max-width: 760px) {
+      .page-hero .page-hero-title {
+        font-size: clamp(2.25rem, 6vw, 3rem);
+        line-height: 1.08;
+      }
+    }
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -81,14 +108,14 @@
 </header>
 
   <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
-    <section class="reveal text-center max-w-3xl mx-auto">
-      <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
+    <section class="reveal text-center max-w-3xl mx-auto page-hero">
+      <p class="page-hero-eyebrow text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
         Personal logs / 003
       </p>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight">
+      <h1 class="page-hero-title text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
         Note <span class="gradient-text">&</span> Riflessioni
       </h1>
-      <p class="text-slate-600 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
+      <p class="page-hero-description text-slate-600 text-lg mt-6 max-w-xl mx-auto leading-relaxed">
         Uno spazio pronto ad accogliere i futuri articoli e thoughts personali.
       </p>
     </section>

@@ -52,8 +52,6 @@
             --muted: var(--ph-color-muted);
             --surface: var(--ph-color-surface);
             --background: var(--ph-color-bg);
-            --mouse-x: 50vw;
-            --mouse-y: 30vh;
         }
 
         * {
@@ -80,24 +78,9 @@
             z-index: -2;
             pointer-events: none;
             background:
-                radial-gradient(
-                    550px circle at var(--mouse-x) var(--mouse-y),
-                    rgba(8,127,156,.09),
-                    transparent 70%
-                ),
                 linear-gradient(rgba(8,127,156,.035) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(8,127,156,.035) 1px, transparent 1px);
-            background-size: auto, 42px 42px, 42px 42px;
-        }
-
-        #ambient-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: .65;
+            background-size: 42px 42px;
         }
 
         h1, h2, h3, h4 {
@@ -677,6 +660,71 @@
             margin-top: 24px;
         }
 
+        .direct-channels-shell > .card {
+            width: 100%;
+            max-width: 860px;
+            margin-inline: auto;
+        }
+
+        .contact-channels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-areas:
+                "email linkedin"
+                "location github";
+            column-gap: clamp(14px, 2.2vw, 28px);
+            row-gap: 8px;
+        }
+
+        .contact-channels-grid .contact-item {
+            min-width: 0;
+            margin-top: 0;
+            min-height: 64px;
+        }
+
+        .channel-email { grid-area: email; }
+        .channel-location { grid-area: location; }
+        .channel-linkedin { grid-area: linkedin; }
+        .channel-github { grid-area: github; }
+
+        .contact-channel-link {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--cyan);
+            font-weight: 650;
+            text-decoration: underline;
+            text-decoration-color: rgba(0,174,202,.38);
+            text-underline-offset: 4px;
+            transition: color .2s, gap .2s, text-decoration-color .2s;
+        }
+
+        .contact-channel-link i {
+            color: var(--cyan);
+            font-size: 10px;
+            opacity: .8;
+        }
+
+        .contact-channel-link:hover {
+            color: var(--pink);
+            gap: 11px;
+            text-decoration-color: currentColor;
+        }
+
+        .contact-channel-link:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .contact-channels-grid {
+                grid-template-columns: 1fr;
+                row-gap: 16px;
+            }
+        }
+
         .contact-icon {
             width: 42px;
             height: 42px;
@@ -966,7 +1014,6 @@
 
 <body class="portfolio-page">
 
-<canvas id="ambient-canvas" aria-hidden="true"></canvas>
 
 <!-- NAVBAR -->
 
@@ -1424,67 +1471,70 @@
             <p>// Invia una trasmissione criptata</p>
         </div>
 
-        <div class="contact-grid">
-
+        <div class="contact-grid direct-channels-shell" style="grid-template-columns:1fr">
             <div class="card reveal">
-                <h3 class="mono" style="font-size:14px;text-transform:uppercase">
+                <h3 class="mono" style="font-size:14px;text-transform:uppercase;margin-bottom:28px">
                     // Direct Channels
                 </h3>
 
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i class="fa-solid fa-envelope"></i>
+                <div class="contact-channels-grid">
+                    <div class="contact-item channel-email">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <small>Secure Email</small>
+                            <a class="contact-channel-link"
+                               href="https://mail.google.com/mail/?view=cm&fs=1&to=marco.scatassi.99%40gmail.com"
+                               target="_blank" rel="noopener noreferrer"
+                               aria-label="Scrivi un'email a marco.scatassi.99@gmail.com">
+                                marco.scatassi.99@gmail.com
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <small>Secure Email</small>
-                        <a href="mailto:marco.scatassi.99@gmail.com">
-                            marco.scatassi.99@gmail.com
-                        </a>
-                    </div>
-                </div>
 
-                <div class="contact-item">
-                    <div class="contact-icon" style="color:var(--pink)">
-                        <i class="fa-solid fa-location-dot"></i>
+                    <div class="contact-item channel-location">
+                        <div class="contact-icon" style="color:var(--pink)">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <small>Node Location</small>
+                            <p>Milano, Italia</p>
+                        </div>
                     </div>
-                    <div>
-                        <small>Node Location</small>
-                        <p>Milano, Italia</p>
-                    </div>
-                </div>
 
-                <div class="contact-item">
-                    <div class="contact-icon" style="color:var(--yellow)">
-                        <i class="fa-brands fa-github"></i>
+                    <div class="contact-item channel-linkedin">
+                        <div class="contact-icon" style="color:#0a66c2">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </div>
+                        <div>
+                            <small>LinkedIn Profile</small>
+                            <a class="contact-channel-link"
+                               href="https://www.linkedin.com/in/marco-scatassi/"
+                               target="_blank" rel="noopener noreferrer">
+                                linkedin.com/in/marco-scatassi
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <small>GitHub Source</small>
-                        <a href="https://github.com/marco-scatassi"
-                           target="_blank" rel="noopener noreferrer">
-                            github.com/marco-scatassi
-                        </a>
+
+                    <div class="contact-item channel-github">
+                        <div class="contact-icon" style="color:var(--yellow)">
+                            <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                            <small>GitHub Source</small>
+                            <a class="contact-channel-link"
+                               href="https://github.com/marco-scatassi"
+                               target="_blank" rel="noopener noreferrer">
+                                github.com/marco-scatassi
+                                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="card card-pink reveal">
-                <div class="contact-mailto">
-                    <h3 class="card-title">
-                        <span class="card-icon" style="color:var(--pink);background:rgba(217,54,112,.08)">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        Scrivimi
-                    </h3>
-                    <p>Hai una domanda o vuoi parlare di una collaborazione? Apri il tuo client email e mandami un messaggio.</p>
-                    <a class="btn btn-primary"
-                       style="width:100%;justify-content:center"
-                       href="mailto:marco.scatassi.99@gmail.com">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        Scrivi un'email
-                    </a>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
@@ -1506,6 +1556,12 @@
 
             <a href="mailto:marco.scatassi.99@gmail.com">
                 <i class="fa-solid fa-envelope"></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/marco-scatassi/"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="LinkedIn Profile">
+                <i class="fa-brands fa-linkedin-in"></i>
             </a>
         </div>
     </div>
@@ -1532,27 +1588,12 @@
     revealElements.forEach(element => observer.observe(element));
 
 
-    // MOUSE-TRACKING AMBIENT GLOW
+    // PROJECT CARD 3D TILT
 
     const finePointer = window.matchMedia('(pointer:fine)').matches;
     const reducedMotion = window.matchMedia(
         '(prefers-reduced-motion: reduce)'
     ).matches;
-
-    if (finePointer && !reducedMotion) {
-        window.addEventListener('pointermove', event => {
-            document.documentElement.style.setProperty(
-                '--mouse-x', event.clientX + 'px'
-            );
-
-            document.documentElement.style.setProperty(
-                '--mouse-y', event.clientY + 'px'
-            );
-        }, { passive: true });
-    }
-
-
-    // PROJECT CARD 3D TILT
 
     if (finePointer && !reducedMotion) {
         document.querySelectorAll('.project-card').forEach(card => {
@@ -1579,112 +1620,6 @@
     }
 
 
-    // ANIMATED NETWORK PARTICLES
-
-    const canvas = document.getElementById('ambient-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let particles = [];
-    let width = 0;
-    let height = 0;
-    let animationFrame;
-
-    function resizeCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-        width = window.innerWidth;
-        height = window.innerHeight;
-
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-        const particleCount = Math.min(
-            48,
-            Math.floor(width / 28)
-        );
-
-        particles = Array.from(
-            { length: particleCount },
-            () => ({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.22,
-                vy: (Math.random() - 0.5) * 0.22,
-                radius: 1 + Math.random() * 1.4
-            })
-        );
-    }
-
-    function drawNetwork() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach((particle, index) => {
-
-            if (!reducedMotion) {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-
-                if (particle.x < 0 || particle.x > width) {
-                    particle.vx *= -1;
-                }
-
-                if (particle.y < 0 || particle.y > height) {
-                    particle.vy *= -1;
-                }
-            }
-
-            // Draw particle
-            ctx.beginPath();
-            ctx.arc(
-                particle.x,
-                particle.y,
-                particle.radius,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fillStyle = 'rgba(8,127,156,.48)';
-            ctx.fill();
-
-            // Connect nearby particles
-            for (let j = index + 1; j < particles.length; j++) {
-
-                const other = particles[j];
-
-                const dx = particle.x - other.x;
-                const dy = particle.y - other.y;
-                const distance = Math.hypot(dx, dy);
-
-                if (distance < 112) {
-                    ctx.beginPath();
-
-                    ctx.moveTo(particle.x, particle.y);
-                    ctx.lineTo(other.x, other.y);
-
-                    ctx.strokeStyle =
-                        `rgba(8,127,156,${(1 - distance / 112) * 0.12})`;
-
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
-        });
-
-        if (!reducedMotion) {
-            animationFrame = requestAnimationFrame(drawNetwork);
-        }
-    }
-
-    resizeCanvas();
-    drawNetwork();
-
-    window.addEventListener('resize', () => {
-        cancelAnimationFrame(animationFrame);
-        resizeCanvas();
-        drawNetwork();
-    }, { passive: true });
 
 </script>
 

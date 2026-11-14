@@ -59,6 +59,33 @@
     .album-content { position:absolute; z-index:1; inset:auto 0 0; padding:25px }
     .reveal { opacity:0; transform:translateY(22px); transition:.7s ease }
     .reveal.visible { opacity:1; transform:translateY(0) }
+
+    /* Match the Music hero typography exactly. */
+    .page-hero .page-hero-eyebrow {
+      color: var(--ph-color-cyan);
+      font: 800 10px/1.4 var(--ph-font-mono);
+      letter-spacing: .2em;
+    }
+    .page-hero .page-hero-title {
+      font-family: var(--ph-font-display, Inter, ui-sans-serif, system-ui, sans-serif);
+      font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+      font-weight: var(--ph-font-weight-display, 800);
+      line-height: 1.08;
+      letter-spacing: var(--ph-letter-spacing-display, -.035em);
+      text-rendering: geometricPrecision;
+    }
+    .page-hero .page-hero-description {
+      max-width: 610px;
+      color: var(--music-muted, var(--ph-color-muted));
+      font-size: clamp(15px, 1.3vw, 17px);
+      line-height: 1.8;
+    }
+    @media (max-width: 760px) {
+      .page-hero .page-hero-title {
+        font-size: clamp(2.25rem, 6vw, 3rem);
+        line-height: 1.08;
+      }
+    }
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
       .reveal { opacity:1; transform:none }
@@ -89,14 +116,14 @@
 </header>
 
   <main class="max-w-6xl mx-auto px-6 py-16 md:py-24 space-y-14">
-    <section class="text-center max-w-3xl mx-auto reveal">
-      <p class="text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
+    <section class="text-center max-w-3xl mx-auto reveal page-hero">
+      <p class="page-hero-eyebrow text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
         Visual memories / 002
       </p>
-      <h1 class="text-5xl md:text-6xl font-black tracking-tight">
+      <h1 class="page-hero-title text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
         Photo<span class="gradient-text">book</span>
       </h1>
-      <p class="text-slate-600 text-lg leading-relaxed mt-6">
+      <p class="page-hero-description text-slate-600 text-lg leading-relaxed mt-6 max-w-xl mx-auto">
         Nei viaggi ricerco sempre il contatto con la natura animale e umana. Alcuni di questi mi hanno fatto crescere, altri mi hanno dato dei ricordi preziosi ed ognuno mi ha lasciato delle storie da poter raccontare.
       </p>
       <div class="flex justify-center gap-2 mt-7">

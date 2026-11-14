@@ -198,11 +198,7 @@
   font: 800 9px/1.4 var(--ph-font-mono);
   letter-spacing: .08em;
 }
-.music-playlist-copy p:last-child::after {
-  content: "⌄";
-  font-size: 15px;
-  line-height: 1;
-}
+/* No decorative chevron: it was rendering as an unwanted v beside the playlist count. */
 .music-playlist-links {
   padding: 0 18px 17px;
   gap: 8px;
@@ -388,11 +384,7 @@
   letter-spacing: 0;
   text-transform: none;
 }
-.music-playlist-view-hint::after {
-  content: "⌄";
-  font-size: 15px;
-  line-height: 1;
-}
+/* No decorative chevron: keep the “Visualizza brani” label clean. */
 .music-playlist-links {
   flex: 0 0 auto;
   display: flex;
