@@ -321,3 +321,16 @@ Verifica eseguita: controlli statici su markup, classi aggiunte, riferimenti agl
 La hero introduttiva non è più racchiusa in una card: mantiene titolo, descrizione e tag direttamente sul fondo pagina. La sezione del contenuto Instagram ha una composizione esplicita a due colonne su desktop e impilata su mobile, evitando che il pulsante venga compresso o sovrapposto.
 
 Nelle card playlist, “Visualizza brani” ha recuperato una tipografia sans-serif e una gerarchia più vicine alla versione precedente. L'azione “Apri su YouTube Music” è affiancata al comando di apertura dell'elenco, allineata sul lato destro; sui viewport molto stretti può passare a una riga dedicata, sempre allineata a destra. Non sono stati modificati i flussi di caricamento playlist, player o ricerca.
+
+### Adeguamento dimensionale Portfolio e Personal — 2026-11-14
+
+È stata corretta la scala visiva usando i selettori realmente presenti nelle pagine: `.portfolio-page .portfolio-hero` e `.personal-page .personal-hero`. La revisione precedente aveva usato selettori non coerenti con la struttura effettiva (ad esempio `.portfolio-hero h1` era presente, ma alcuni target come descrizione e titoli erano riferiti a classi errate), perciò l'incremento risultava incompleto.
+
+La nuova scala aumenta titoli, descrizioni, badge, pulsanti, ritratto, icone e contenuti delle card. Le hero desktop mantengono altezza vincolata al viewport e hanno una variante per schermi bassi; mobile conserva altezze naturali e dimensioni dedicate. Le sezioni successive ricevono incrementi più contenuti per migliorare la lettura senza gonfiare inutilmente il layout.
+
+### Ripristino della card Video in Evidenza
+
+Il markup e l'aspetto della sezione sono stati riportati alla versione precedente al refresh visuale Music del 14 novembre: card `glass` originale e pannello interno Tailwind con gradiente cyan/bianco/rosa, senza le classi `music-featured-card` e `music-featured-panel` e senza gli override CSS introdotti per quella card. Il pulsante Instagram torna allo stile `.neon-button` originale. La navigazione Music e le playlist non sono state ripristinate o modificate da questo intervento.
+
+Verifica: confronto del markup con la versione storica pre-refresh e controllo statico dei selettori CSS e delle classi rimosse. Non è stato eseguito un test browser/screenshot; il fit va confermato a 1366×768, 1440×900, 390×844 e 360×800.
+
