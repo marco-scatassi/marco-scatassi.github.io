@@ -101,6 +101,19 @@
     .playlist-track-link:hover .playlist-track-title { color:#078da7; }
     .playlist-track-title { font-weight:750; color:#17243a; }
     .playlist-track-meta { font-size:11px; color:#64748b; margin-top:2px; }
+    .playlist-player-section { margin-bottom:18px; }
+    .playlist-player-heading {
+      margin-bottom:10px; color:#087e99; font-size:11px;
+      font-weight:900; letter-spacing:.14em; text-transform:uppercase;
+    }
+    .playlist-player-frame {
+      position:relative; width:100%; height:clamp(220px,56.25vw,380px);
+      overflow:hidden; border-radius:12px; background:#17243a;
+      box-shadow:0 10px 25px rgba(23,36,58,.14);
+    }
+    .playlist-player-frame iframe {
+      position:absolute; inset:0; width:100%; height:100%; border:0;
+    }
     .playlist-links {
       display:flex; flex-wrap:wrap; gap:8px 20px; padding:0 20px 16px;
     }
@@ -261,6 +274,27 @@
       });
     }, {threshold:.12});
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function createPublicPlaylistPlayer(playlist) {
+      const section = document.createElement('section');
+      section.className = 'playlist-player-section';
+      const heading = document.createElement('p');
+      heading.className = 'playlist-player-heading';
+      heading.textContent = 'Ascolta la playlist';
+      const frame = document.createElement('div');
+      frame.className = 'playlist-player-frame';
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/videoseries?list=' +
+        encodeURIComponent(playlist.youtube_playlist_id);
+      iframe.title = 'Player YouTube per la playlist ' + (playlist.title || 'musicale');
+      iframe.loading = 'lazy';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      frame.appendChild(iframe);
+      section.append(heading, frame);
+      return section;
+    }
 
     function filterPublicPlaylistTracks(searchInput, status, trackList) {
       const query = searchInput.value.trim().toLocaleLowerCase('it');
@@ -443,6 +477,14 @@
             details.hidden = !opening;
             toggle.setAttribute('aria-expanded', String(opening));
             hint.textContent = opening ? 'NASCONDI I BRANI  ↑' : 'VISUALIZZA I BRANI  ↓';
+            if (opening) {
+              if (!details.querySelector('.playlist-player-frame')) {
+                details.insertBefore(createPublicPlaylistPlayer(item), detailStatus);
+              }
+            } else {
+              const player = details.querySelector('.playlist-player-section');
+              if (player) player.remove();
+            }
             if (opening && details.dataset.loaded !== 'true') {
               try {
                 await loadPublicPlaylistTracks(item, detailStatus, trackList, searchInput);
