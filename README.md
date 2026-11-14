@@ -275,3 +275,10 @@ Il refresh visuale è stato applicato a Portfolio e alla landing Personal tramit
 - Ridotti gli effetti decorativi continui nella landing Personal; mantenuti i contenuti, i link, il form e le interazioni già presenti.
 
 Il lavoro è esclusivamente frontend. Le verifiche effettuate sono statiche su markup, classi, collegamenti e caricamento dei fogli CSS. Non sono stati eseguiti test visuali browser né verifiche del deploy GitHub Pages.
+
+
+### Correzione tipografica e uniformità navbar
+
+Dopo il feedback sul refresh, sono stati ridimensionati i titoli principali e le intestazioni delle pagine Portfolio e Personal, con limiti più conservativi e regole di wrapping per evitare che il testo venga tagliato o esca dai contenitori, in particolare sui viewport stretti.
+
+La navbar adotta ora un criterio uniforme senza icone: rimosse le sole icone presenti nei link Musica, Memories e Journal della landing Personal. Le icone nei contenuti e nelle card restano invariate.
