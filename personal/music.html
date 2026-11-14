@@ -487,8 +487,8 @@
           meta.className = 'text-xs text-slate-500 mt-2';
           meta.textContent = Number.isInteger(item.item_count) ? item.item_count + ' brani/video' : 'Playlist YouTube';
           const hint = document.createElement('p');
-          hint.className = 'text-xs font-bold text-cyan-700 mt-4';
-          hint.textContent = 'VISUALIZZA I BRANI  ↓';
+          hint.className = 'music-playlist-view-hint text-xs font-bold text-cyan-700 mt-4';
+          hint.textContent = 'Visualizza brani';
           copy.append(title, meta, hint);
           toggle.appendChild(copy);
           card.appendChild(toggle);
@@ -503,7 +503,11 @@
           youtubeMusicLink.innerHTML = '<i class="fa-solid fa-headphones" aria-hidden="true"></i> Apri su YouTube Music ↗';
 
           playlistLinks.appendChild(youtubeMusicLink);
-          card.appendChild(playlistLinks);
+
+          const playlistActions = document.createElement('div');
+          playlistActions.className = 'music-playlist-actions-row';
+          playlistActions.append(toggle, playlistLinks);
+          card.appendChild(playlistActions);
 
           const details = document.createElement('div');
           details.className = 'playlist-details music-playlist-details p-5';
