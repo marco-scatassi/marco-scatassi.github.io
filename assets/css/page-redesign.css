@@ -727,3 +727,107 @@
   .personal-page .personal-card p { font-size: 14.5px; }
 }
 
+/* 2026-11-14 — prevent hero title clipping and enforce a clear heading scale.
+   Main page titles must remain larger than every section/card heading. */
+.portfolio-page .portfolio-hero {
+  height: auto;
+  min-height: calc(100svh - var(--ph-header-height, 76px));
+}
+.portfolio-page .portfolio-hero h1 {
+  font-size: clamp(2.7rem, 4.2vw, 4.15rem);
+  line-height: 1.08;
+  letter-spacing: -.05em;
+  overflow-wrap: anywhere;
+}
+.portfolio-page .section-heading h2 {
+  font-size: clamp(1.55rem, 2.65vw, 2.15rem);
+  line-height: 1.18;
+}
+.personal-page .personal-hero {
+  height: auto;
+  min-height: calc(100svh - var(--ph-header-height, 76px));
+}
+.personal-page .personal-hero .hero-title-layout {
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+}
+.personal-page .personal-hero .hero-title-layout .hero-title {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: clamp(2.8rem, 5.4vw, 4.65rem);
+  line-height: 1.06;
+  letter-spacing: -.052em;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+.personal-page .personal-card h2,
+.personal-page .personal-discover h2 {
+  font-size: clamp(1.45rem, 2.25vw, 1.85rem);
+  line-height: 1.2;
+}
+@media (min-width: 761px) and (max-height: 700px) {
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2.65rem, 3.4vw, 3.25rem);
+    line-height: 1.06;
+  }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(2.75rem, 4.3vw, 3.7rem);
+  }
+}
+@media (max-width: 760px) {
+  .portfolio-page .portfolio-hero {
+    height: auto;
+    min-height: 0;
+  }
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2.55rem, 7.2vw, 3.45rem);
+    line-height: 1.1;
+  }
+  .portfolio-page .section-heading h2 {
+    font-size: clamp(1.5rem, 4.8vw, 1.9rem);
+  }
+  .personal-page .personal-hero {
+    height: auto;
+    min-height: 0;
+  }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    font-size: clamp(2.5rem, 7.2vw, 3.35rem);
+    line-height: 1.08;
+  }
+  .personal-page .personal-card h2,
+  .personal-page .personal-discover h2 {
+    font-size: clamp(1.4rem, 4.2vw, 1.8rem);
+  }
+}
+@media (max-width: 520px) {
+  /* Give the display title the full content width; keep the chip below it
+     instead of squeezing the words into a narrow flex column. */
+  .personal-page .personal-hero .hero-title-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .personal-page .personal-hero .hero-title-layout .hero-title {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+    font-size: clamp(2.35rem, 9vw, 2.8rem);
+    line-height: 1.08;
+    text-align: center;
+    overflow-wrap: normal;
+  }
+  .personal-page .personal-hero .hero-title-layout .title-chip {
+    width: 42px;
+    height: 68px;
+    transform: rotate(18deg);
+  }
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2.35rem, 8.2vw, 2.85rem);
+  }
+  .portfolio-page .section-heading h2 {
+    font-size: clamp(1.45rem, 6vw, 1.8rem);
+  }
+}
+
