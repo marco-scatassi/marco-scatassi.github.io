@@ -52,15 +52,31 @@
       transform:rotate(-6deg);
     }
 
-    /* Typography aligned with the Music page hero */
-    .page-hero-eyebrow { font-size: .75rem; line-height: 1rem; }
-    .page-hero-title { font-size: 2.25rem; line-height: 2.5rem; }
-    .page-hero-description { font-size: 1.125rem; line-height: 1.75rem; }
-    @media (min-width: 640px) {
-      .page-hero-title { font-size: 3rem; line-height: 1; }
+    /* Match the Music hero typography exactly. */
+    .page-hero .page-hero-eyebrow {
+      color: var(--ph-color-cyan);
+      font: 800 10px/1.4 var(--ph-font-mono);
+      letter-spacing: .2em;
     }
-    @media (min-width: 768px) {
-      .page-hero-title { font-size: 3.75rem; line-height: 1; }
+    .page-hero .page-hero-title {
+      font-family: var(--ph-font-display, Inter, ui-sans-serif, system-ui, sans-serif);
+      font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+      font-weight: var(--ph-font-weight-display, 800);
+      line-height: 1.08;
+      letter-spacing: var(--ph-letter-spacing-display, -.035em);
+      text-rendering: geometricPrecision;
+    }
+    .page-hero .page-hero-description {
+      max-width: 610px;
+      color: var(--music-muted, var(--ph-color-muted));
+      font-size: clamp(15px, 1.3vw, 17px);
+      line-height: 1.8;
+    }
+    @media (max-width: 760px) {
+      .page-hero .page-hero-title {
+        font-size: clamp(2.25rem, 6vw, 3rem);
+        line-height: 1.08;
+      }
     }
     @media(prefers-reduced-motion:reduce) {
       *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important }
