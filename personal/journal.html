@@ -116,15 +116,15 @@
         Note <span class="gradient-text">&</span> Riflessioni
       </h1>
       <p class="page-hero-description text-slate-600 text-lg mt-6 max-w-xl mx-auto leading-relaxed">
-        Uno spazio pronto ad accogliere i futuri articoli e thoughts personali.
+        Una raccolta di newsletter: per ogni testata puoi raggiungere direttamente il sito ufficiale.
       </p>
     </section>
 
     <section id="journal-feed" class="space-y-5 reveal" aria-live="polite">
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p class="text-xs font-bold tracking-[.2em] uppercase text-cyan-700">Newsletter selezionate</p>
-          <h2 class="text-2xl md:text-3xl font-black mt-2">Dal mio <span class="gradient-text">Journal</span></h2>
+          <p class="text-xs font-bold tracking-[.2em] uppercase text-cyan-700">Testate selezionate</p>
+          <h2 class="text-2xl md:text-3xl font-black mt-2">Le newsletter che <span class="gradient-text">seguo</span></h2>
         </div>
         <p id="journal-count" class="text-sm text-slate-500">Caricamento…</p>
       </div>
@@ -166,37 +166,45 @@
   </footer>
 
   <script>
-    const JOURNAL_API = "https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/journal/newsletters";
+    const JOURNAL_API = "https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/journal/brands";
     const journalList = document.getElementById("journal-list");
     const journalCount = document.getElementById("journal-count");
     const journalError = document.getElementById("journal-error");
 
-    function formatJournalDate(value) {
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return "";
-      return new Intl.DateTimeFormat("it-IT", { dateStyle: "long" }).format(date);
-    }
-
-    function renderNewsletter(item) {
+    function renderBrand(item) {
       const article = document.createElement("article");
-      article.className = "glass rounded-3xl p-7 md:p-9";
-      const meta = document.createElement("div");
-      meta.className = "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-slate-500";
-      const sender = document.createElement("span");
-      sender.className = "font-bold text-cyan-800";
-      sender.textContent = item.sender_name || "Newsletter";
-      const date = document.createElement("time");
-      date.dateTime = item.received_at || "";
-      date.textContent = formatJournalDate(item.received_at);
-      meta.append(sender, date);
-
+      article.className = "glass rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-5";
+      if (item.logo_url) {
+        const logo = document.createElement("img");
+        logo.src = item.logo_url;
+        logo.alt = item.name ? "Logo " + item.name : "Logo newsletter";
+        logo.loading = "lazy";
+        logo.referrerPolicy = "no-referrer";
+        logo.className = "w-20 h-20 object-contain rounded-2xl bg-white p-2 shrink-0";
+        article.append(logo);
+      } else {
+        const mark = document.createElement("div");
+        mark.className = "w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-100 to-pink-100 text-cyan-700 grid place-items-center text-3xl shrink-0";
+        mark.innerHTML = '<i class="fa-regular fa-newspaper" aria-hidden="true"></i>';
+        article.append(mark);
+      }
+      const content = document.createElement("div");
+      content.className = "flex-1 min-w-0 text-center sm:text-left";
       const title = document.createElement("h3");
-      title.className = "text-xl md:text-2xl font-black mt-4";
-      title.textContent = item.subject || "Senza oggetto";
-      const content = document.createElement("p");
-      content.className = "mt-5 text-slate-700 leading-relaxed whitespace-pre-wrap break-words";
-      content.textContent = item.content_text || item.snippet || "";
-      article.append(meta, title, content);
+      title.className = "text-xl md:text-2xl font-black";
+      title.textContent = item.name || "Newsletter";
+      const link = document.createElement("a");
+      link.href = item.official_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.className = "inline-flex items-center gap-2 mt-4 rounded-full bg-slate-950 text-white px-5 py-3 text-sm font-bold hover:bg-cyan-800 transition";
+      link.textContent = "Leggi sul sito ufficiale";
+      const icon = document.createElement("i");
+      icon.className = "fa-solid fa-arrow-up-right-from-square";
+      icon.setAttribute("aria-hidden", "true");
+      link.append(icon);
+      content.append(title, link);
+      article.append(content);
       return article;
     }
 
@@ -212,19 +220,19 @@
           empty.className = "glass rounded-[2rem] p-9 md:p-14 text-center";
           const icon = document.createElement("div");
           icon.className = "note-icon mx-auto mb-7";
-          icon.innerHTML = '<i class="fa-solid fa-pen-nib" aria-hidden="true"></i>';
+          icon.innerHTML = '<i class="fa-regular fa-newspaper" aria-hidden="true"></i>';
           const heading = document.createElement("h2");
           heading.className = "text-2xl md:text-3xl font-black";
-          heading.textContent = "Nessuna newsletter pubblicata";
+          heading.textContent = "Nessuna testata pubblicata";
           const copy = document.createElement("p");
           copy.className = "text-slate-600 max-w-md mx-auto mt-4 leading-relaxed";
-          copy.textContent = "Le nuove letture appariranno qui quando saranno selezionate e pubblicate.";
+          copy.textContent = "Le newsletter selezionate appariranno qui con un collegamento ai rispettivi siti ufficiali.";
           empty.append(icon, heading, copy);
           journalList.append(empty);
         } else {
-          items.forEach(item => journalList.append(renderNewsletter(item)));
+          items.forEach(item => journalList.append(renderBrand(item)));
         }
-        journalCount.textContent = items.length + (items.length === 1 ? " newsletter pubblicata" : " newsletter pubblicate");
+        journalCount.textContent = items.length + (items.length === 1 ? " testata pubblicata" : " testate pubblicate");
       } catch (error) {
         journalCount.textContent = "";
         journalError.textContent = error.message || "Errore durante il caricamento.";
@@ -232,11 +240,10 @@
         journalList.replaceChildren();
         const fallback = document.createElement("div");
         fallback.className = "glass rounded-3xl p-8 text-center text-slate-600";
-        fallback.textContent = "Impossibile caricare le newsletter. Riprova più tardi.";
+        fallback.textContent = "Impossibile caricare le testate. Riprova più tardi.";
         journalList.append(fallback);
       }
     }
-
     loadJournal();
   </script>
 
