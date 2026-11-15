@@ -202,15 +202,8 @@
 
       <div class="module">
         <h3>Gmail Journal</h3>
-        <p class="muted">Importa esclusivamente i messaggi con l'etichetta Gmail <strong>Journal</strong>. La pubblicazione sul sito resta manuale.</p>
-        <p><span class="status" id="gmail-status">Verifica in corso…</span></p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;">
-          <button id="gmail-connect-button" type="button">Collega Gmail</button>
-          <button id="gmail-sync-button" type="button" disabled>Importa etichetta Journal</button>
-          <button id="gmail-disconnect-button" type="button" disabled>Disconnetti</button>
-        </div>
-        <p class="muted" id="gmail-message" role="status" aria-live="polite"></p>
-        <div id="gmail-newsletters" aria-live="polite"></div>
+        <p class="muted">Gestisci le newsletter importate da Gmail e scegli quali pubblicare nel Journal.</p>
+        <p><a class="home-link" href="./journal.html">Apri gestione Journal</a></p>
       </div>
 
       <div class="module">
@@ -452,8 +445,6 @@
           "Errore YouTube: " + youtubeError.message;
       }
 
-      await initializeGmail(session);
-
     } catch (error) {
       console.error(
         "Errore dashboard:",
@@ -509,174 +500,6 @@
       youtubeStatus.textContent = "Errore: " + error.message;
       youtubeConnectButton.disabled = false;
       youtubeConnectButton.textContent = "Riprova collegamento";
-    }
-  });
-
-  // GMAIL JOURNAL: OAuth, importazione controllata e pubblicazione manuale.
-  const gmailStatus = document.getElementById("gmail-status");
-  const gmailMessage = document.getElementById("gmail-message");
-  const gmailConnectButton = document.getElementById("gmail-connect-button");
-  const gmailSyncButton = document.getElementById("gmail-sync-button");
-  const gmailDisconnectButton = document.getElementById("gmail-disconnect-button");
-  const gmailNewsletters = document.getElementById("gmail-newsletters");
-  let gmailNextPageToken = null;
-
-  async function gmailRequest(path, options = {}) {
-    const { data, error } = await supabaseClient.auth.getSession();
-    if (error) throw error;
-    if (!data.session) throw new Error("Sessione scaduta. Accedi nuovamente.");
-    const response = await fetch(WORKER_URL + path, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${data.session.access_token}`,
-        ...(options.body ? { "Content-Type": "application/json" } : {}),
-        ...(options.headers || {})
-      }
-    });
-    const result = await response.json();
-    if (!response.ok && response.status !== 207) {
-      throw new Error(result.error || `Richiesta Gmail fallita (HTTP ${response.status}).`);
-    }
-    return result;
-  }
-
-  function setGmailBusy(busy) {
-    gmailConnectButton.disabled = busy;
-    gmailSyncButton.disabled = busy;
-    gmailDisconnectButton.disabled = busy;
-  }
-
-  async function initializeGmail() {
-    try {
-      const result = await gmailRequest("/api/gmail/status");
-      if (result.connected && result.canReadMessages) {
-        gmailStatus.textContent = "Gmail collegato";
-        gmailConnectButton.textContent = "Ricollega Gmail";
-        gmailSyncButton.disabled = false;
-        gmailDisconnectButton.disabled = false;
-        await loadGmailNewsletters();
-      } else {
-        gmailStatus.textContent = "Gmail non collegato";
-        gmailConnectButton.textContent = "Collega Gmail";
-        gmailSyncButton.disabled = true;
-        gmailDisconnectButton.disabled = true;
-      }
-      const callbackResult = new URLSearchParams(location.search).get("gmail");
-      if (callbackResult) {
-        const messages = {
-          connected: "Gmail collegato correttamente.",
-          "scope-error": "Google non ha concesso lo scope Gmail richiesto.",
-          "authorization-error": "Autorizzazione Gmail annullata o rifiutata.",
-          "configuration-error": "Configurazione OAuth Gmail incompleta sul Worker.",
-          "missing-refresh-token": "Google non ha restituito un refresh token: ripeti il collegamento."
-        };
-        gmailMessage.textContent = messages[callbackResult] || "Esito collegamento Gmail: " + callbackResult;
-        const cleanUrl = new URL(location.href);
-        cleanUrl.searchParams.delete("gmail");
-        history.replaceState({}, "", cleanUrl);
-      }
-    } catch (error) {
-      gmailStatus.textContent = "Stato Gmail non disponibile";
-      gmailMessage.textContent = error.message;
-    }
-  }
-
-  async function loadGmailNewsletters() {
-    const result = await gmailRequest("/api/journal/newsletters?limit=50");
-    gmailNewsletters.replaceChildren();
-    const items = Array.isArray(result.items) ? result.items : [];
-    if (!items.length) {
-      const empty = document.createElement("p");
-      empty.className = "muted";
-      empty.textContent = 'Nessuna newsletter importata. Verifica che i messaggi desiderati abbiano l\'etichetta Gmail "Journal".';
-      gmailNewsletters.append(empty);
-      return;
-    }
-    items.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "youtube-playlist";
-      const title = document.createElement("strong");
-      title.textContent = item.subject || "(Senza oggetto)";
-      const sender = document.createElement("p");
-      sender.className = "muted";
-      sender.textContent = (item.sender_name || "Mittente sconosciuto") + " · " +
-        new Intl.DateTimeFormat("it-IT", { dateStyle: "medium" }).format(new Date(item.received_at));
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = item.is_published ? "Rimuovi dal sito" : "Pubblica sul sito";
-      button.style.marginTop = "9px";
-      button.addEventListener("click", async () => {
-        button.disabled = true;
-        try {
-          await gmailRequest("/api/journal/newsletters/publication", {
-            method: "POST",
-            body: JSON.stringify({ id: item.id, isPublished: !item.is_published })
-          });
-          await loadGmailNewsletters();
-          gmailMessage.textContent = item.is_published
-            ? "Newsletter rimossa dal Journal pubblico."
-            : "Newsletter pubblicata sul Journal.";
-        } catch (error) {
-          gmailMessage.textContent = error.message;
-          button.disabled = false;
-        }
-      });
-      row.append(title, sender, button);
-      gmailNewsletters.append(row);
-    });
-  }
-
-  gmailConnectButton.addEventListener("click", async () => {
-    setGmailBusy(true);
-    gmailMessage.textContent = "Apertura autorizzazione Google…";
-    try {
-      const result = await gmailRequest("/api/gmail/connect");
-      if (!result.authorizationUrl) throw new Error("URL di autorizzazione non restituito.");
-      window.location.assign(result.authorizationUrl);
-    } catch (error) {
-      gmailMessage.textContent = error.message;
-      setGmailBusy(false);
-    }
-  });
-
-  gmailSyncButton.addEventListener("click", async () => {
-    setGmailBusy(true);
-    gmailMessage.textContent = 'Importazione dei messaggi con etichetta "Journal"…';
-    try {
-      const result = await gmailRequest("/api/gmail/sync", {
-        method: "POST",
-        body: JSON.stringify({ maxMessages: 50, pageToken: gmailNextPageToken })
-      });
-      gmailNextPageToken = result.nextPageToken || null;
-      gmailSyncButton.textContent = gmailNextPageToken ? "Importa pagina successiva" : "Importa etichetta Journal";
-      gmailMessage.textContent = "Lettura completata: " + result.scanned + " esaminati, " +
-        result.imported + " importati/aggiornati, " + result.skipped + " ignorati." +
-        (gmailNextPageToken ? " Ci sono altri messaggi: premi di nuovo il pulsante per proseguire." : " Hai raggiunto l'ultima pagina.");
-      await loadGmailNewsletters();
-    } catch (error) {
-      gmailMessage.textContent = error.message;
-    } finally {
-      setGmailBusy(false);
-      gmailSyncButton.disabled = false;
-      gmailDisconnectButton.disabled = false;
-    }
-  });
-
-  gmailDisconnectButton.addEventListener("click", async () => {
-    if (!confirm("Disconnettere Gmail? Le newsletter già importate resteranno archiviate.")) return;
-    setGmailBusy(true);
-    try {
-      await gmailRequest("/api/gmail/disconnect", { method: "POST" });
-      gmailStatus.textContent = "Gmail non collegato";
-      gmailConnectButton.textContent = "Collega Gmail";
-      gmailMessage.textContent = "Gmail disconnesso. Le newsletter archiviate non sono state eliminate.";
-      gmailNewsletters.replaceChildren();
-    } catch (error) {
-      gmailMessage.textContent = error.message;
-    } finally {
-      setGmailBusy(false);
-      gmailSyncButton.disabled = true;
-      gmailDisconnectButton.disabled = true;
     }
   });
 
