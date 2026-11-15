@@ -23,6 +23,8 @@
     .status.connected{background:#e1f7eb;color:#167443}.status.error{background:#fff0f0;color:#b42318}
     #message{min-height:18px;margin:14px 0 0;color:var(--muted);font:12px ui-monospace,monospace;overflow-wrap:anywhere}#message.error{color:#b42318}#message.success{color:#167443}
     .filter-button{background:#fff;color:var(--ink);border-color:#d5dee8}.filter-button[aria-pressed=true]{border-color:var(--cyan);background:#e8f9fc;color:#07586a}
+    .label-filter-label{color:var(--muted);font:11px ui-monospace,monospace}
+    #newsletter-label-filter{min-height:40px;max-width:260px;padding:9px 12px;border:1px solid #ccd5df;border-radius:8px;background:#fff;color:var(--ink);font:13px system-ui,sans-serif}
     .newsletter-list{display:grid;gap:12px}.newsletter-card{padding:17px;border:1px solid var(--line);border-radius:12px;background:#fff}
     .newsletter-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.newsletter-title{margin:0;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
     .newsletter-meta{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
@@ -88,6 +90,8 @@
       <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Tutte</button>
       <button class="filter-button" type="button" data-filter="unpublished" aria-pressed="false">Da pubblicare</button>
       <button class="filter-button" type="button" data-filter="published" aria-pressed="false">Pubblicate</button>
+      <label class="label-filter-label" for="newsletter-label-filter">Etichetta</label>
+      <select id="newsletter-label-filter" aria-label="Filtra newsletter per etichetta"><option value="all">Tutte le etichette</option></select>
       <button class="secondary" id="refresh-button" type="button">Aggiorna elenco</button>
     </div>
     <div class="newsletter-list" id="newsletter-list" style="margin-top:16px"><div class="empty">Caricamento archivio…</div></div>
@@ -114,6 +118,8 @@
   const saveLabelsButton = document.getElementById("save-labels-button");
   const reloadLabelsButton = document.getElementById("reload-labels-button");
   const labelSummary = document.getElementById("label-summary");
+  const newsletterLabelFilter = document.getElementById("newsletter-label-filter");
+  let activeLabelFilter = "all";
   let nextPageToken = null;
   let activeFilter = "all";
   let gmailLabels = [];
@@ -217,18 +223,34 @@
     if (activeFilter === "unpublished") query.set("published", "false");
     const result = await workerRequest("/api/journal/newsletters?" + query.toString());
     const items = Array.isArray(result.items) ? result.items : [];
+    const availableNewsletterLabels = [...new Set(items.flatMap(item => Array.isArray(item.gmail_label_names) ? item.gmail_label_names : []))].sort((a, b) => a.localeCompare(b, "it"));
+    newsletterLabelFilter.replaceChildren();
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "Tutte le etichette";
+    newsletterLabelFilter.append(allOption);
+    availableNewsletterLabels.forEach(name => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      newsletterLabelFilter.append(option);
+    });
+    if (activeLabelFilter !== "all" && !availableNewsletterLabels.includes(activeLabelFilter)) activeLabelFilter = "all";
+    newsletterLabelFilter.value = activeLabelFilter;
+    const visibleItems = activeLabelFilter === "all" ? items : items.filter(item => Array.isArray(item.gmail_label_names) && item.gmail_label_names.includes(activeLabelFilter));
     listElement.replaceChildren();
-    countElement.textContent = items.length + " ELEMENTI";
-    if (!items.length) {
+    countElement.textContent = visibleItems.length + " ELEMENTI";
+    if (!visibleItems.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
-      empty.textContent = activeFilter === "published" ? "Non ci sono newsletter pubblicate."
+      empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter per questa etichetta."
+        : activeFilter === "published" ? "Non ci sono newsletter pubblicate."
         : activeFilter === "unpublished" ? "Non ci sono newsletter in attesa di pubblicazione."
-        : "Archivio vuoto. Collega Gmail e importa le newsletter dall'etichetta selezionata.";
+        : "Archivio vuoto. Collega Gmail e importa le newsletter dalle etichette selezionate.";
       listElement.append(empty);
       return;
     }
-    items.forEach(item => {
+    visibleItems.forEach(item => {
       const card = document.createElement("article");
       card.className = "newsletter-card";
       const top = document.createElement("div");
@@ -244,6 +266,12 @@
         : new Intl.DateTimeFormat("it-IT", { dateStyle: "medium", timeStyle: "short" }).format(received);
       meta.textContent = (item.sender_name || item.sender_email || "Mittente sconosciuto") + " · " + date;
       copy.append(title, meta);
+      if (Array.isArray(item.gmail_label_names) && item.gmail_label_names.length) {
+        const labels = document.createElement("p");
+        labels.className = "newsletter-meta newsletter-labels";
+        labels.textContent = "Etichette: " + item.gmail_label_names.join(", ");
+        copy.append(labels);
+      }
       const state = document.createElement("span");
       state.className = "publication-state" + (item.is_published ? " published" : "");
       state.textContent = item.is_published ? "Pubblicata" : "Bozza";
@@ -355,7 +383,7 @@
     try {
       const result = await workerRequest("/api/gmail/sync", {
         method: "POST",
-        body: JSON.stringify({ maxMessages: 100, pageToken: nextPageToken })
+        body: JSON.stringify({ maxMessages: 20, pageToken: nextPageToken })
       });
       nextPageToken = result.nextPageToken || null;
       syncButton.textContent = nextPageToken ? "Importa pagina successiva" : "Importa newsletter";
@@ -375,6 +403,10 @@
     }
   });
   labelSearch.addEventListener("input", renderGmailLabels);
+  newsletterLabelFilter.addEventListener("change", () => {
+    activeLabelFilter = newsletterLabelFilter.value;
+    loadNewsletters().catch(error => setMessage(error.message, "error"));
+  });
   reloadLabelsButton.addEventListener("click", async () => {
     reloadLabelsButton.disabled = true;
     try { await loadGmailLabels(); setMessage("Elenco etichette aggiornato.", "success"); }
