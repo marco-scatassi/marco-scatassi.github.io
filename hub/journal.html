@@ -448,11 +448,9 @@
       disconnectButton.disabled = !connected;
       reloadLabelsButton.disabled = !connected;
       saveLabelsButton.disabled = !connected;
-      if (connected) {
-        await loadGmailLabels();
-        await loadNewsletterBrands();
-        await loadNewsletters();
-      }
+      if (connected) await loadGmailLabels();
+      await loadNewsletterBrands();
+      if (connected) await loadNewsletters();
       const callbackResult = new URLSearchParams(location.search).get("gmail");
       if (callbackResult) {
         const messages = {
