@@ -30,12 +30,20 @@
     .newsletter-meta{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5;overflow-wrap:anywhere}
     .publication-state{flex:0 0 auto;padding:5px 8px;border-radius:99px;background:#f0f3f6;color:#637184;font:10px ui-monospace,monospace;text-transform:uppercase}
     .publication-state.published{background:#e1f7eb;color:#167443}.newsletter-preview{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);color:#526174;font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
-    .newsletter-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.newsletter-actions button{min-height:34px;padding:8px 11px;font-size:11px}
+    .newsletter-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.newsletter-actions button,.newsletter-actions a{min-height:34px;padding:8px 11px;font-size:11px}.newsletter-actions a{display:inline-flex;align-items:center;justify-content:center;border-radius:7px;background:#102238;color:#fff;text-decoration:none;font-weight:650}.newsletter-actions .is-disabled{opacity:.55;cursor:not-allowed;pointer-events:none}
     .empty{padding:30px 16px;border:1px dashed #d5dee8;border-radius:10px;color:var(--muted);text-align:center;line-height:1.6}
     .label-settings{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
     .label-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
     .label-toolbar input{flex:1 1 220px;min-height:38px;padding:8px 11px;border:1px solid #d5dee8;border-radius:8px;font:13px system-ui,sans-serif}
     .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:135px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
+    .brand-config-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px;margin-top:14px}
+    .brand-config{border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+    .brand-config h3{font-size:13px;margin:0 0 10px;overflow-wrap:anywhere}
+    .brand-config label{display:block;margin-top:9px;color:var(--muted);font-size:11px}
+    .brand-config input[type="text"],.brand-config input[type="url"]{display:block;width:100%;min-height:36px;margin-top:5px;padding:8px 10px;border:1px solid #d5dee8;border-radius:7px;font:12px system-ui,sans-serif;color:var(--ink)}
+    .brand-config .brand-publish{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:12px}
+    .brand-config .brand-publish input{width:15px;height:15px}
+    .brand-config .brand-save{margin-top:12px;min-height:34px;padding:8px 11px;font-size:11px}
     #newsletter-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
     #newsletter-pagination[hidden]{display:none!important}
     #newsletter-page-status{color:var(--muted);font:11px ui-monospace,monospace;text-align:center}
@@ -59,7 +67,7 @@
 <main>
   <div class="eyebrow">// Mail archive · Private workspace</div>
   <h1>Gmail <span>Journal</span></h1>
-  <p class="intro">Scegli le etichette Gmail da cui importare i messaggi. Verranno mostrate tutte le etichette disponibili; solo quelle create da te sono selezionabili. Le email vengono archiviate come testo semplice e la pubblicazione sul sito resta sempre manuale.</p>
+  <p class="intro">Scegli le etichette Gmail da cui importare i messaggi. Verranno mostrate tutte le etichette disponibili; solo quelle create da te sono selezionabili. Le email restano private. Puoi associare ogni etichetta a una testata e pubblicare soltanto nome, logo e link al sito ufficiale.</p>
   <div class="section-head"><h2>Collegamento Gmail</h2><span class="count">OAUTH · READ ONLY</span></div>
   <section class="panel">
     <div class="connection-grid">
@@ -87,21 +95,23 @@
       <p class="label-help">Le etichette di sistema (Posta in arrivo, Inviati, Bozze e simili) sono visibili ma non selezionabili. La selezione limita l'importazione del Personal Hub, non il permesso OAuth concesso a Google.</p>
     </div>
   </section>
+  <div class="section-head"><h2>Testate newsletter</h2><span class="count">PUBBLICAZIONE PER ETICHETTA</span></div>
+  <section class="panel">
+    <p class="small-note" style="margin-top:0">Ogni etichetta Gmail identifica una sola testata. Configura nome, sito ufficiale e logo; attivando la pubblicazione, sul Journal pubblico apparirà solo una scheda con questi dati. I singoli messaggi non verranno pubblicati.</p>
+    <div id="newsletter-brand-list" class="brand-config-list"><div class="empty">Caricamento testate…</div></div>
+  </section>
   <div class="section-head"><h2>Archivio newsletter</h2><span class="count" id="newsletter-count">CARICAMENTO…</span></div>
   <section class="panel">
     <div class="filters" role="group" aria-label="Filtra newsletter">
-      <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Tutte</button>
-      <button class="filter-button" type="button" data-filter="unpublished" aria-pressed="false">Da pubblicare</button>
-      <button class="filter-button" type="button" data-filter="published" aria-pressed="false">Pubblicate</button>
       <label class="label-filter-label" for="newsletter-label-filter">Etichetta</label>
       <select id="newsletter-label-filter" aria-label="Filtra newsletter per etichetta"><option value="all">Tutte le etichette</option></select>
       <button class="secondary" id="refresh-button" type="button">Aggiorna elenco</button>
     </div>
     <div class="newsletter-list" id="newsletter-list" style="margin-top:16px"><div class="empty">Caricamento archivio…</div></div>
     <div id="newsletter-pagination" hidden aria-label="Paginazione archivio newsletter">
-      <button class="secondary" id="newsletter-previous" type="button" disabled>10 precedenti</button>
+      <button class="secondary" id="newsletter-previous" type="button" disabled>5 precedenti</button>
       <span id="newsletter-page-status" aria-live="polite">Pagina 1</span>
-      <button class="secondary" id="newsletter-next" type="button">10 successivi</button>
+      <button class="secondary" id="newsletter-next" type="button">5 successivi</button>
     </div>
   </section>
 </main>
@@ -133,12 +143,14 @@
   const newsletterLabelFilter = document.getElementById("newsletter-label-filter");
   let activeLabelFilter = "all";
   let newsletterPage = 0;
-  const NEWSLETTERS_PER_PAGE = 10;
+  const NEWSLETTERS_PER_PAGE = 5;
   let nextPageToken = null;
-  let activeFilter = "all";
   let gmailLabels = [];
   let selectedLabelIds = new Set();
   let savedLabelIds = new Set();
+  let newsletterBrands = [];
+  let brandsByLabel = new Map();
+  const brandConfigList = document.getElementById("newsletter-brand-list");
 
   function setMessage(message, type = "") {
     messageElement.textContent = message;
@@ -231,13 +243,93 @@
     if (busy) syncButton.disabled = true;
     else updateLabelSummary();
   }
+  function renderNewsletterBrands() {
+    brandConfigList.replaceChildren();
+    const labelsById = new Map(gmailLabels.map(label => [label.id, label]));
+    const labelIds = new Set([...savedLabelIds, ...newsletterBrands.map(brand => brand.gmail_label_id)]);
+    if (!labelIds.size) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Salva almeno un'etichetta Gmail per configurare una testata.";
+      brandConfigList.append(empty);
+      return;
+    }
+    [...labelIds].sort((a, b) => {
+      const left = labelsById.get(a)?.name || brandsByLabel.get(a)?.name || a;
+      const right = labelsById.get(b)?.name || brandsByLabel.get(b)?.name || b;
+      return left.localeCompare(right, "it");
+    }).forEach(labelId => {
+      const existing = brandsByLabel.get(labelId);
+      const labelName = labelsById.get(labelId)?.name || existing?.name || labelId;
+      const card = document.createElement("div");
+      card.className = "brand-config";
+      const heading = document.createElement("h3");
+      heading.textContent = labelName;
+      const nameLabel = document.createElement("label");
+      nameLabel.textContent = "Nome pubblico";
+      const nameInput = document.createElement("input");
+      nameInput.type = "text"; nameInput.maxLength = 120; nameInput.required = true;
+      nameInput.value = existing?.name || labelName; nameInput.placeholder = "Nome della newsletter";
+      nameLabel.append(nameInput);
+      const urlLabel = document.createElement("label");
+      urlLabel.textContent = "Sito ufficiale";
+      const urlInput = document.createElement("input");
+      urlInput.type = "url"; urlInput.required = true; urlInput.placeholder = "https://...";
+      urlInput.value = existing?.official_url || "";
+      urlLabel.append(urlInput);
+      const logoLabel = document.createElement("label");
+      logoLabel.textContent = "URL logo (facoltativo)";
+      const logoInput = document.createElement("input");
+      logoInput.type = "url"; logoInput.placeholder = "https://.../logo.png";
+      logoInput.value = existing?.logo_url || "";
+      logoLabel.append(logoInput);
+      const publishLabel = document.createElement("label");
+      publishLabel.className = "brand-publish";
+      const publishInput = document.createElement("input");
+      publishInput.type = "checkbox"; publishInput.checked = !!existing?.is_published;
+      const publishText = document.createElement("span");
+      publishText.textContent = "Mostra nel Journal pubblico";
+      publishLabel.append(publishInput, publishText);
+      const saveButton = document.createElement("button");
+      saveButton.type = "button"; saveButton.className = "brand-save";
+      saveButton.textContent = "Salva testata";
+      saveButton.addEventListener("click", async () => {
+        saveButton.disabled = true;
+        try {
+          const result = await workerRequest("/api/journal/brands", {
+            method: "POST",
+            body: JSON.stringify({
+              gmailLabelId: labelId, name: nameInput.value.trim(),
+              officialUrl: urlInput.value.trim(), logoUrl: logoInput.value.trim(),
+              isPublished: publishInput.checked
+            })
+          });
+          const saved = result.item;
+          brandsByLabel.set(labelId, saved);
+          newsletterBrands = [...brandsByLabel.values()];
+          renderNewsletterBrands();
+          await loadNewsletters();
+          setMessage(publishInput.checked ? "Testata pubblicata nel Journal." : "Configurazione della testata salvata.", "success");
+        } catch (error) {
+          setMessage(error.message, "error");
+          saveButton.disabled = false;
+        }
+      });
+      card.append(heading, nameLabel, urlLabel, logoLabel, publishLabel, saveButton);
+      brandConfigList.append(card);
+    });
+  }
+  async function loadNewsletterBrands() {
+    const result = await workerRequest("/api/journal/brands");
+    newsletterBrands = Array.isArray(result.items) ? result.items : [];
+    brandsByLabel = new Map(newsletterBrands.map(brand => [brand.gmail_label_id, brand]));
+    renderNewsletterBrands();
+  }
   async function loadNewsletters() {
     const offset = newsletterPage * NEWSLETTERS_PER_PAGE;
     // Richiede un elemento aggiuntivo per sapere se esiste la pagina successiva.
     const query = new URLSearchParams({ limit: String(NEWSLETTERS_PER_PAGE + 1), offset: String(offset) });
     if (activeLabelFilter !== "all") query.set("labelId", activeLabelFilter);
-    if (activeFilter === "published") query.set("published", "true");
-    if (activeFilter === "unpublished") query.set("published", "false");
     const result = await workerRequest("/api/journal/newsletters?" + query.toString());
     const items = Array.isArray(result.items) ? result.items : [];
     if (!items.length && newsletterPage > 0) {
@@ -280,8 +372,6 @@
       const empty = document.createElement("div");
       empty.className = "empty";
       empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter associata a questa etichetta. Se i messaggi erano già stati importati, premi “Importa newsletter” per aggiornare le etichette dall’account Gmail."
-        : activeFilter === "published" ? "Non ci sono newsletter pubblicate."
-        : activeFilter === "unpublished" ? "Non ci sono newsletter in attesa di pubblicazione."
         : "Archivio vuoto. Collega Gmail e importa le newsletter dalle etichette selezionate.";
       listElement.append(empty);
       return;
@@ -308,35 +398,30 @@
         labels.textContent = "Etichette: " + item.gmail_label_names.join(", ");
         copy.append(labels);
       }
-      const state = document.createElement("span");
-      state.className = "publication-state" + (item.is_published ? " published" : "");
-      state.textContent = item.is_published ? "Pubblicata" : "Bozza";
-      top.append(copy, state);
+      top.append(copy);
       const preview = document.createElement("div");
       preview.className = "newsletter-preview";
       preview.textContent = (item.content_text || item.snippet || "Nessun contenuto testuale disponibile.").slice(0, 700);
       if ((item.content_text || "").length > 700) preview.textContent += "…";
       const actions = document.createElement("div");
       actions.className = "newsletter-actions";
-      const publicationButton = document.createElement("button");
-      publicationButton.type = "button";
-      publicationButton.className = item.is_published ? "secondary" : "";
-      publicationButton.textContent = item.is_published ? "Rimuovi dal sito" : "Pubblica sul sito";
-      publicationButton.addEventListener("click", async () => {
-        publicationButton.disabled = true;
-        try {
-          await workerRequest("/api/journal/newsletters/publication", {
-            method: "POST",
-            body: JSON.stringify({ id: item.id, isPublished: !item.is_published })
-          });
-          setMessage(item.is_published ? "Newsletter rimossa dal sito." : "Newsletter pubblicata sul sito.", "success");
-          await loadNewsletters();
-        } catch (error) {
-          setMessage(error.message, "error");
-          publicationButton.disabled = false;
-        }
-      });
-      actions.append(publicationButton);
+      const labelIds = Array.isArray(item.gmail_label_ids) ? item.gmail_label_ids : [];
+      const linkedBrand = labelIds.map(id => brandsByLabel.get(id)).find(brand => brand && brand.official_url);
+      const readLink = document.createElement("a");
+      readLink.textContent = "Leggi ora";
+      if (linkedBrand) {
+        readLink.href = linkedBrand.official_url;
+        readLink.target = "_blank";
+        readLink.rel = "noopener noreferrer";
+        readLink.setAttribute("aria-label", "Leggi " + (linkedBrand.name || "la newsletter") + " sul sito ufficiale");
+      } else {
+        readLink.href = "#";
+        readLink.className = "is-disabled";
+        readLink.setAttribute("aria-disabled", "true");
+        readLink.title = "Configura prima il sito ufficiale nella sezione Testate newsletter";
+        readLink.addEventListener("click", event => event.preventDefault());
+      }
+      actions.append(readLink);
       card.append(top, preview, actions);
       listElement.append(card);
     });
@@ -362,6 +447,7 @@
       saveLabelsButton.disabled = !connected;
       if (connected) {
         await loadGmailLabels();
+        await loadNewsletterBrands();
         await loadNewsletters();
       }
       const callbackResult = new URLSearchParams(location.search).get("gmail");
@@ -391,6 +477,7 @@
           saveLabelsButton.disabled = !nowConnected;
           if (nowConnected) {
             await loadGmailLabels();
+            await loadNewsletterBrands();
             await loadNewsletters();
           }
         }
@@ -446,7 +533,7 @@
   });
   reloadLabelsButton.addEventListener("click", async () => {
     reloadLabelsButton.disabled = true;
-    try { await loadGmailLabels(); setMessage("Elenco etichette aggiornato.", "success"); }
+    try { await loadGmailLabels(); await loadNewsletterBrands(); setMessage("Elenco etichette aggiornato.", "success"); }
     catch (error) { setMessage(error.message, "error"); }
     finally { reloadLabelsButton.disabled = false; }
   });
@@ -463,6 +550,8 @@
       syncButton.textContent = "Importa newsletter";
       renderGmailLabels();
       updateLabelSummary();
+      await loadNewsletterBrands();
+      await loadNewsletters();
       setMessage("Selezione delle etichette salvata. La prossima importazione partirà dall'inizio.", "success");
     } catch (error) {
       setMessage(error.message, "error");
@@ -504,16 +593,6 @@
     try { await loadNewsletters(); setMessage("Archivio aggiornato.", "success"); }
     catch (error) { setMessage(error.message, "error"); }
     finally { refreshButton.disabled = false; }
-  });
-  document.querySelectorAll("[data-filter]").forEach(button => {
-    button.addEventListener("click", async () => {
-      activeFilter = button.dataset.filter;
-      newsletterPage = 0;
-      document.querySelectorAll("[data-filter]").forEach(item =>
-        item.setAttribute("aria-pressed", String(item === button)));
-      try { await loadNewsletters(); }
-      catch (error) { setMessage(error.message, "error"); }
-    });
   });
   document.getElementById("logout-button").addEventListener("click", async event => {
     const button = event.currentTarget;
