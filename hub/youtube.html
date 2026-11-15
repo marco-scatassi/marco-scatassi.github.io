@@ -107,13 +107,55 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 /* La regola .video-row{display:grid} non deve annullare l'attributo hidden */
 .video-row[hidden]{display:none!important}
 
+/* Header e collegamento coerenti con hub/journal.html */
+:root{color-scheme:light;--ink:#172638;--muted:#718096;--line:#e5eaf0;--cyan:#00aeca;--surface:#fff;--bg:#f5f8fc}
+header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,255,.94);box-shadow:0 2px 12px #17263810;backdrop-filter:blur(12px)}
+.brand{color:#172638;font-size:13px;font-weight:800;letter-spacing:1.1px;text-decoration:none;text-transform:uppercase}.brand span{color:#00aeca}
+.header-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.header-actions .nav-link,.header-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 15px;border:1px solid #172638;border-radius:8px;background:#172638;color:#fff;font:700 13px system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s}
+.header-actions .nav-link{background:#fff;color:#172638;border-color:#ccd5df}
+.header-actions .nav-link:hover,.header-actions button:hover{opacity:.88;box-shadow:none}
+.connection-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+.connection-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:9px;max-width:520px}
+.connection-actions button{min-height:40px;padding:10px 15px;border-radius:8px;font:700 13px system-ui,sans-serif}
+.connection-actions .nav-link{background:#fff;color:#172638;border:1px solid #ccd5df}
+.status{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:99px;background:#eef2f6;color:#526174;font-size:12px;font-weight:700}
+.status.connected{background:#e1f7eb;color:#167443}.status.error{background:#fff0f0;color:#b42318}
+#message{min-height:18px;margin:14px 0 0;color:#718096;font:12px ui-monospace,monospace;overflow-wrap:anywhere}
+#message.error{color:#b42318}#message.success{color:#167443}
+@media(max-width:650px){header{padding:13px 16px;align-items:flex-start}.brand{padding-top:11px;font-size:11px}.header-actions{justify-content:flex-end}.header-actions button,.header-actions .nav-link{min-height:36px;padding:8px 10px;font-size:11px}.connection-grid{grid-template-columns:1fr}.connection-actions{justify-content:flex-start}.connection-actions button{min-height:36px;padding:8px 10px;font-size:11px}}
+
 </style></head>
 <body>
-<header><a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a><div class="header-actions"><a class="nav-link" href="./dashboard.html">Dashboard</a><button class="action" id="sync-button" type="button">Aggiorna da YouTube</button><button class="nav-link" id="header-metadata-sync" type="button">Sincronizza generi e mood</button><button class="action" id="logout-button" type="button">Esci</button></div></header>
+<header>
+  <a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a>
+  <div class="header-actions">
+    <a class="nav-link" href="./dashboard.html">Dashboard</a>
+    <button id="logout-button" type="button">Esci</button>
+  </div>
+</header>
 <main>
 <div class="eyebrow">// Media library · Private workspace</div><h1>Playlist <span>Management</span></h1>
-<p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; usa Aggiorna da YouTube per sincronizzare le modifiche del tuo account.</p>
-<p class="small-note" id="sync-status" role="status" aria-live="polite">Stato sincronizzazione non ancora caricato.</p><p class="small-note" id="metadata-sync-status" role="status" aria-live="polite">Generi e mood: sincronizzazione non ancora eseguita.</p>
+<p class="intro">Archivio personale delle playlist e dei brani. La pagina legge la copia salvata in Supabase; collega YouTube per aggiornare l'archivio e gestire le playlist del tuo account.</p>
+
+<div class="section-head"><h2>Collegamento YouTube</h2><span class="count">OAUTH · ACCOUNT</span></div>
+<section class="panel connection-panel" aria-label="Collegamento YouTube">
+  <div class="connection-grid">
+    <div>
+      <span class="status" id="youtube-status">Verifica collegamento…</span>
+      <p class="small-note" style="margin:12px 0 0">Autorizza Personal Hub ad accedere alle playlist YouTube. Puoi revocare il collegamento in qualsiasi momento.</p>
+      <p class="small-note" id="sync-status" role="status" aria-live="polite" style="margin:8px 0 0">Stato sincronizzazione non ancora caricato.</p>
+      <p class="small-note" id="metadata-sync-status" role="status" aria-live="polite" style="margin:5px 0 0">Generi e mood: sincronizzazione non ancora eseguita.</p>
+    </div>
+    <div class="connection-actions">
+      <button class="action" id="connect-youtube-button" type="button">Collega YouTube</button>
+      <button class="nav-link" id="sync-button" type="button" disabled>Aggiorna da YouTube</button>
+      <button class="nav-link" id="header-metadata-sync" type="button" disabled>Sincronizza generi e mood</button>
+      <button class="nav-link" id="disconnect-youtube-button" type="button" disabled>Disconnetti</button>
+    </div>
+  </div>
+  <p id="message" role="status" aria-live="polite"></p>
+</section>
 
 
 <section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
@@ -177,7 +219,6 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
   <div id="mapping-preview" class="small-note"></div>
 </section></div>
 <section class="panel detail-panel" id="detail-section" aria-labelledby="details-heading" hidden><div class="detail-title"><button id="back-to-playlists" class="nav-link" type="button">← Playlist</button><div><div class="eyebrow">// Selected collection</div><h2 id="details-heading">Dettagli playlist</h2></div><button id="diagnose-playlist-button" class="nav-link" type="button">Verifica playlist</button><span class="count" id="video-count"></span></div><p id="diagnostic-result" class="small-note diagnostic-result" role="status" aria-live="polite"></p><div class="search-tools"><label class="eyebrow" for="playlist-search">CERCA IN QUESTA PLAYLIST</label><div class="search-row"><input class="search-input" id="playlist-search" type="search" placeholder="Filtra per titolo, artista, album o genere…" autocomplete="off"></div><p class="search-feedback" id="playlist-search-feedback" role="status" aria-live="polite"></p></div><div id="video-list" class="empty">Seleziona una playlist per visualizzarne i video.</div><button id="load-more" class="action load-more" type="button" hidden>Carica altri video</button></section>
-<p id="message" role="status" aria-live="polite"></p>
 </main>
 <script>
 const SUPABASE_URL="https://iszuojmfzolohktlkkau.supabase.co";
@@ -189,6 +230,11 @@ const grid=document.getElementById("playlist-grid"),videoList=document.getElemen
 let accessToken=null,selectedPlaylistId=null,nextVideoPageToken=null,loadedVideoCount=0,allPlaylists=[],playlistById=new Map(),globalSearchOffset=0,globalSearchQuery="",globalSearchBusy=false;
 const requestedVideoTokens=new Set(),loadedVideoIds=new Set();
 const syncButton=document.getElementById("sync-button"),syncStatus=document.getElementById("sync-status");
+const youtubeStatus=document.getElementById("youtube-status");
+const connectYoutubeButton=document.getElementById("connect-youtube-button");
+const disconnectYoutubeButton=document.getElementById("disconnect-youtube-button");
+const metadataSyncButton=document.getElementById("header-metadata-sync");
+let youtubeConnected=false;
 const diagnosePlaylistButton=document.getElementById("diagnose-playlist-button"),diagnosticResult=document.getElementById("diagnostic-result");
 const globalSearchInput=document.getElementById("global-search"),globalSearchClear=document.getElementById("global-search-clear"),globalSearchFeedback=document.getElementById("global-search-feedback"),globalSearchResults=document.getElementById("global-search-results"),globalSearchMore=document.getElementById("global-search-more");
 const playlistSearchInput=document.getElementById("playlist-search"),playlistSearchFeedback=document.getElementById("playlist-search-feedback");
@@ -542,6 +588,37 @@ diagnosePlaylistButton.addEventListener("click",async()=>{
   }
 });
 logoutButton.addEventListener("click",async()=>{logoutButton.disabled=true;try{const{error}=await supabaseClient.auth.signOut();if(error)throw error;window.location.replace("./index.html")}catch(error){setMessage("Errore durante l'uscita: "+error.message,"error");logoutButton.disabled=false}});
+function setYoutubeConnectionState(connected, canManage=true){
+  youtubeConnected=!!connected&&!!canManage;
+  youtubeStatus.textContent=youtubeConnected?"YouTube collegato":connected?"Collegato · permessi insufficienti":"YouTube non collegato";
+  youtubeStatus.className="status"+(youtubeConnected?" connected":connected?" error":"");
+  connectYoutubeButton.textContent=connected?"Ricollega YouTube":"Collega YouTube";
+  syncButton.disabled=!youtubeConnected;
+  metadataSyncButton.disabled=!youtubeConnected;
+  disconnectYoutubeButton.disabled=!connected;
+}
+async function refreshYoutubeConnection(){
+  const result=await workerGet("/api/youtube/status");
+  setYoutubeConnectionState(result.connected,result.canManagePlaylists);
+}
+connectYoutubeButton.addEventListener("click",async()=>{
+  connectYoutubeButton.disabled=true;
+  setMessage("Apertura autorizzazione Google…");
+  try{
+    const result=await workerGet("/api/youtube/connect");
+    if(!result.authorizationUrl)throw new Error("URL di autorizzazione non restituito.");
+    window.location.assign(result.authorizationUrl);
+  }catch(error){setMessage("Collegamento non avviato: "+error.message,"error");connectYoutubeButton.disabled=false}
+});
+disconnectYoutubeButton.addEventListener("click",async()=>{
+  if(!window.confirm("Disconnettere YouTube? Le playlist e i brani già archiviati in Supabase resteranno disponibili."))return;
+  disconnectYoutubeButton.disabled=true;
+  try{
+    await workerPost("/api/youtube/disconnect",{});
+    setYoutubeConnectionState(false,false);
+    setMessage("YouTube disconnesso. L'archivio già salvato in Personal Hub non è stato eliminato.","success");
+  }catch(error){setMessage("Disconnessione non completata: "+error.message,"error");disconnectYoutubeButton.disabled=false}
+});
 async function refreshSyncStatus(){if(!syncStatus)return;try{const result=await workerGet("/api/youtube/sync/status");const sync=result.sync;if(!sync){syncStatus.textContent="Nessuna sincronizzazione ancora effettuata.";}else{const stamp=sync.completed_at||sync.started_at;syncStatus.textContent="Ultima sincronizzazione: "+(stamp?new Date(stamp).toLocaleString("it-IT"):"non disponibile")+" · "+sync.status+(sync.error?" · "+sync.error:"");}}catch(error){syncStatus.textContent="Stato sincronizzazione non disponibile: "+error.message;}}
 syncButton.addEventListener("click",async()=>{
   syncButton.disabled=true;
@@ -579,7 +656,7 @@ syncButton.addEventListener("click",async()=>{
     setMessage("Sincronizzazione non completata: "+error.message,"error");
     await refreshSyncStatus();
   }finally{
-    syncButton.disabled=false;
+    syncButton.disabled=!youtubeConnected;
     syncButton.textContent="AGGIORNA DA YOUTUBE";
   }
 });
@@ -781,6 +858,6 @@ studioCreate.addEventListener("click",async()=>{
   }catch(error){studioStatus.textContent="Operazione non completata: "+error.message}
   finally{studioCreate.disabled=false;studioCreate.textContent="Crea playlist su YouTube"}
 });
-async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const auth=await workerGet("/api/me");if(!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
+async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const auth=await workerGet("/api/me");if(!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");await refreshYoutubeConnection();await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error");if(youtubeStatus){youtubeStatus.textContent="Verifica collegamento non riuscita";youtubeStatus.className="status error"}}}
 initialize();
 </script></body></html>
