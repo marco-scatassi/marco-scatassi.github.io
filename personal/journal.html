@@ -120,30 +120,18 @@
       </p>
     </section>
 
-    <section class="glass rounded-[2rem] p-9 md:p-16 text-center reveal">
-      <div class="flex justify-center mb-8">
-        <div class="note-icon">
-          <i class="fa-solid fa-pen-nib"></i>
+    <section id="journal-feed" class="space-y-5 reveal" aria-live="polite">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="text-xs font-bold tracking-[.2em] uppercase text-cyan-700">Newsletter selezionate</p>
+          <h2 class="text-2xl md:text-3xl font-black mt-2">Dal mio <span class="gradient-text">Journal</span></h2>
         </div>
+        <p id="journal-count" class="text-sm text-slate-500">Caricamento…</p>
       </div>
-
-      <span class="inline-block px-4 py-2 rounded-full bg-amber-100 text-amber-800 text-xs font-black tracking-widest uppercase">
-        <i class="fa-solid fa-hourglass-half mr-2"></i>Work in progress
-      </span>
-
-      <h2 class="text-3xl md:text-4xl font-black mt-6">
-        Nessun articolo <span class="gradient-text">pubblicato</span>
-      </h2>
-      <p class="text-slate-600 max-w-md mx-auto mt-4 leading-relaxed">
-        Qui potrai aggiungere le tue riflessioni e i tuoi testi in qualsiasi momento.
-      </p>
-
-      <div class="max-w-xs mx-auto mt-9">
-        <div class="h-1.5 rounded-full bg-slate-200 overflow-hidden">
-          <div class="h-full w-1/3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-500"></div>
-        </div>
-        <p class="text-xs text-slate-400 mt-3 font-mono typing-cursor">Waiting for next entry</p>
+      <div id="journal-list" class="space-y-5">
+        <div class="glass rounded-3xl p-8 text-center text-slate-500">Sto caricando le newsletter pubblicate…</div>
       </div>
+      <p id="journal-error" class="hidden text-sm text-rose-700" role="status"></p>
     </section>
 
     <section class="grid sm:grid-cols-3 gap-4 reveal">
@@ -176,6 +164,81 @@
       </a>
     </div>
   </footer>
+
+  <script>
+    const JOURNAL_API = "https://personal-hub-api.marco-scatassi-99.workers.dev/api/public/journal/newsletters";
+    const journalList = document.getElementById("journal-list");
+    const journalCount = document.getElementById("journal-count");
+    const journalError = document.getElementById("journal-error");
+
+    function formatJournalDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return new Intl.DateTimeFormat("it-IT", { dateStyle: "long" }).format(date);
+    }
+
+    function renderNewsletter(item) {
+      const article = document.createElement("article");
+      article.className = "glass rounded-3xl p-7 md:p-9";
+      const meta = document.createElement("div");
+      meta.className = "flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-slate-500";
+      const sender = document.createElement("span");
+      sender.className = "font-bold text-cyan-800";
+      sender.textContent = item.sender_name || "Newsletter";
+      const date = document.createElement("time");
+      date.dateTime = item.received_at || "";
+      date.textContent = formatJournalDate(item.received_at);
+      meta.append(sender, date);
+
+      const title = document.createElement("h3");
+      title.className = "text-xl md:text-2xl font-black mt-4";
+      title.textContent = item.subject || "Senza oggetto";
+      const content = document.createElement("p");
+      content.className = "mt-5 text-slate-700 leading-relaxed whitespace-pre-wrap break-words";
+      content.textContent = item.content_text || item.snippet || "";
+      article.append(meta, title, content);
+      return article;
+    }
+
+    async function loadJournal() {
+      try {
+        const response = await fetch(JOURNAL_API + "?limit=30", { headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("Il Journal non è al momento disponibile.");
+        const result = await response.json();
+        const items = Array.isArray(result.items) ? result.items : [];
+        journalList.replaceChildren();
+        if (!items.length) {
+          const empty = document.createElement("div");
+          empty.className = "glass rounded-[2rem] p-9 md:p-14 text-center";
+          const icon = document.createElement("div");
+          icon.className = "note-icon mx-auto mb-7";
+          icon.innerHTML = '<i class="fa-solid fa-pen-nib" aria-hidden="true"></i>';
+          const heading = document.createElement("h2");
+          heading.className = "text-2xl md:text-3xl font-black";
+          heading.textContent = "Nessuna newsletter pubblicata";
+          const copy = document.createElement("p");
+          copy.className = "text-slate-600 max-w-md mx-auto mt-4 leading-relaxed";
+          copy.textContent = "Le nuove letture appariranno qui quando saranno selezionate e pubblicate.";
+          empty.append(icon, heading, copy);
+          journalList.append(empty);
+        } else {
+          items.forEach(item => journalList.append(renderNewsletter(item)));
+        }
+        journalCount.textContent = items.length + (items.length === 1 ? " newsletter" : " newsletter");
+      } catch (error) {
+        journalCount.textContent = "";
+        journalError.textContent = error.message || "Errore durante il caricamento.";
+        journalError.classList.remove("hidden");
+        journalList.replaceChildren();
+        const fallback = document.createElement("div");
+        fallback.className = "glass rounded-3xl p-8 text-center text-slate-600";
+        fallback.textContent = "Impossibile caricare le newsletter. Riprova più tardi.";
+        journalList.append(fallback);
+      }
+    }
+
+    loadJournal();
+  </script>
 
   <script>
     const observer = new IntersectionObserver(entries => {
