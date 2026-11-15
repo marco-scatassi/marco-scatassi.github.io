@@ -208,13 +208,8 @@
 
       <div class="module">
         <h3>YouTube</h3>
-        <p><a class="home-link" href="./youtube.html">Apri gestione playlist</a></p>
-        <p class="muted">
-          Le tue playlist e i tuoi contenuti preferiti.
-        </p>
-        <button id="youtube-connect-button" type="button">Collega YouTube</button>
-        <p class="muted" id="youtube-status">Non ancora verificato</p>
-        <div id="youtube-playlists" aria-live="polite"></div>
+        <p class="muted">Gestisci le playlist, organizza i contenuti e scegli cosa mostrare sul sito.</p>
+        <p><a class="home-link" href="./youtube.html">Apri gestione YouTube</a></p>
       </div>
 
     </div>
@@ -371,79 +366,7 @@
 
       loginLink.style.display = "none";
 
-      // Verifica collegamento e carica le playlist YouTube.
-      youtubeStatus.textContent = "Verifica collegamento YouTube...";
-      try {
-        const authHeaders = {
-          Authorization: `Bearer ${session.access_token}`
-        };
 
-        const youtubeResponse = await fetch(
-          `${WORKER_URL}/api/youtube/status`,
-          { method: "GET", headers: authHeaders }
-        );
-        const youtubeResult = await youtubeResponse.json();
-
-        if (!youtubeResponse.ok) {
-          throw new Error(
-            `Worker HTTP ${youtubeResponse.status}: ${youtubeResult.error || "verifica non riuscita"}`
-          );
-        }
-
-        if (youtubeResult.connected) {
-          youtubeStatus.textContent = "YouTube collegato. Caricamento playlist...";
-          youtubeConnectButton.textContent = "Ricollega YouTube";
-
-          const playlistsResponse = await fetch(
-            `${WORKER_URL}/api/youtube/library/playlists`,
-            { method: "GET", headers: authHeaders }
-          );
-          const playlistsResult = await playlistsResponse.json();
-
-          if (!playlistsResponse.ok) {
-            throw new Error(
-              `Lettura playlist HTTP ${playlistsResponse.status}: ${playlistsResult.error || "richiesta non riuscita"}`
-            );
-          }
-
-          const playlists = Array.isArray(playlistsResult.items)
-            ? playlistsResult.items
-            : [];
-
-          const playlistContainer = document.getElementById("youtube-playlists");
-          playlistContainer.replaceChildren();
-
-          if (playlists.length === 0) {
-            youtubeStatus.textContent = "Collegato, ma Google non ha restituito playlist.";
-          } else {
-            youtubeStatus.textContent = `Collegato. ${playlists.length} playlist caricate.`;
-
-            playlists.forEach((playlist) => {
-              const item = document.createElement("div");
-              item.className = "youtube-playlist";
-
-              const title = document.createElement("strong");
-              title.textContent = playlist.title || "Playlist senza titolo";
-
-              const details = document.createElement("p");
-              details.className = "muted";
-              const count = playlist.item_count;
-              details.textContent = Number.isInteger(count)
-                ? `${count} video`
-                : "Numero video non disponibile";
-
-              item.append(title, details);
-              playlistContainer.appendChild(item);
-            });
-          }
-        } else {
-          youtubeStatus.textContent = "YouTube non ancora collegato.";
-          youtubeConnectButton.textContent = "Collega YouTube";
-        }
-      } catch (youtubeError) {
-        youtubeStatus.textContent =
-          "Errore YouTube: " + youtubeError.message;
-      }
 
     } catch (error) {
       console.error(
@@ -461,47 +384,6 @@
       // Non cancelliamo la sessione automaticamente.
     }
   }
-
-  // AVVIO COLLEGAMENTO GOOGLE / YOUTUBE
-  const youtubeConnectButton =
-    document.getElementById("youtube-connect-button");
-  const youtubeStatus = document.getElementById("youtube-status");
-
-  youtubeConnectButton.addEventListener("click", async () => {
-    youtubeConnectButton.disabled = true;
-    youtubeConnectButton.textContent = "Connessione...";
-    youtubeStatus.textContent = "Preparazione del collegamento Google...";
-
-    try {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error) throw error;
-      if (!data.session) {
-        window.location.replace("./index.html");
-        return;
-      }
-
-      const response = await fetch(`${WORKER_URL}/api/youtube/connect`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${data.session.access_token}`
-        }
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(`Worker HTTP ${response.status}: ${result.error || "richiesta non riuscita"}`);
-      }
-      if (!result.authorizationUrl) {
-        throw new Error("Il Worker non ha restituito l'indirizzo di autorizzazione Google.");
-      }
-
-      window.location.assign(result.authorizationUrl);
-    } catch (error) {
-      youtubeStatus.textContent = "Errore: " + error.message;
-      youtubeConnectButton.disabled = false;
-      youtubeConnectButton.textContent = "Riprova collegamento";
-    }
-  });
 
   // LOGOUT ESPLICITO
   logoutButton.addEventListener(
