@@ -519,6 +519,7 @@
   const gmailSyncButton = document.getElementById("gmail-sync-button");
   const gmailDisconnectButton = document.getElementById("gmail-disconnect-button");
   const gmailNewsletters = document.getElementById("gmail-newsletters");
+  let gmailNextPageToken = null;
 
   async function gmailRequest(path, options = {}) {
     const { data, error } = await supabaseClient.auth.getSession();
@@ -644,10 +645,13 @@
     try {
       const result = await gmailRequest("/api/gmail/sync", {
         method: "POST",
-        body: JSON.stringify({ maxMessages: 50 })
+        body: JSON.stringify({ maxMessages: 50, pageToken: gmailNextPageToken })
       });
-      gmailMessage.textContent = `Lettura completata: ${result.scanned} esaminati, ${result.imported} importati/aggiornati, ${result.skipped} ignorati.` +
-        (result.nextPageToken ? " Ci sono altri messaggi: premi di nuovo il pulsante per proseguire." : "");
+      gmailNextPageToken = result.nextPageToken || null;
+      gmailSyncButton.textContent = gmailNextPageToken ? "Importa pagina successiva" : "Importa etichetta Journal";
+      gmailMessage.textContent = "Lettura completata: " + result.scanned + " esaminati, " +
+        result.imported + " importati/aggiornati, " + result.skipped + " ignorati." +
+        (gmailNextPageToken ? " Ci sono altri messaggi: premi di nuovo il pulsante per proseguire." : " Hai raggiunto l'ultima pagina.");
       await loadGmailNewsletters();
     } catch (error) {
       gmailMessage.textContent = error.message;
