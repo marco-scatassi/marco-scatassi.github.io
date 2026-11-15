@@ -150,7 +150,7 @@ header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,25
     <div class="connection-actions">
       <button class="action" id="connect-youtube-button" type="button">Collega YouTube</button>
       <button class="nav-link" id="sync-button" type="button" disabled>Aggiorna da YouTube</button>
-      <button class="nav-link" id="header-metadata-sync" type="button" disabled>Sincronizza generi e mood</button>
+      <button class="nav-link" id="header-metadata-sync" type="button">Sincronizza generi e mood</button>
       <button class="nav-link" id="disconnect-youtube-button" type="button" disabled>Disconnetti</button>
     </div>
   </div>
@@ -594,7 +594,6 @@ function setYoutubeConnectionState(connected, canManage=true){
   youtubeStatus.className="status"+(youtubeConnected?" connected":connected?" error":"");
   connectYoutubeButton.textContent=connected?"Ricollega YouTube":"Collega YouTube";
   syncButton.disabled=!youtubeConnected;
-  metadataSyncButton.disabled=!youtubeConnected;
   disconnectYoutubeButton.disabled=!connected;
 }
 async function refreshYoutubeConnection(){
@@ -858,6 +857,6 @@ studioCreate.addEventListener("click",async()=>{
   }catch(error){studioStatus.textContent="Operazione non completata: "+error.message}
   finally{studioCreate.disabled=false;studioCreate.textContent="Crea playlist su YouTube"}
 });
-async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const auth=await workerGet("/api/me");if(!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");await refreshYoutubeConnection();await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error");if(youtubeStatus){youtubeStatus.textContent="Verifica collegamento non riuscita";youtubeStatus.className="status error"}}}
+async function initialize(){try{playlistCount.textContent="VERIFICA SESSIONE…";const{data,error}=await supabaseClient.auth.getSession();if(error)throw new Error("Errore Supabase: "+error.message);if(!data.session){window.location.replace("./index.html");return}accessToken=data.session.access_token;playlistCount.textContent="VERIFICA ACCESSO…";const auth=await workerGet("/api/me");if(!auth.authenticated)throw new Error("Account non autorizzato dal servizio Personal Hub.");try{await refreshYoutubeConnection()}catch(connectionError){youtubeStatus.textContent="Stato collegamento non disponibile";youtubeStatus.className="status error";setMessage("Verifica collegamento YouTube non riuscita: "+connectionError.message,"error")}await loadPlaylists();await refreshSyncStatus()}catch(error){const empty=document.createElement("div");empty.className="empty";empty.textContent="Non è stato possibile caricare l’archivio Supabase: "+error.message;grid.replaceChildren(empty);playlistCount.textContent="ERRORE";setMessage(error.message,"error")}}
 initialize();
 </script></body></html>
