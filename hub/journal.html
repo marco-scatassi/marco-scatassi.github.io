@@ -249,7 +249,7 @@
     if (!items.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
-      empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter per questa etichetta."
+      empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter associata a questa etichetta. Se i messaggi erano già stati importati, premi “Importa newsletter” per aggiornare le etichette dall’account Gmail."
         : activeFilter === "published" ? "Non ci sono newsletter pubblicate."
         : activeFilter === "unpublished" ? "Non ci sono newsletter in attesa di pubblicazione."
         : "Archivio vuoto. Collega Gmail e importa le newsletter dalle etichette selezionate.";
