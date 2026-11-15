@@ -110,6 +110,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 /* Tipografia e gerarchia delle sezioni coerenti con hub/journal.html */
 .section-head{margin:32px 0 14px}
 .section-head h2,.detail-title h2{font:700 18px system-ui,sans-serif;letter-spacing:.3px;text-transform:none}
+.section-head button{min-height:40px;padding:10px 15px;font:700 13px system-ui,sans-serif;letter-spacing:normal;text-transform:none}
 .connection-actions button,.panel button,.panel .nav-link{min-height:40px;padding:10px 15px;font:700 13px system-ui,sans-serif;letter-spacing:normal;text-transform:none}
 .connection-actions button:disabled,.panel button:disabled{opacity:.48}
 /* Header e collegamento coerenti con hub/journal.html */
@@ -165,14 +166,13 @@ header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,25
 
 
 <div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div><section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
-<section class="panel" id="playlist-tools" aria-label="Gestisci playlist" style="margin:28px 0 18px;padding:18px;background:#fff">
-<div class="detail-title"><div><div class="eyebrow">// Gestione</div><h2>Gestisci Playlist</h2></div></div><p class="small-note">Scegli lo strumento da utilizzare.</p>
+<div class="section-head"><h2>Gestisci Playlist</h2><span class="count">GESTIONE</span></div><section class="panel" id="playlist-tools" aria-label="Gestisci playlist" style="margin:0 0 18px;padding:18px;background:#fff">
+<p class="small-note">Scegli lo strumento da utilizzare.</p>
 <div class="search-row" role="group" aria-label="Strumenti gestione playlist">
 <button class="action" id="open-playlist-studio" type="button" aria-pressed="false">Crea nuova playlist</button>
 <button class="nav-link" id="show-edit-playlist" type="button" aria-pressed="false">Modifica playlist</button>
 <button class="nav-link" id="show-mapping-tools" type="button" aria-pressed="false">Importa mapping</button></div></section>
-<div id="playlist-tool-create" hidden><section class="panel" id="playlist-studio" style="margin:0 0 24px">
-  <div class="detail-title"><div><div class="eyebrow">// Playlist studio</div><h2>Proposte intelligenti</h2></div><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div>
+<div id="playlist-tool-create" hidden><div class="section-head"><h2>Proposte intelligenti</h2><button class="nav-link" id="close-playlist-studio" type="button">Chiudi</button></div><section class="panel" id="playlist-studio" style="margin:0 0 24px">
 
   <p class="small-note">I brani vengono raccolti da Favorite Songs e Video piaciuti. Se un video è presente in entrambe le raccolte compare una sola volta. Filtra per titolo, artista, album, mood o genere e seleziona i brani da includere. I metadati manuali si gestiscono nell'apposita sezione, non durante la creazione.</p>
   <div class="studio-filter-grid" style="margin:14px 0">
