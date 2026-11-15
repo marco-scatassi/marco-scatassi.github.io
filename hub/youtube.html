@@ -107,6 +107,11 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 /* La regola .video-row{display:grid} non deve annullare l'attributo hidden */
 .video-row[hidden]{display:none!important}
 
+/* Tipografia e gerarchia delle sezioni coerenti con hub/journal.html */
+.section-head{margin:32px 0 14px}
+.section-head h2,.detail-title h2{font:700 18px system-ui,sans-serif;letter-spacing:.3px;text-transform:none}
+.connection-actions button,.panel button,.panel .nav-link{min-height:40px;padding:10px 15px;font:700 13px system-ui,sans-serif;letter-spacing:normal;text-transform:none}
+.connection-actions button:disabled,.panel button:disabled{opacity:.48}
 /* Header e collegamento coerenti con hub/journal.html */
 :root{color-scheme:light;--ink:#172638;--muted:#718096;--line:#e5eaf0;--cyan:#00aeca;--surface:#fff;--bg:#f5f8fc}
 header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,255,.94);box-shadow:0 2px 12px #17263810;backdrop-filter:blur(12px)}
@@ -131,6 +136,7 @@ header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,25
   <a class="brand" href="./dashboard.html">PERSONAL HUB <span>// YOUTUBE</span></a>
   <div class="header-actions">
     <a class="nav-link" href="./dashboard.html">Dashboard</a>
+    <a class="nav-link" href="../personal/music.html" target="_blank" rel="noopener">Apri Music pubblico</a>
     <button id="logout-button" type="button">Esci</button>
   </div>
 </header>
@@ -158,7 +164,7 @@ header{padding:17px max(24px,calc((100% - 1100px)/2));background:rgba(255,255,25
 </section>
 
 
-<section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
+<div class="section-head" id="playlist-head"><h2>Le tue playlist</h2><span class="count" id="playlist-count">CARICAMENTO…</span></div><section class="panel" id="playlist-panel" aria-label="Elenco playlist"><div class="search-tools" id="global-search-tools"><label class="eyebrow" for="global-search">CERCA NELL’ARCHIVIO COMPLETO</label><div class="search-row"><input class="search-input" id="global-search" type="search" minlength="2" maxlength="100" placeholder="Titolo, artista, album o canale…" autocomplete="off"><button class="nav-link" id="global-search-clear" type="button">Pulisci</button></div><p class="search-feedback" id="global-search-feedback" role="status" aria-live="polite">Inserisci almeno 2 caratteri per cercare in tutte le playlist.</p><div class="search-results" id="global-search-results"></div><button class="nav-link search-more" id="global-search-more" type="button" hidden>Mostra altri risultati</button></div><div id="playlist-grid" class="playlist-grid"><div class="empty">Caricamento archivio da Supabase…</div></div></section>
 <section class="panel" id="playlist-tools" aria-label="Gestisci playlist" style="margin:28px 0 18px;padding:18px;background:#fff">
 <div class="detail-title"><div><div class="eyebrow">// Gestione</div><h2>Gestisci Playlist</h2></div></div><p class="small-note">Scegli lo strumento da utilizzare.</p>
 <div class="search-row" role="group" aria-label="Strumenti gestione playlist">
