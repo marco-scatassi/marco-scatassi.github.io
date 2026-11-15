@@ -351,8 +351,14 @@ function updateEditFacetOptions(source){
   }
 }
 
+function normalizeEditFilterValue(value){
+  return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ").trim().toLocaleLowerCase("it");
+}
 function readEditFilters(prefix){
-  return Object.fromEntries(editFacetFields.map(field=>[field,document.getElementById(prefix+field+"-filter").value.trim().toLocaleLowerCase("it")]));
+  return Object.fromEntries(editFacetFields.map(field=>[
+    field,normalizeEditFilterValue(document.getElementById(prefix+field+"-filter").value)
+  ]));
 }
 function renderEditTracks(){
   editTracks.replaceChildren();
@@ -367,7 +373,7 @@ function renderEditTracks(){
     copy.append(title,meta);entry.append(check,copy);
     const matches=editFacetFields.every(field=>{
       const value=track[field],values=Array.isArray(value)?value:[value];
-      return !filters[field]||values.some(item=>String(item||"").toLocaleLowerCase("it").includes(filters[field]));
+      return !filters[field]||values.some(item=>normalizeEditFilterValue(item).includes(filters[field]));
     });
     entry.hidden=!matches;editTracks.append(entry);
   });
@@ -375,6 +381,7 @@ function renderEditTracks(){
 }
 
 async function loadEditPlaylist(id){
+  clearTimeout(editSearchTimer);editSearchRequestId++;editSearchResults.replaceChildren();editSearchResults.hidden=true;
   editForm.hidden=true;if(!id)return;
   const playlist=allPlaylists.find(p=>p.id===id);if(!playlist)return;
   editStatus.textContent="Caricamento playlist…";
@@ -446,22 +453,29 @@ mappingImport.addEventListener("click",async()=>{
 });
 editSelect.addEventListener("change",()=>loadEditPlaylist(editSelect.value));
 editFacetFields.forEach(field=>document.getElementById("edit-track-"+field+"-filter").addEventListener("input",()=>{renderEditTracks();runEditArchiveSearch()}));
-let editSearchTimer=null,editSearchResults=document.getElementById("edit-add-track-results");
+let editSearchTimer=null,editSearchRequestId=0,editSearchResults=document.getElementById("edit-add-track-results");
 function runEditArchiveSearch(){
   clearTimeout(editSearchTimer);
+  const requestId=++editSearchRequestId;
   const filters=readEditFilters("edit-track-");
   editSearchResults.hidden=true;editSearchResults.replaceChildren();
   if(!editFacetFields.some(field=>filters[field]))return;
   editSearchTimer=setTimeout(async()=>{
+    const playlistId=editSelect.value;
     try{
-      const params=new URLSearchParams({limit:"40"});
-      editFacetFields.forEach(field=>{if(filters[field])params.set(field,document.getElementById("edit-track-"+field+"-filter").value.trim())});
+      const params=new URLSearchParams({limit:"100",offset:"0"});
+      editFacetFields.forEach(field=>{
+        const input=document.getElementById("edit-track-"+field+"-filter");
+        if(filters[field])params.set(field,input.value.trim());
+      });
       const result=await workerGet("/api/youtube/library/search?"+params.toString());
-      updateEditFacetOptions(result.items||[]);
+      if(requestId!==editSearchRequestId||playlistId!==editSelect.value)return;
+      const results=Array.isArray(result.items)?result.items:[];
+      updateEditFacetOptions(results);
       const currentIds=new Set(editPlaylistItems.map(t=>t.id));
       const currentVideoIds=new Set(editPlaylistItems.map(t=>t.video_id).filter(Boolean));
       const unique=new Map();
-      (result.items||[]).forEach(track=>{
+      results.forEach(track=>{
         const key=track.video_id||track.id;
         if(!unique.has(key))unique.set(key,track);
       });
@@ -481,9 +495,11 @@ function runEditArchiveSearch(){
           });
           row.append(label,button);editSearchResults.append(row);
         });
-      if(!editSearchResults.childElementCount){const empty=document.createElement("p");empty.className="small-note";empty.textContent="Nessun brano trovato nell’archivio.";editSearchResults.append(empty)}
+      if(!editSearchResults.childElementCount){const empty=document.createElement("p");empty.className="small-note";empty.textContent="Nessun brano trovato nell’archivio per i filtri impostati.";editSearchResults.append(empty)}
       editSearchResults.hidden=false;
-    }catch(error){editStatus.textContent="Ricerca brani non riuscita: "+error.message}
+    }catch(error){
+      if(requestId===editSearchRequestId)editStatus.textContent="Ricerca brani non riuscita: "+error.message;
+    }
   },250);
 }
 
