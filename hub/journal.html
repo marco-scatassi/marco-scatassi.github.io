@@ -30,6 +30,15 @@
     .publication-state.published{background:#e1f7eb;color:#167443}.newsletter-preview{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);color:#526174;font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
     .newsletter-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.newsletter-actions button{min-height:34px;padding:8px 11px;font-size:11px}
     .empty{padding:30px 16px;border:1px dashed #d5dee8;border-radius:10px;color:var(--muted);text-align:center;line-height:1.6}
+    .label-settings{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+    .label-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .label-toolbar input{flex:1 1 220px;min-height:38px;padding:8px 11px;border:1px solid #d5dee8;border-radius:8px;font:13px system-ui,sans-serif}
+    .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:340px;overflow:auto}
+    .label-option{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}
+    .label-option input{flex:0 0 auto;width:16px;height:16px;accent-color:var(--cyan)}
+    .label-option.system{color:#8793a2;background:#f8fafc}
+    .label-option span{min-width:0;overflow-wrap:anywhere}
+    .label-help{margin:9px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
     @media(max-width:650px){header{padding:13px 16px;align-items:flex-start}.brand{padding-top:11px;font-size:11px}.header-actions{justify-content:flex-end}.header-actions button,.header-actions .nav-link{min-height:36px;padding:8px 10px;font-size:11px}main{margin-top:28px}.panel{padding:15px}.connection-grid{grid-template-columns:1fr}.newsletter-top{display:block}.publication-state{display:inline-flex;margin-top:9px}}
   </style>
 </head>
@@ -45,13 +54,13 @@
 <main>
   <div class="eyebrow">// Mail archive · Private workspace</div>
   <h1>Gmail <span>Journal</span></h1>
-  <p class="intro">Importa le newsletter contrassegnate con l'etichetta Gmail <strong>04.-newsletter</strong> e con tutte le sue sottoetichette. Le email vengono archiviate come testo semplice; la pubblicazione sul sito resta sempre manuale.</p>
+  <p class="intro">Scegli le etichette Gmail da cui importare i messaggi. Verranno mostrate tutte le etichette disponibili; solo quelle create da te sono selezionabili. Le email vengono archiviate come testo semplice e la pubblicazione sul sito resta sempre manuale.</p>
   <div class="section-head"><h2>Collegamento Gmail</h2><span class="count">OAUTH · READ ONLY</span></div>
   <section class="panel">
     <div class="connection-grid">
       <div>
         <span class="status" id="gmail-status">Verifica collegamento…</span>
-        <p class="small-note" id="label-summary" style="margin:12px 0 0">Etichetta selezionata: 04.-newsletter e sottoetichette.</p>
+        <p class="small-note" id="label-summary" style="margin:12px 0 0">Nessuna etichetta selezionata.</p>
       </div>
       <div class="actions">
         <button id="connect-button" type="button">Collega Gmail</button>
@@ -60,6 +69,18 @@
       </div>
     </div>
     <p id="message" role="status" aria-live="polite"></p>
+    <div class="label-settings">
+      <div class="label-toolbar">
+        <strong style="font-size:13px">Etichette autorizzate all'importazione</strong>
+        <button id="reload-labels-button" class="secondary" type="button" disabled>Aggiorna etichette</button>
+      </div>
+      <div class="label-toolbar">
+        <input id="label-search" type="search" placeholder="Filtra etichette…" aria-label="Filtra etichette Gmail">
+        <button id="save-labels-button" type="button" disabled>Salva selezione</button>
+      </div>
+      <div id="gmail-labels" class="label-list"><div class="empty">Collega Gmail per caricare le etichette.</div></div>
+      <p class="label-help">Le etichette di sistema (Posta in arrivo, Inviati, Bozze e simili) sono visibili ma non selezionabili. La selezione limita l'importazione del Personal Hub, non il permesso OAuth concesso a Google.</p>
+    </div>
   </section>
   <div class="section-head"><h2>Archivio newsletter</h2><span class="count" id="newsletter-count">CARICAMENTO…</span></div>
   <section class="panel">
@@ -88,8 +109,16 @@
   const listElement = document.getElementById("newsletter-list");
   const countElement = document.getElementById("newsletter-count");
   const refreshButton = document.getElementById("refresh-button");
+  const labelsElement = document.getElementById("gmail-labels");
+  const labelSearch = document.getElementById("label-search");
+  const saveLabelsButton = document.getElementById("save-labels-button");
+  const reloadLabelsButton = document.getElementById("reload-labels-button");
+  const labelSummary = document.getElementById("label-summary");
   let nextPageToken = null;
   let activeFilter = "all";
+  let gmailLabels = [];
+  let selectedLabelIds = new Set();
+  let savedLabelIds = new Set();
 
   function setMessage(message, type = "") {
     messageElement.textContent = message;
@@ -127,11 +156,60 @@
     if (!response.ok && response.status !== 207) throw new Error(result.error || "Richiesta non riuscita (HTTP " + response.status + ").");
     return result;
   }
+  function updateLabelSummary() {
+    const count = selectedLabelIds.size;
+    labelSummary.textContent = count ? count + (count === 1 ? " etichetta selezionata." : " etichette selezionate.")
+      : "Nessuna etichetta selezionata.";
+    syncButton.disabled = statusElement.dataset.connected !== "true" || count === 0;
+    saveLabelsButton.disabled = statusElement.dataset.connected !== "true"
+      || (count === savedLabelIds.size && [...selectedLabelIds].every(id => savedLabelIds.has(id)));
+  }
+  function renderGmailLabels() {
+    const query = labelSearch.value.trim().toLocaleLowerCase("it");
+    labelsElement.replaceChildren();
+    const visible = gmailLabels.filter(label => label.name.toLocaleLowerCase("it").includes(query));
+    if (!visible.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Nessuna etichetta corrisponde al filtro.";
+      labelsElement.append(empty);
+      return;
+    }
+    visible.forEach(label => {
+      const row = document.createElement("label");
+      row.className = "label-option" + (label.selectable ? "" : " system");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = selectedLabelIds.has(label.id);
+      checkbox.disabled = !label.selectable;
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) selectedLabelIds.add(label.id);
+        else selectedLabelIds.delete(label.id);
+        updateLabelSummary();
+      });
+      const name = document.createElement("span");
+      name.textContent = label.name + (label.selectable ? "" : " · sistema");
+      row.append(checkbox, name);
+      labelsElement.append(row);
+    });
+  }
+  async function loadGmailLabels() {
+    const result = await workerRequest("/api/gmail/labels");
+    gmailLabels = Array.isArray(result.labels) ? result.labels : [];
+    selectedLabelIds = new Set(gmailLabels.filter(label => label.selectable && label.selected).map(label => label.id));
+    savedLabelIds = new Set(selectedLabelIds);
+    renderGmailLabels();
+    updateLabelSummary();
+    reloadLabelsButton.disabled = false;
+  }
   function setBusy(busy) {
     connectButton.disabled = busy;
-    syncButton.disabled = busy || statusElement.dataset.connected !== "true";
     disconnectButton.disabled = busy || statusElement.dataset.connected !== "true";
     refreshButton.disabled = busy;
+    reloadLabelsButton.disabled = busy || statusElement.dataset.connected !== "true";
+    saveLabelsButton.disabled = busy || statusElement.dataset.connected !== "true";
+    if (busy) syncButton.disabled = true;
+    else updateLabelSummary();
   }
   async function loadNewsletters() {
     const query = new URLSearchParams({ limit: "100" });
@@ -216,7 +294,12 @@
       connectButton.textContent = connected ? "Ricollega Gmail" : "Collega Gmail";
       syncButton.disabled = !connected;
       disconnectButton.disabled = !connected;
-      if (connected) await loadNewsletters();
+      reloadLabelsButton.disabled = !connected;
+      saveLabelsButton.disabled = !connected;
+      if (connected) {
+        await loadGmailLabels();
+        await loadNewsletters();
+      }
       const callbackResult = new URLSearchParams(location.search).get("gmail");
       if (callbackResult) {
         const messages = {
@@ -240,7 +323,12 @@
           statusElement.className = "status" + (nowConnected ? " connected" : "");
           syncButton.disabled = !nowConnected;
           disconnectButton.disabled = !nowConnected;
-          if (nowConnected) await loadNewsletters();
+          reloadLabelsButton.disabled = !nowConnected;
+          saveLabelsButton.disabled = !nowConnected;
+          if (nowConnected) {
+            await loadGmailLabels();
+            await loadNewsletters();
+          }
         }
       }
     } catch (error) {
@@ -263,7 +351,7 @@
   });
   syncButton.addEventListener("click", async () => {
     setBusy(true);
-    setMessage("Importazione delle email da 04.-newsletter e dalle sue sottoetichette…");
+    setMessage("Importazione delle email dalle etichette selezionate…");
     try {
       const result = await workerRequest("/api/gmail/sync", {
         method: "POST",
@@ -284,6 +372,32 @@
       setMessage(error.message, "error");
     } finally {
       setBusy(false);
+    }
+  });
+  labelSearch.addEventListener("input", renderGmailLabels);
+  reloadLabelsButton.addEventListener("click", async () => {
+    reloadLabelsButton.disabled = true;
+    try { await loadGmailLabels(); setMessage("Elenco etichette aggiornato.", "success"); }
+    catch (error) { setMessage(error.message, "error"); }
+    finally { reloadLabelsButton.disabled = false; }
+  });
+  saveLabelsButton.addEventListener("click", async () => {
+    saveLabelsButton.disabled = true;
+    try {
+      const result = await workerRequest("/api/gmail/labels", {
+        method: "POST",
+        body: JSON.stringify({ selectedIds: [...selectedLabelIds] })
+      });
+      savedLabelIds = new Set(result.selectedIds || []);
+      selectedLabelIds = new Set(savedLabelIds);
+      nextPageToken = null;
+      syncButton.textContent = "Importa newsletter";
+      renderGmailLabels();
+      updateLabelSummary();
+      setMessage("Selezione delle etichette salvata. La prossima importazione partirà dall'inizio.", "success");
+    } catch (error) {
+      setMessage(error.message, "error");
+      updateLabelSummary();
     }
   });
   disconnectButton.addEventListener("click", async () => {
