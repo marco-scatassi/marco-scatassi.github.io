@@ -219,28 +219,34 @@
   }
   async function loadNewsletters() {
     const query = new URLSearchParams({ limit: "100" });
+    if (activeLabelFilter !== "all") query.set("labelId", activeLabelFilter);
     if (activeFilter === "published") query.set("published", "true");
     if (activeFilter === "unpublished") query.set("published", "false");
     const result = await workerRequest("/api/journal/newsletters?" + query.toString());
     const items = Array.isArray(result.items) ? result.items : [];
-    const availableNewsletterLabels = [...new Set([...gmailLabels.filter(label => label.selectable && savedLabelIds.has(label.id)).map(label => label.name), ...items.flatMap(item => Array.isArray(item.gmail_label_names) ? item.gmail_label_names : [])])].sort((a, b) => a.localeCompare(b, "it"));
+    const labelOptions = new Map();
+    gmailLabels.filter(label => label.selectable && savedLabelIds.has(label.id)).forEach(label => labelOptions.set(label.id, label.name));
+    items.forEach(item => {
+      const ids = Array.isArray(item.gmail_label_ids) ? item.gmail_label_ids : [];
+      const names = Array.isArray(item.gmail_label_names) ? item.gmail_label_names : [];
+      ids.forEach((id, index) => { if (!labelOptions.has(id)) labelOptions.set(id, names[index] || id); });
+    });
     newsletterLabelFilter.replaceChildren();
     const allOption = document.createElement("option");
     allOption.value = "all";
     allOption.textContent = "Tutte le etichette";
     newsletterLabelFilter.append(allOption);
-    availableNewsletterLabels.forEach(name => {
+    [...labelOptions.entries()].sort((a, b) => a[1].localeCompare(b[1], "it")).forEach(([id, name]) => {
       const option = document.createElement("option");
-      option.value = name;
+      option.value = id;
       option.textContent = name;
       newsletterLabelFilter.append(option);
     });
-    if (activeLabelFilter !== "all" && !availableNewsletterLabels.includes(activeLabelFilter)) activeLabelFilter = "all";
+    if (activeLabelFilter !== "all" && !labelOptions.has(activeLabelFilter)) activeLabelFilter = "all";
     newsletterLabelFilter.value = activeLabelFilter;
-    const visibleItems = activeLabelFilter === "all" ? items : items.filter(item => Array.isArray(item.gmail_label_names) && item.gmail_label_names.includes(activeLabelFilter));
     listElement.replaceChildren();
-    countElement.textContent = visibleItems.length + " ELEMENTI";
-    if (!visibleItems.length) {
+    countElement.textContent = items.length + " ELEMENTI";
+    if (!items.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
       empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter per questa etichetta."
@@ -250,7 +256,7 @@
       listElement.append(empty);
       return;
     }
-    visibleItems.forEach(item => {
+    items.forEach(item => {
       const card = document.createElement("article");
       card.className = "newsletter-card";
       const top = document.createElement("div");
