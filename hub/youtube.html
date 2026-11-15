@@ -95,6 +95,7 @@ main{width:min(1100px,calc(100% - 32px));margin:42px auto 70px}
 .track-check-item input{margin-top:4px;flex:0 0 auto;accent-color:#00aeca}
 .studio-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
 .track-check-item{cursor:pointer;transition:border-color .15s,background .15s}
+.track-check-item[hidden],.track-picker-results[hidden]{display:none!important}
 .track-check-item:has(input:checked){border-color:#00aeca;background:#eefbfe}
 .track-check-item input{width:16px;height:16px;accent-color:#00aeca}
 .track-check-copy{min-width:0}
