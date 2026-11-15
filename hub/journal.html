@@ -406,7 +406,8 @@
       const actions = document.createElement("div");
       actions.className = "newsletter-actions";
       const labelIds = Array.isArray(item.gmail_label_ids) ? item.gmail_label_ids : [];
-      const linkedBrand = labelIds.map(id => brandsByLabel.get(id)).find(brand => brand && brand.official_url);
+      const linkedBrands = labelIds.map(id => brandsByLabel.get(id)).filter(brand => brand && brand.official_url);
+      const linkedBrand = linkedBrands.length === 1 ? linkedBrands[0] : null;
       const readLink = document.createElement("a");
       readLink.textContent = "Leggi ora";
       if (linkedBrand) {
@@ -418,7 +419,9 @@
         readLink.href = "#";
         readLink.className = "is-disabled";
         readLink.setAttribute("aria-disabled", "true");
-        readLink.title = "Configura prima il sito ufficiale nella sezione Testate newsletter";
+        readLink.title = linkedBrands.length > 1
+          ? "Il messaggio è associato a più testate: verifica le etichette Gmail."
+          : "Configura prima il sito ufficiale nella sezione Testate newsletter";
         readLink.addEventListener("click", event => event.preventDefault());
       }
       actions.append(readLink);
