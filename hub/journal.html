@@ -35,7 +35,10 @@
     .label-settings{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
     .label-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
     .label-toolbar input{flex:1 1 220px;min-height:38px;padding:8px 11px;border:1px solid #d5dee8;border-radius:8px;font:13px system-ui,sans-serif}
-    .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:340px;overflow:auto}
+    .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:190px;overflow-y:auto;overflow-x:hidden}
+    #newsletter-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+    #newsletter-pagination[hidden]{display:none!important}
+    #newsletter-page-status{color:var(--muted);font:11px ui-monospace,monospace;text-align:center}
     .label-option{display:flex;align-items:center;gap:10px;min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}
     .label-option input{flex:0 0 auto;width:16px;height:16px;accent-color:var(--cyan)}
     .label-option.system{color:#8793a2;background:#f8fafc}
@@ -95,6 +98,11 @@
       <button class="secondary" id="refresh-button" type="button">Aggiorna elenco</button>
     </div>
     <div class="newsletter-list" id="newsletter-list" style="margin-top:16px"><div class="empty">Caricamento archivio…</div></div>
+    <div id="newsletter-pagination" hidden aria-label="Paginazione archivio newsletter">
+      <button class="secondary" id="newsletter-previous" type="button" disabled>Precedenti</button>
+      <span id="newsletter-page-status" aria-live="polite">Pagina 1</span>
+      <button class="secondary" id="newsletter-next" type="button">Successivi</button>
+    </div>
   </section>
 </main>
 <script>
@@ -112,6 +120,10 @@
   const disconnectButton = document.getElementById("disconnect-button");
   const listElement = document.getElementById("newsletter-list");
   const countElement = document.getElementById("newsletter-count");
+  const newsletterPagination = document.getElementById("newsletter-pagination");
+  const newsletterPrevious = document.getElementById("newsletter-previous");
+  const newsletterNext = document.getElementById("newsletter-next");
+  const newsletterPageStatus = document.getElementById("newsletter-page-status");
   const refreshButton = document.getElementById("refresh-button");
   const labelsElement = document.getElementById("gmail-labels");
   const labelSearch = document.getElementById("label-search");
@@ -120,6 +132,8 @@
   const labelSummary = document.getElementById("label-summary");
   const newsletterLabelFilter = document.getElementById("newsletter-label-filter");
   let activeLabelFilter = "all";
+  let newsletterPage = 0;
+  const NEWSLETTERS_PER_PAGE = 10;
   let nextPageToken = null;
   let activeFilter = "all";
   let gmailLabels = [];
@@ -218,12 +232,26 @@
     else updateLabelSummary();
   }
   async function loadNewsletters() {
-    const query = new URLSearchParams({ limit: "100" });
+    const offset = newsletterPage * NEWSLETTERS_PER_PAGE;
+    // Richiede un elemento aggiuntivo per sapere se esiste la pagina successiva.
+    const query = new URLSearchParams({ limit: String(NEWSLETTERS_PER_PAGE + 1), offset: String(offset) });
     if (activeLabelFilter !== "all") query.set("labelId", activeLabelFilter);
     if (activeFilter === "published") query.set("published", "true");
     if (activeFilter === "unpublished") query.set("published", "false");
     const result = await workerRequest("/api/journal/newsletters?" + query.toString());
     const items = Array.isArray(result.items) ? result.items : [];
+    if (!items.length && newsletterPage > 0) {
+      newsletterPage -= 1;
+      return loadNewsletters();
+    }
+    const hasNextPage = items.length > NEWSLETTERS_PER_PAGE;
+    const pageItems = items.slice(0, NEWSLETTERS_PER_PAGE);
+    newsletterPagination.hidden = newsletterPage === 0 && !hasNextPage;
+    newsletterPrevious.disabled = newsletterPage === 0;
+    newsletterNext.disabled = !hasNextPage;
+    newsletterPageStatus.textContent = pageItems.length
+      ? "Newsletter " + (offset + 1) + "–" + (offset + pageItems.length) + (hasNextPage ? "+" : "")
+      : "Nessuna newsletter";
     const labelOptions = new Map();
     gmailLabels.filter(label => label.selectable && savedLabelIds.has(label.id)).forEach(label => labelOptions.set(label.id, label.name));
     items.forEach(item => {
@@ -245,8 +273,10 @@
     if (activeLabelFilter !== "all" && !labelOptions.has(activeLabelFilter)) activeLabelFilter = "all";
     newsletterLabelFilter.value = activeLabelFilter;
     listElement.replaceChildren();
-    countElement.textContent = items.length + " ELEMENTI";
-    if (!items.length) {
+    countElement.textContent = pageItems.length
+      ? (offset + 1) + "–" + (offset + pageItems.length) + (hasNextPage ? "+" : "") + " NEWSLETTER"
+      : "0 NEWSLETTER";
+    if (!pageItems.length) {
       const empty = document.createElement("div");
       empty.className = "empty";
       empty.textContent = activeLabelFilter !== "all" ? "Nessuna newsletter associata a questa etichetta. Se i messaggi erano già stati importati, premi “Importa newsletter” per aggiornare le etichette dall’account Gmail."
@@ -256,7 +286,7 @@
       listElement.append(empty);
       return;
     }
-    items.forEach(item => {
+    pageItems.forEach(item => {
       const card = document.createElement("article");
       card.className = "newsletter-card";
       const top = document.createElement("div");
@@ -411,6 +441,7 @@
   labelSearch.addEventListener("input", renderGmailLabels);
   newsletterLabelFilter.addEventListener("change", () => {
     activeLabelFilter = newsletterLabelFilter.value;
+    newsletterPage = 0;
     loadNewsletters().catch(error => setMessage(error.message, "error"));
   });
   reloadLabelsButton.addEventListener("click", async () => {
@@ -456,6 +487,18 @@
       setBusy(false);
     }
   });
+  newsletterPrevious.addEventListener("click", async () => {
+    if (newsletterPage === 0) return;
+    newsletterPage -= 1;
+    try { await loadNewsletters(); }
+    catch (error) { setMessage(error.message, "error"); }
+  });
+  newsletterNext.addEventListener("click", async () => {
+    if (newsletterNext.disabled) return;
+    newsletterPage += 1;
+    try { await loadNewsletters(); }
+    catch (error) { newsletterPage = Math.max(0, newsletterPage - 1); setMessage(error.message, "error"); }
+  });
   refreshButton.addEventListener("click", async () => {
     refreshButton.disabled = true;
     try { await loadNewsletters(); setMessage("Archivio aggiornato.", "success"); }
@@ -465,6 +508,7 @@
   document.querySelectorAll("[data-filter]").forEach(button => {
     button.addEventListener("click", async () => {
       activeFilter = button.dataset.filter;
+      newsletterPage = 0;
       document.querySelectorAll("[data-filter]").forEach(item =>
         item.setAttribute("aria-pressed", String(item === button)));
       try { await loadNewsletters(); }
