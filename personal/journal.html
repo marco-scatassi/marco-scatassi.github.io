@@ -224,7 +224,7 @@
         } else {
           items.forEach(item => journalList.append(renderNewsletter(item)));
         }
-        journalCount.textContent = items.length + (items.length === 1 ? " newsletter" : " newsletter");
+        journalCount.textContent = items.length + (items.length === 1 ? " newsletter pubblicata" : " newsletter pubblicate");
       } catch (error) {
         journalCount.textContent = "";
         journalError.textContent = error.message || "Errore durante il caricamento.";
