@@ -35,7 +35,7 @@
     .label-settings{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
     .label-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
     .label-toolbar input{flex:1 1 220px;min-height:38px;padding:8px 11px;border:1px solid #d5dee8;border-radius:8px;font:13px system-ui,sans-serif}
-    .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:190px;overflow-y:auto;overflow-x:hidden}
+    .label-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:7px;max-height:135px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
     #newsletter-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
     #newsletter-pagination[hidden]{display:none!important}
     #newsletter-page-status{color:var(--muted);font:11px ui-monospace,monospace;text-align:center}
@@ -99,9 +99,9 @@
     </div>
     <div class="newsletter-list" id="newsletter-list" style="margin-top:16px"><div class="empty">Caricamento archivio…</div></div>
     <div id="newsletter-pagination" hidden aria-label="Paginazione archivio newsletter">
-      <button class="secondary" id="newsletter-previous" type="button" disabled>Precedenti</button>
+      <button class="secondary" id="newsletter-previous" type="button" disabled>10 precedenti</button>
       <span id="newsletter-page-status" aria-live="polite">Pagina 1</span>
-      <button class="secondary" id="newsletter-next" type="button">Successivi</button>
+      <button class="secondary" id="newsletter-next" type="button">10 successivi</button>
     </div>
   </section>
 </main>
@@ -250,7 +250,7 @@
     newsletterPrevious.disabled = newsletterPage === 0;
     newsletterNext.disabled = !hasNextPage;
     newsletterPageStatus.textContent = pageItems.length
-      ? "Newsletter " + (offset + 1) + "–" + (offset + pageItems.length) + (hasNextPage ? "+" : "")
+      ? "Elementi " + (offset + 1) + "–" + (offset + pageItems.length) + (hasNextPage ? " · altri disponibili" : "")
       : "Nessuna newsletter";
     const labelOptions = new Map();
     gmailLabels.filter(label => label.selectable && savedLabelIds.has(label.id)).forEach(label => labelOptions.set(label.id, label.name));
