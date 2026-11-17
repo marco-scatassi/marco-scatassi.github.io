@@ -397,3 +397,10 @@ Il feedback sull'usabilità smartphone ha evidenziato che la prima passata respo
 La pagina Music ha ora un indice interno sticky sotto la navbar mobile, con voci a griglia e stato attivo. Il calcolo dello scroll e l'IntersectionObserver usano un offset mobile coerente con header e indice, mentre desktop conserva l'offset precedente. Le card playlist impilano player e azioni, con pulsanti a larghezza piena e controlli di ricerca/lista più adatti al touch.
 
 La modifica resta frontend-only. Verifica statica effettuata su markup, selettori, ordine di caricamento CSS e logica di navigazione; non è disponibile in questa sessione un browser automatizzato per screenshot o test su viewport reali. La resa effettiva va ancora confermata su dispositivi fisici.
+
+### Portfolio contact section mobile pass — 2026-11-17
+
+- Optimized **Establish Uplink** for narrow screens: single-column contact rows, clearer spacing and typography, fixed-size icons, and more usable link touch targets.
+- Prevented the contact card from remaining visually hidden while its scroll-reveal observer initializes on mobile.
+- Desktop layout and contact destinations are unchanged.
+
