@@ -388,3 +388,12 @@ Interventi principali:
 La modifica è solo frontend: non cambia API, autenticazione, OAuth, database, RLS o Worker. Il lavoro è stato applicato direttamente a `main`, come richiesto.
 
 **Verifica:** controllati staticamente i riferimenti ai fogli CSS e i file aggiornati su GitHub. Non è stato eseguito un browser test, una prova con dispositivi fisici o uno screenshot comparativo; non è quindi possibile dichiarare già verificata la resa effettiva sui viewport 320/360/390/430/768/1024 px. Questi controlli restano necessari, in particolare per le pagine private con contenuti caricati dinamicamente.
+
+
+### Second pass responsive: navigazione e Music — 2026-11-17
+
+Il feedback sull'usabilità smartphone ha evidenziato che la prima passata responsive non aveva risolto il problema della navigazione: la navbar era diventata un insieme di link su più righe senza una griglia sufficientemente prevedibile. La seconda passata usa una griglia esplicita a tre colonne, con target touch uniformi, testo centrato e nessuna dipendenza dallo scorrimento orizzontale.
+
+La pagina Music ha ora un indice interno sticky sotto la navbar mobile, con voci a griglia e stato attivo. Il calcolo dello scroll e l'IntersectionObserver usano un offset mobile coerente con header e indice, mentre desktop conserva l'offset precedente. Le card playlist impilano player e azioni, con pulsanti a larghezza piena e controlli di ricerca/lista più adatti al touch.
+
+La modifica resta frontend-only. Verifica statica effettuata su markup, selettori, ordine di caricamento CSS e logica di navigazione; non è disponibile in questa sessione un browser automatizzato per screenshot o test su viewport reali. La resa effettiva va ancora confermata su dispositivi fisici.
