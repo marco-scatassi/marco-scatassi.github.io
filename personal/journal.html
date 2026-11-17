@@ -191,7 +191,7 @@
     async function loadJournal() {
       try {
         const response = await fetch(JOURNAL_API + "?limit=30", { headers: { Accept: "application/json" } });
-        if (!response.ok) throw new Error("Il Journal non è al momento disponibile.");
+        if (!response.ok) throw new Error("La pagina delle newsletter non è al momento disponibile.");
         const result = await response.json();
         const items = Array.isArray(result.items) ? result.items : [];
         journalList.replaceChildren();
