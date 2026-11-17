@@ -561,12 +561,12 @@
       }
     }
     const musicNavOffset = window.matchMedia('(max-width: 420px)').matches
-      ? 140
-      : window.matchMedia('(max-width: 760px)').matches ? 144 : 112;
+      ? 196
+      : window.matchMedia('(max-width: 760px)').matches ? 200 : 112;
     const musicIndexLinks = Array.from(document.querySelectorAll('.music-index-link[data-section]'));
     const musicSections = musicIndexLinks
       .map(link => document.getElementById(link.dataset.section))
-      .filter(section => section && !section.hidden);
+      .filter(Boolean);
     function setActiveMusicSection(id) {
       musicIndexLinks.forEach(link => {
         const active = link.dataset.section === id;
