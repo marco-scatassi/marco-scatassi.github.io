@@ -245,6 +245,41 @@
     if (busy) syncButton.disabled = true;
     else updateLabelSummary();
   }
+  function findOfficialContentLink(newsletter, brand) {
+    if (!brand?.official_url || !Array.isArray(newsletter.content_links)) return null;
+    let official;
+    try { official = new URL(brand.official_url); }
+    catch { return null; }
+    if (official.protocol !== "https:" || !official.hostname) return null;
+
+    const prefixPath = official.pathname.replace(/\/+$/, "") || "/";
+    const candidates = newsletter.content_links.map((link, index) => {
+      if (!link || typeof link.url !== "string") return null;
+      try {
+        const target = new URL(link.url);
+        if (target.protocol !== "https:" || target.origin !== official.origin
+          || target.username || target.password) return null;
+        const matchesPath = prefixPath === "/"
+          ? target.pathname !== "/"
+          : target.pathname === prefixPath || target.pathname.startsWith(prefixPath + "/");
+        if (!matchesPath) return null;
+
+        const anchorText = typeof link.text === "string" ? link.text.trim() : "";
+        const normalizedText = anchorText.toLocaleLowerCase("it");
+        const isCallToAction = /\b(leggi|read|scopri|discover|continua|continue|approfondisci|view|open|articolo|article)\b/.test(normalizedText);
+        const isBoilerplate = /\b(unsubscribe|disiscriv|privacy|preferenze|preferences|gestisci|manage|social|instagram|facebook|linkedin)\b/.test(normalizedText);
+        const isContentPath = target.pathname !== prefixPath && target.pathname !== "/";
+        const score = (isCallToAction ? 4 : 0) + (isContentPath ? 2 : 0) - (isBoilerplate ? 10 : 0);
+        return { url: target.href, score, index };
+      } catch {
+        return null;
+      }
+    }).filter(Boolean);
+
+    candidates.sort((a, b) => b.score - a.score || a.index - b.index);
+    return candidates[0]?.url || null;
+  }
+
   function renderNewsletterBrands() {
     brandConfigList.replaceChildren();
     const labelsById = new Map(gmailLabels.map(label => [label.id, label]));
@@ -274,7 +309,7 @@
       nameInput.value = existing?.name || labelName; nameInput.placeholder = "Nome della newsletter";
       nameLabel.append(nameInput);
       const urlLabel = document.createElement("label");
-      urlLabel.textContent = "Sito ufficiale";
+      urlLabel.textContent = "Sito ufficiale (prefisso dei link ai contenuti)";
       const urlInput = document.createElement("input");
       urlInput.type = "url"; urlInput.required = true; urlInput.placeholder = "https://...";
       urlInput.value = existing?.official_url || "";
@@ -410,10 +445,11 @@
       const labelIds = Array.isArray(item.gmail_label_ids) ? item.gmail_label_ids : [];
       const linkedBrands = labelIds.map(id => brandsByLabel.get(id)).filter(brand => brand && brand.official_url);
       const linkedBrand = linkedBrands.length === 1 ? linkedBrands[0] : null;
+      const contentUrl = linkedBrand ? findOfficialContentLink(item, linkedBrand) : null;
       const readLink = document.createElement("a");
       readLink.textContent = "Leggi ora";
-      if (linkedBrand) {
-        readLink.href = linkedBrand.official_url;
+      if (contentUrl) {
+        readLink.href = contentUrl;
         readLink.target = "_blank";
         readLink.rel = "noopener noreferrer";
         readLink.setAttribute("aria-label", "Leggi " + (linkedBrand.name || "la newsletter") + " sul sito ufficiale");
@@ -423,7 +459,9 @@
         readLink.setAttribute("aria-disabled", "true");
         readLink.title = linkedBrands.length > 1
           ? "Il messaggio è associato a più testate: verifica le etichette Gmail."
-          : "Configura prima il sito ufficiale nella sezione Testate newsletter";
+          : linkedBrand
+            ? "Nessun link al contenuto trovato con il prefisso configurato. Reimporta la newsletter dopo l'aggiornamento."
+            : "Configura prima il sito ufficiale nella sezione Testate newsletter";
         readLink.addEventListener("click", event => event.preventDefault());
       }
       actions.append(readLink);
