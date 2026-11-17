@@ -417,3 +417,9 @@ La sezione contatti del portfolio è stata adattata agli schermi piccoli: contat
 ### Revisione copy area personale — 2026-11-17
 
 Secondo passaggio sui testi dell'area personale: ridotte ulteriormente formule promozionali, titoli enfatici, ripetizioni e descrizioni generiche. Le pagine usano etichette essenziali e descrizioni fattuali per musica, viaggi e newsletter. Nessuna modifica a layout, stili, navigazione, contenuti dinamici o logica applicativa.
+
+### Favicon del sito — 2026-11-17
+
+Aggiunta una favicon SVG condivisa (`/favicon.svg`), con fondo blu notte, monogramma geometrico ciano e accento rosa. Il riferimento è presente nell'head di tutte le pagine HTML, comprese le pagine annidate e il template album. Il formato SVG mantiene il simbolo nitido alle dimensioni ridotte e non richiede dipendenze o asset raster aggiuntivi.
+
+Verifica effettuata: controllo statico dei riferimenti nei file HTML e presenza dell'asset nella root. La visualizzazione effettiva e l'aggiornamento della cache favicon devono essere confermati nel browser dopo la pubblicazione.
