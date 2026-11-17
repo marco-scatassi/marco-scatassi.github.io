@@ -560,10 +560,13 @@
         status.textContent = 'Le playlist musicali non sono momentaneamente disponibili.';
       }
     }
+    const musicNavOffset = window.matchMedia('(max-width: 420px)').matches
+      ? 140
+      : window.matchMedia('(max-width: 760px)').matches ? 144 : 112;
     const musicIndexLinks = Array.from(document.querySelectorAll('.music-index-link[data-section]'));
     const musicSections = musicIndexLinks
       .map(link => document.getElementById(link.dataset.section))
-      .filter(Boolean);
+      .filter(section => section && !section.hidden);
     function setActiveMusicSection(id) {
       musicIndexLinks.forEach(link => {
         const active = link.dataset.section === id;
@@ -578,7 +581,7 @@
         if (!target) return;
         event.preventDefault();
         setActiveMusicSection(target.id);
-        const top = target.getBoundingClientRect().top + window.scrollY - 112;
+        const top = target.getBoundingClientRect().top + window.scrollY - musicNavOffset;
         window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
       });
     });
@@ -588,7 +591,7 @@
           .filter(entry => entry.isIntersecting)
           .sort((a,b) => Math.abs(a.boundingClientRect.top - 112) - Math.abs(b.boundingClientRect.top - 112))[0];
         if (visible) setActiveMusicSection(visible.target.id);
-      }, { rootMargin:'-112px 0px -58% 0px', threshold:[0,.05,.15,.3] });
+      }, { rootMargin:`-${musicNavOffset}px 0px -58% 0px`, threshold:[0,.05,.15,.3] });
       musicSections.forEach(section => sectionObserver.observe(section));
     }
 
