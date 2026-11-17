@@ -1,0 +1,198 @@
+/* Personal Hub — responsive system pass (2026-11-17).
+   Loaded after the shared design tokens; page-specific rules remain authoritative
+   unless a mobile usability correction is explicitly marked !important. */
+
+:where(html) { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+:where(img, video, iframe, canvas, svg) { max-width: 100%; }
+:where(button, input, select, textarea) { font: inherit; }
+:where(button, a, input, select, textarea, summary) { touch-action: manipulation; }
+:where(button, a, input, select, textarea) { scroll-margin-block: 6rem; }
+:where(input, select, textarea) { min-width: 0; }
+:where(p, h1, h2, h3, h4, a, span, label) { overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  html, body { max-width: 100%; }
+  body { overflow-x: clip; }
+  :where(button, .btn, a[role="button"], input, select, textarea) { min-height: 44px; }
+  :where(input, select, textarea) { max-width: 100%; font-size: 16px; }
+  :where(iframe, .playlist-player-frame) { max-width: 100%; }
+  :where(.container, .ph-container, main) {
+    max-width: 100%;
+  }
+
+  /* Public navigation: all destinations remain visible without a hidden
+     horizontal strip that requires discovering a swipe gesture. */
+  .ph-nav-shell {
+    width: min(calc(100% - 24px), var(--ph-content-width, 1152px)) !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 10px 0 9px !important;
+  }
+  .ph-brand { margin: 0 2px !important; min-height: 34px; }
+  .ph-nav-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .ph-nav-link {
+    flex: 1 1 auto;
+    min-width: max-content;
+    min-height: 42px !important;
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    white-space: normal !important;
+    line-height: 1.2;
+  }
+  .ph-nav-divider { display: none !important; }
+
+  /* Portfolio: use a single readable column and remove decorative offsets
+     that can push the profile frame beyond the viewport. */
+  .portfolio-page .hero,
+  .portfolio-page .portfolio-hero {
+    width: min(calc(100% - 32px), 620px) !important;
+    min-height: 0 !important;
+    height: auto !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 30px !important;
+    padding: 42px 0 56px !important;
+  }
+  .portfolio-page .hero-content { width: 100%; max-width: none !important; }
+  .portfolio-page .hero h1,
+  .portfolio-page .portfolio-hero h1 {
+    font-size: clamp(2rem, 8vw, 3rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -.045em !important;
+    margin: 16px 0 !important;
+  }
+  .portfolio-page .hero-description,
+  .portfolio-page .portfolio-hero .hero-description {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+  }
+  .portfolio-page .hero-buttons { display: flex; flex-wrap: wrap; gap: 9px !important; }
+  .portfolio-page .hero-buttons .btn {
+    flex: 1 1 170px;
+    width: auto !important;
+    min-height: 46px !important;
+  }
+  .portfolio-page .profile-frame,
+  .portfolio-page .portfolio-hero .profile-frame {
+    width: min(72vw, 260px) !important;
+    height: min(88vw, 310px) !important;
+    margin-inline: auto;
+  }
+  .portfolio-page .profile-label { left: 8px !important; bottom: 8px !important; }
+  .portfolio-page .section { padding: 52px 16px !important; }
+  .portfolio-page .section-heading { margin-bottom: 26px !important; }
+  .portfolio-page .section-heading h2 { font-size: clamp(1.55rem, 6vw, 2rem) !important; }
+  .portfolio-page .projects-grid,
+  .portfolio-page .skills-grid,
+  .portfolio-page .two-columns,
+  .portfolio-page .contact-grid,
+  .portfolio-page .cert-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .portfolio-page .card { min-width: 0; padding: 20px !important; }
+  .portfolio-page .card:hover,
+  .portfolio-page .project-card:hover { transform: none !important; }
+
+  /* Personal landing: prevent title/chip collisions and oversized cards. */
+  .personal-page .personal-hero,
+  .personal-page .personal-discover {
+    width: min(calc(100% - 32px), 620px) !important;
+  }
+  .personal-page .personal-hero {
+    min-height: 0 !important;
+    padding: 44px 0 52px !important;
+    gap: 18px !important;
+  }
+  .personal-page .hero-title-layout {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px !important;
+  }
+  .personal-page .hero-title-layout .hero-title {
+    flex: 0 1 auto !important;
+    font-size: clamp(1.9rem, 7.8vw, 2.8rem) !important;
+    line-height: 1.08 !important;
+    text-align: center;
+  }
+  .personal-page .hero-title-layout .title-chip {
+    width: 42px !important;
+    height: 68px !important;
+  }
+  .personal-page .personal-hero > p { font-size: 15px !important; line-height: 1.65 !important; }
+  .personal-page .personal-discover { padding-bottom: 60px !important; }
+  .personal-page .personal-card {
+    min-height: 0 !important;
+    padding: 24px !important;
+  }
+  .personal-page .personal-card:hover { transform: none !important; }
+
+  /* Music: the section index becomes a compact in-flow grid rather than a
+     sticky sidebar competing with the sticky site header. */
+  .music-main { width: min(calc(100% - 28px), 680px) !important; }
+  .music-sections-layout { display: flex !important; flex-direction: column; gap: 18px !important; }
+  .music-index {
+    position: static !important;
+    top: auto !important;
+    min-height: 0 !important;
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px !important;
+    padding: 9px !important;
+    border-radius: 16px !important;
+  }
+  .music-index-record { display: none !important; }
+  .music-index-link {
+    min-width: 0 !important;
+    min-height: 44px !important;
+    justify-content: center;
+    padding: 7px 5px !important;
+    text-align: center;
+    font-size: 11px !important;
+    white-space: normal !important;
+  }
+  .music-sections-content { width: 100%; }
+  .music-hero { padding: 30px 0 !important; }
+  .music-hero h1 { font-size: clamp(2rem, 8vw, 2.8rem) !important; }
+  .music-playlists-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .music-playlist-card { min-width: 0; }
+  .music-playlist-card .music-playlist-actions-row { flex-wrap: wrap !important; gap: 10px; }
+  .music-playlist-card .music-playlist-toggle { min-height: 44px !important; }
+  .playlist-track-list { max-height: 46vh !important; }
+  .playlist-track { align-items: flex-start !important; }
+  .playlist-track-title { font-size: 13px; line-height: 1.4; }
+
+  /* Editorial pages. */
+  .page-hero { padding-inline: 0 !important; }
+  .page-hero .page-hero-title { font-size: clamp(2rem, 8vw, 2.8rem) !important; }
+  .page-hero .page-hero-description { font-size: 15px !important; line-height: 1.65 !important; }
+  .journal-grid, .nature-grid, .memories-grid { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+@media (max-width: 420px) {
+  .ph-brand { gap: 8px; font-size: 13px; }
+  .ph-brand-context { font-size: 9px; }
+  .ph-nav-link { padding-inline: 8px !important; font-size: 11px !important; }
+  .music-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .portfolio-page .hero-buttons .btn { flex-basis: 100%; }
+  .personal-page .personal-card { padding: 20px !important; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .portfolio-page .card:hover,
+  .portfolio-page .project-card:hover,
+  .personal-page .personal-card:hover { transform: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
