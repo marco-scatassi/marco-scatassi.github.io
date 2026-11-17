@@ -62,3 +62,12 @@
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; }
 }
+
+@media (max-width:700px) {
+  body:has(#login-form) main,
+  body:has(#password-form) main {
+    width:min(calc(100% - 32px),420px) !important;
+    margin:24px auto !important;
+    padding:24px !important;
+  }
+}
