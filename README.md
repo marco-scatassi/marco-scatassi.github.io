@@ -413,3 +413,7 @@ Intervento limitato ai testi e alle etichette visibili: URL, logica applicativa,
 ### Portfolio contact section mobile pass — 2026-11-17
 
 La sezione contatti del portfolio è stata adattata agli schermi piccoli: contatti disposti in colonna, spaziatura e tipografia più leggibili, icone uniformi e link con area di tocco adeguata. Su mobile la scheda non dipende più dall'inizializzazione dell'animazione di ingresso. Il layout desktop e le destinazioni dei link restano invariati.
+
+### Revisione copy area personale — 2026-11-17
+
+Secondo passaggio sui testi dell'area personale: ridotte ulteriormente formule promozionali, titoli enfatici, ripetizioni e descrizioni generiche. Le pagine usano etichette essenziali e descrizioni fattuali per musica, viaggi e newsletter. Nessuna modifica a layout, stili, navigazione, contenuti dinamici o logica applicativa.
