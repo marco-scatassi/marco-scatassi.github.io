@@ -111,21 +111,21 @@
   <main class="max-w-5xl mx-auto px-6 py-16 md:py-24 space-y-12">
     <section class="reveal text-center max-w-3xl mx-auto page-hero">
       <p class="page-hero-eyebrow text-xs font-bold tracking-[.3em] text-cyan-700 uppercase mb-4">
-        Newsletter / 03
+        Newsletter
       </p>
       <h1 class="page-hero-title text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
-        Le newsletter <span class="gradient-text">che seguo</span>
+        Newsletter
       </h1>
       <p class="page-hero-description text-slate-600 text-lg mt-6 max-w-xl mx-auto leading-relaxed">
-        Una selezione di newsletter che leggo e che trovo interessanti. Da qui puoi visitare il sito ufficiale di ciascuna testata.
+        Le newsletter che leggo. Da qui puoi visitare il sito di ciascuna.
       </p>
     </section>
 
     <section id="journal-feed" class="space-y-5 reveal" aria-live="polite">
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p class="text-xs font-bold tracking-[.2em] uppercase text-cyan-700">Le pubblicazioni</p>
-          <h2 class="text-2xl md:text-3xl font-black mt-2">Le testate che seguo</h2>
+          <p class="text-xs font-bold tracking-[.2em] uppercase text-cyan-700">Newsletter</p>
+          <h2 class="text-2xl md:text-3xl font-black mt-2">Newsletter</h2>
         </div>
         <p id="journal-count" class="text-sm text-slate-500">Caricamento…</p>
       </div>
@@ -142,10 +142,10 @@
     <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>
         <p class="font-bold text-white">Marco Scatassi</p>
-        <p class="text-xs mt-1">Spazio personale · Newsletter</p>
+        <p class="text-xs mt-1">Newsletter</p>
       </div>
       <a href="../personal.html" class="text-sm hover:text-cyan-300 transition">
-        <i class="fa-solid fa-arrow-left mr-2"></i>Torna allo spazio personale
+        <i class="fa-solid fa-arrow-left mr-2"></i>Torna alla pagina personale
       </a>
     </div>
   </footer>
@@ -203,10 +203,10 @@
           icon.innerHTML = '<i class="fa-regular fa-newspaper" aria-hidden="true"></i>';
           const heading = document.createElement("h2");
           heading.className = "text-2xl md:text-3xl font-black";
-          heading.textContent = "Nessuna testata pubblicata";
+          heading.textContent = "Nessuna newsletter";
           const copy = document.createElement("p");
           copy.className = "text-slate-600 max-w-md mx-auto mt-4 leading-relaxed";
-          copy.textContent = "Le newsletter selezionate appariranno qui con un collegamento ai rispettivi siti ufficiali.";
+          copy.textContent = "Le newsletter aggiunte compariranno qui.";
           empty.append(icon, heading, copy);
           journalList.append(empty);
         } else {
