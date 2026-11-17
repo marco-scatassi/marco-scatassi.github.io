@@ -437,4 +437,9 @@
     transform: none !important;
   }
 }
+@media (max-width: 760px) {
+  .portfolio-page #contact .contact-item {
+    grid-area: auto !important;
+  }
+}
 
