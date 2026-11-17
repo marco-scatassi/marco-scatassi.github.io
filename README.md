@@ -398,9 +398,16 @@ La pagina Music ha ora un indice interno sticky sotto la navbar mobile, con voci
 
 La modifica resta frontend-only. Verifica statica effettuata su markup, selettori, ordine di caricamento CSS e logica di navigazione; non è disponibile in questa sessione un browser automatizzato per screenshot o test su viewport reali. La resa effettiva va ancora confermata su dispositivi fisici.
 
-### Portfolio contact section mobile pass — 2026-11-17
+### Revisione dei testi del sito — 2026-11-17
 
-- Optimized **Establish Uplink** for narrow screens: single-column contact rows, clearer spacing and typography, fixed-size icons, and more usable link touch targets.
-- Prevented the contact card from remaining visually hidden while its scroll-reveal observer initializes on mobile.
-- Desktop layout and contact destinations are unchanged.
+È stato uniformato il tono dei contenuti pubblici, con particolare attenzione all'area personale. Rimossi claim e metafore artificialmente cyber (ad esempio "Beyond the ordinary", "Personal frequency" e "End of transmission") e sostituiti con testi descrittivi e diretti.
+
+- **Spazio personale:** presentazione più semplice e sezioni rinominate in italiano: Musica, Viaggi e fotografie, Newsletter.
+- **Musica:** descrizioni concrete di chitarra, esibizioni e playlist; rimossi gli slogan di chiusura.
+- **Viaggi:** testo introduttivo e richiami alle gallerie resi più naturali.
+- **Newsletter:** chiarito che la pagina raccoglie pubblicazioni seguite e rimanda ai rispettivi siti ufficiali.
+- **Homepage e portfolio:** ridotti i riferimenti da terminale/fantascienza e resi più chiari titoli, sezioni e inviti all'azione.
+
+Intervento limitato ai testi e alle etichette visibili: URL, logica applicativa, API e contenuti dinamici non sono stati modificati.
+
 
