@@ -267,9 +267,10 @@
         const anchorText = typeof link.text === "string" ? link.text.trim() : "";
         const normalizedText = anchorText.toLocaleLowerCase("it");
         const isCallToAction = /\b(leggi|read|scopri|discover|continua|continue|approfondisci|view|open|articolo|article)\b/.test(normalizedText);
-        const isBoilerplate = /\b(unsubscribe|disiscriv|privacy|preferenze|preferences|gestisci|manage|social|instagram|facebook|linkedin)\b/.test(normalizedText);
+        const isBoilerplate = /\b(unsubscribe|disiscriv|privacy|preferenze|preferences|gestisci|manage|social|instagram|facebook|linkedin|view in browser|visualizza nel browser)\b/.test(normalizedText);
+        if (isBoilerplate) return null;
         const isContentPath = target.pathname !== prefixPath && target.pathname !== "/";
-        const score = (isCallToAction ? 4 : 0) + (isContentPath ? 2 : 0) - (isBoilerplate ? 10 : 0);
+        const score = (isCallToAction ? 4 : 0) + (isContentPath ? 2 : 0);
         return { url: target.href, score, index };
       } catch {
         return null;
