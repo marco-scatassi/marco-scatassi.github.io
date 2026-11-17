@@ -443,9 +443,7 @@
       const status = await workerRequest("/api/gmail/status");
       const connected = !!(status.connected && status.canReadMessages);
       statusElement.dataset.connected = String(connected);
-      statusElement.textContent = connected
-        ? "Gmail collegato" + (status.connectedEmail ? " · " + status.connectedEmail : " · account non verificato")
-        : "Gmail non collegato";
+      statusElement.textContent = connected ? "Gmail collegato" : "Gmail non collegato";
       statusElement.className = "status" + (connected ? " connected" : "");
       connectButton.textContent = connected ? "Ricollega Gmail" : "Collega Gmail";
       syncButton.disabled = !connected;
@@ -463,7 +461,6 @@
           "authorization-error": "Autorizzazione Gmail annullata o rifiutata.",
           "configuration-error": "Configurazione OAuth Gmail incompleta sul Worker.",
           "missing-refresh-token": "Google non ha restituito un refresh token: ripeti il collegamento.",
-          "profile-error": "Non è stato possibile verificare l'indirizzo dell'account Gmail. Nessuna nuova credenziale è stata salvata.",
           "invalid-state": "La sessione OAuth è scaduta o non valida. Riprova il collegamento."
         };
         setMessage(messages[callbackResult] || "Esito collegamento Gmail: " + callbackResult,
@@ -475,9 +472,7 @@
           const updated = await workerRequest("/api/gmail/status");
           const nowConnected = !!(updated.connected && updated.canReadMessages);
           statusElement.dataset.connected = String(nowConnected);
-          statusElement.textContent = nowConnected
-            ? "Gmail collegato" + (updated.connectedEmail ? " · " + updated.connectedEmail : " · account non verificato")
-            : "Gmail non collegato";
+          statusElement.textContent = nowConnected ? "Gmail collegato" : "Gmail non collegato";
           statusElement.className = "status" + (nowConnected ? " connected" : "");
           syncButton.disabled = !nowConnected;
           disconnectButton.disabled = !nowConnected;
