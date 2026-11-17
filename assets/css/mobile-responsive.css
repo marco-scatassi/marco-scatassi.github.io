@@ -344,3 +344,97 @@
   #featured-video-section { padding:15px !important; }
   .music-playlists-section { padding:15px !important; }
 }
+
+/* Portfolio — Establish Uplink mobile readability. */
+@media (max-width: 760px) {
+  .portfolio-page #contact {
+    padding: 48px 14px !important;
+    scroll-margin-top: 150px;
+  }
+  .portfolio-page #contact .container {
+    width: 100%;
+    max-width: 560px;
+  }
+  .portfolio-page #contact .section-heading {
+    margin-bottom: 24px !important;
+    padding-inline: 4px;
+  }
+  .portfolio-page #contact .section-heading h2 {
+    font-size: clamp(1.55rem, 7vw, 2rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: .02em !important;
+    overflow-wrap: normal;
+  }
+  .portfolio-page #contact .section-heading p {
+    max-width: 30ch;
+    margin-inline: auto;
+    font-size: 10px !important;
+    line-height: 1.5;
+    letter-spacing: .08em !important;
+  }
+  .portfolio-page #contact .direct-channels-shell {
+    display: block !important;
+    width: 100%;
+  }
+  .portfolio-page #contact .direct-channels-shell > .card {
+    width: 100%;
+    padding: 20px 17px !important;
+    border-radius: 16px;
+  }
+  .portfolio-page #contact .direct-channels-shell h3 {
+    margin-bottom: 18px !important;
+    font-size: 13px !important;
+  }
+  .portfolio-page #contact .contact-channels-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas: none !important;
+    gap: 0 !important;
+  }
+  .portfolio-page #contact .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 13px !important;
+    min-width: 0;
+    min-height: 68px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(8,127,156,.12);
+  }
+  .portfolio-page #contact .contact-item:first-child {
+    border-top: 0;
+    padding-top: 4px;
+  }
+  .portfolio-page #contact .contact-item > div:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .portfolio-page #contact .contact-icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+  }
+  .portfolio-page #contact .contact-item small {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+  .portfolio-page #contact .contact-item a,
+  .portfolio-page #contact .contact-item p {
+    max-width: 100%;
+    font-size: 13px !important;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .portfolio-page #contact .contact-channel-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 6px;
+  }
+  /* Do not leave the contact card hidden if the reveal observer is delayed. */
+  .portfolio-page #contact .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
