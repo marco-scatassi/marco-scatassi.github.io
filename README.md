@@ -369,3 +369,22 @@ Il form HTML con `action="mailto:..."` è stato rimosso: `mailto:` non è un end
 ### Playlist cards: titolo sopra il player e CTA leggibile — 2026-11-14
 
 Nella pagina `personal/music.html` il titolo e il conteggio della playlist vengono ora renderizzati prima dell'iframe YouTube. La riga delle azioni resta sotto il player. Il controllo `Visualizza brani` usa la tipografia Inter/display condivisa, dimensione e peso più leggibili, senza trasformazioni uppercase o tracking decorativo. Nessuna modifica alla logica di caricamento playlist, player o API.
+
+
+### Revisione responsive mobile — 2026-11-17
+
+È stato introdotto un livello CSS responsive condiviso, caricato dopo gli stili specifici delle pagine:
+- `assets/css/mobile-responsive.css`: home, Portfolio, landing Personal, Music, Journal e Memories/Nature;
+- `hub/mobile-responsive.css`: login, dashboard, reset password, YouTube e Gmail Journal dell'area privata.
+
+Interventi principali:
+- navbar pubblica disposta su più righe, con destinazioni visibili e senza dipendere dallo swipe orizzontale;
+- layout Portfolio e Personal a colonna singola, titoli con wrapping, immagini e CTA dimensionate per viewport stretti;
+- indice interno Music trasformato in griglia non sticky per evitare sovrapposizioni con l'header;
+- controlli touch con target minimo di 44 px e campi input a 16 px per evitare lo zoom automatico dei browser mobili;
+- header, pannelli, filtri, liste e paginazione dell'area privata resi adattivi, inclusi i layout Gmail e YouTube;
+- rispetto di `prefers-reduced-motion` e contenimento dell'overflow orizzontale.
+
+La modifica è solo frontend: non cambia API, autenticazione, OAuth, database, RLS o Worker. Il lavoro è stato applicato direttamente a `main`, come richiesto.
+
+**Verifica:** controllati staticamente i riferimenti ai fogli CSS e i file aggiornati su GitHub. Non è stato eseguito un browser test, una prova con dispositivi fisici o uno screenshot comparativo; non è quindi possibile dichiarare già verificata la resa effettiva sui viewport 320/360/390/430/768/1024 px. Questi controlli restano necessari, in particolare per le pagine private con contenuti caricati dinamicamente.
