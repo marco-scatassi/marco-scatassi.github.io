@@ -196,3 +196,7 @@
   html { scroll-behavior: auto !important; }
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
+
+@media (max-width:760px) {
+  .music-index-heading, .music-index-caption { display:none !important; }
+}
